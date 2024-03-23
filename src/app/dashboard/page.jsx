@@ -1,7 +1,7 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { usePrivy, useExperimentalFarcasterSigner } from "@privy-io/react-auth";
+import {useRouter} from "next/navigation";
+import {useEffect, useState} from "react";
+import {usePrivy, useExperimentalFarcasterSigner} from "@privy-io/react-auth";
 import Head from "next/head";
 import Navbar from "@/components/ui/Navbar";
 
@@ -35,9 +35,9 @@ export default function DashboardPage() {
         )
       );
     }
-    // if (farcasterAccount.signerPublicKey)
+    // if (farcasterAccount && farcasterAccount.signerPublicKey)
     //   (async function () {
-    //     const { hash } = await submitCast({ text: "Hello world!" });
+    //     const {hash} = await submitCast({text: "Hello world!"});
     //     console.log(hash, "hash");
     //   })();
   }, [ready, authenticated, router, user]);
@@ -50,7 +50,7 @@ export default function DashboardPage() {
 
   //   console.log(farcasterSubject, user, "farcaster");
 
-  const { requestFarcasterSigner, submitCast } = useExperimentalFarcasterSigner();
+  const {requestFarcasterSigner, submitCast} = useExperimentalFarcasterSigner();
 
   //   const farcasterAccount = user.linkedAccounts.find(
   //     (account) => account.type === "farcaster"
@@ -68,7 +68,7 @@ export default function DashboardPage() {
         {ready && authenticated ? (
           <>
             {/* top bar */}
-            {/* <div className="flex flex-row justify-between">
+            <div className="flex flex-row justify-between">
               <h1 className="text-2xl font-semibold">Privy Auth Demo</h1>
               <button
                 onClick={logout}
@@ -91,9 +91,9 @@ export default function DashboardPage() {
               >
                 Authorize my Farcaster signer
               </Button>
-            </div> */}
+            </div>
             {/* body */}
-            {/* <div className="mt-12 flex gap-4 flex-wrap">
+            <div className="mt-12 flex gap-4 flex-wrap">
               {farcasterSubject ? (
                 <button
                   onClick={() => {
@@ -114,7 +114,7 @@ export default function DashboardPage() {
                   Link Farcaster
                 </button>
               )}
-            </div> */}
+            </div>
 
             {/* <p className="mt-6 font-bold uppercase text-sm text-gray-600">
               User object
@@ -145,16 +145,6 @@ export default function DashboardPage() {
             />
           </>
         ) : null}
-
-
-        <button
-          onClick={() => requestFarcasterSigner()}
-          // Prevent requesting a Farcaster signer if a user has not already linked a Farcaster account
-          // or if they have already requested a signer
-          disabled={!farcasterAccount || farcasterAccount.signerPublicKey}
-        >
-          Authorize my Farcaster signer
-        </button>
       </main>
     </>
   );
