@@ -1,9 +1,10 @@
 "use client";
-import {useRouter} from "next/navigation";
-import {useEffect, useState} from "react";
-import {usePrivy, useExperimentalFarcasterSigner} from "@privy-io/react-auth";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { usePrivy, useExperimentalFarcasterSigner } from "@privy-io/react-auth";
 import Head from "next/head";
 import Navbar from "@/components/ui/Navbar";
+import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -50,7 +51,7 @@ export default function DashboardPage() {
 
   //   console.log(farcasterSubject, user, "farcaster");
 
-  const {requestFarcasterSigner, submitCast} = useExperimentalFarcasterSigner();
+  const { requestFarcasterSigner, submitCast } = useExperimentalFarcasterSigner();
 
   //   const farcasterAccount = user.linkedAccounts.find(
   //     (account) => account.type === "farcaster"
