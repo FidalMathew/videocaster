@@ -3,16 +3,11 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { usePrivy, useExperimentalFarcasterSigner } from "@privy-io/react-auth";
 import Head from "next/head";
-<<<<<<< HEAD
 import Navbar from "@/components/ui/Navbar";
-=======
-import { Button } from "@/components/ui/button";
->>>>>>> 67a9fed603406a57e5e71b2c1744349995540d36
 
 export default function DashboardPage() {
   const router = useRouter();
   const [farcasterAccount, setFarcasterAccount] = useState(null);
-<<<<<<< HEAD
   const [hasEmbeddedWallet, setHasEmbeddedWallet] = useState(false);
   const {
     ready,
@@ -23,10 +18,6 @@ export default function DashboardPage() {
     unlinkFarcaster,
     exportWallet,
   } = usePrivy();
-=======
-  const { ready, authenticated, user, logout, linkFarcaster, unlinkFarcaster } =
-    usePrivy();
->>>>>>> 67a9fed603406a57e5e71b2c1744349995540d36
 
   useEffect(() => {
     if (ready && !authenticated) {
@@ -44,11 +35,11 @@ export default function DashboardPage() {
         )
       );
     }
-    if (farcasterAccount && farcasterAccount.signerPublicKey)
-      (async function () {
-        const { hash } = await submitCast({ text: "Hello world!" });
-        console.log(hash, "hash");
-      })();
+    // if (farcasterAccount.signerPublicKey)
+    //   (async function () {
+    //     const { hash } = await submitCast({ text: "Hello world!" });
+    //     console.log(hash, "hash");
+    //   })();
   }, [ready, authenticated, router, user]);
 
   const numAccounts = user?.linkedAccounts?.length || 0;
