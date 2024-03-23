@@ -1,11 +1,13 @@
 "use client";
 import {useRouter} from "next/navigation";
-import {useEffect} from "react";
-import {usePrivy} from "@privy-io/react-auth";
+import {useEffect, useState} from "react";
+import {usePrivy, useExperimentalFarcasterSigner} from "@privy-io/react-auth";
 import Head from "next/head";
+import {Button} from "@/components/ui/button";
 
 export default function DashboardPage() {
   const router = useRouter();
+  const [farcasterAccount, setFarcasterAccount] = useState(null);
   const {ready, authenticated, user, logout, linkFarcaster, unlinkFarcaster} =
     usePrivy();
 
@@ -13,16 +15,32 @@ export default function DashboardPage() {
     if (ready && !authenticated) {
       router.push("/");
     }
-  }, [ready, authenticated, router]);
+    if (user) {
+      setFarcasterAccount(
+        user.linkedAccounts.find((account) => account.type === "farcaster")
+      );
+    }
+    if (farcasterAccount.signerPublicKey)
+      (async function () {
+        const {hash} = await submitCast({text: "Hello world!"});
+        console.log(hash, "hash");
+      })();
+  }, [ready, authenticated, router, user]);
 
   const numAccounts = user?.linkedAccounts?.length || 0;
   const canRemoveAccount = numAccounts > 1;
 
-  const email = user?.email;
-  const phone = user?.phone;
-  const wallet = user?.wallet;
   //   farcaster
-  const farcasterSubject = user?.farcaster?.subject || null;
+  const farcasterSubject = user?.farcaster?.fid || null;
+
+  //   console.log(farcasterSubject, user, "farcaster");
+
+  const {requestFarcasterSigner, submitCast} = useExperimentalFarcasterSigner();
+
+  //   const farcasterAccount = user.linkedAccounts.find(
+  //     (account) => account.type === "farcaster"
+  //   );
+  console.log(farcasterAccount, "acc");
 
   return (
     <>
@@ -41,6 +59,15 @@ export default function DashboardPage() {
               >
                 Logout
               </button>
+
+              <Button
+                onClick={() => requestFarcasterSigner()}
+                // Prevent requesting a Farcaster signer if a user has not already linked a Farcaster account
+                // or if they have already requested a signer
+                disabled={!farcasterAccount || farcasterAccount.signerPublicKey}
+              >
+                Authorize my Farcaster signer
+              </Button>
             </div>
             <div className="mt-12 flex gap-4 flex-wrap">
               {farcasterSubject ? (
@@ -51,7 +78,7 @@ export default function DashboardPage() {
                   className="text-sm border border-violet-600 hover:border-violet-700 py-2 px-4 rounded-md text-violet-600 hover:text-violet-700 disabled:border-gray-500 disabled:text-gray-500 hover:disabled:text-gray-500"
                   disabled={!canRemoveAccount}
                 >
-                  Unlink Google
+                  Unlink Farcaster
                 </button>
               ) : (
                 <button
