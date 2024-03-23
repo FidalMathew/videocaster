@@ -1,14 +1,14 @@
 "use client";
-import {useRouter} from "next/navigation";
-import {useEffect, useState} from "react";
-import {usePrivy, useExperimentalFarcasterSigner} from "@privy-io/react-auth";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { usePrivy, useExperimentalFarcasterSigner } from "@privy-io/react-auth";
 import Head from "next/head";
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
   const router = useRouter();
   const [farcasterAccount, setFarcasterAccount] = useState(null);
-  const {ready, authenticated, user, logout, linkFarcaster, unlinkFarcaster} =
+  const { ready, authenticated, user, logout, linkFarcaster, unlinkFarcaster } =
     usePrivy();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function DashboardPage() {
     }
     if (farcasterAccount.signerPublicKey)
       (async function () {
-        const {hash} = await submitCast({text: "Hello world!"});
+        const { hash } = await submitCast({ text: "Hello world!" });
         console.log(hash, "hash");
       })();
   }, [ready, authenticated, router, user]);
@@ -35,7 +35,7 @@ export default function DashboardPage() {
 
   //   console.log(farcasterSubject, user, "farcaster");
 
-  const {requestFarcasterSigner, submitCast} = useExperimentalFarcasterSigner();
+  const { requestFarcasterSigner, submitCast } = useExperimentalFarcasterSigner();
 
   //   const farcasterAccount = user.linkedAccounts.find(
   //     (account) => account.type === "farcaster"
@@ -103,6 +103,16 @@ export default function DashboardPage() {
             />
           </>
         ) : null}
+
+
+        <button
+          onClick={() => requestFarcasterSigner()}
+          // Prevent requesting a Farcaster signer if a user has not already linked a Farcaster account
+          // or if they have already requested a signer
+          disabled={!farcasterAccount || farcasterAccount.signerPublicKey}
+        >
+          Authorize my Farcaster signer
+        </button>
       </main>
     </>
   );
