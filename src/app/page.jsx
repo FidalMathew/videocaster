@@ -2,14 +2,18 @@
 
 import {Button} from "@/components/ui/button";
 import {usePrivy} from "@privy-io/react-auth";
+import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 export default function Home() {
-  const {login} = usePrivy();
+  const {login, ready, authenticated} = usePrivy();
   const [mounted, setMounted] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
-    console.log(process.env.ACCOUNT_KEY);
-  }, []);
+    if (ready && authenticated) {
+      router.push("/dashboard");
+    }
+  }, [router, ready, authenticated]);
+
   useEffect(() => setMounted(true), []);
   if (!mounted) return null;
   return (

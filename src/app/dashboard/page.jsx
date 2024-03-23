@@ -3,13 +3,21 @@ import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 import {usePrivy, useExperimentalFarcasterSigner} from "@privy-io/react-auth";
 import Head from "next/head";
-import {Button} from "@/components/ui/button";
+import Navbar from "@/components/ui/Navbar";
 
 export default function DashboardPage() {
   const router = useRouter();
   const [farcasterAccount, setFarcasterAccount] = useState(null);
-  const {ready, authenticated, user, logout, linkFarcaster, unlinkFarcaster} =
-    usePrivy();
+  const [hasEmbeddedWallet, setHasEmbeddedWallet] = useState(false);
+  const {
+    ready,
+    authenticated,
+    user,
+    logout,
+    linkFarcaster,
+    unlinkFarcaster,
+    exportWallet,
+  } = usePrivy();
 
   useEffect(() => {
     if (ready && !authenticated) {
@@ -19,8 +27,15 @@ export default function DashboardPage() {
       setFarcasterAccount(
         user.linkedAccounts.find((account) => account.type === "farcaster")
       );
+
+      setHasEmbeddedWallet(
+        !!user.linkedAccounts.find(
+          (account) =>
+            account.type === "wallet" && account.walletClient === "privy"
+        )
+      );
     }
-    if (farcasterAccount.signerPublicKey)
+    if (farcasterAccount && farcasterAccount.signerPublicKey)
       (async function () {
         const {hash} = await submitCast({text: "Hello world!"});
         console.log(hash, "hash");
@@ -41,6 +56,7 @@ export default function DashboardPage() {
   //     (account) => account.type === "farcaster"
   //   );
   console.log(farcasterAccount, "acc");
+  const isAuthenticated = ready && authenticated;
 
   return (
     <>
@@ -48,10 +64,11 @@ export default function DashboardPage() {
         <title>Privy Auth Demo</title>
       </Head>
 
-      <main className="flex flex-col min-h-screen px-4 sm:px-20 py-6 sm:py-10 bg-privy-light-blue">
+      <main className="flex flex-col min-h-screen">
         {ready && authenticated ? (
           <>
-            <div className="flex flex-row justify-between">
+            {/* top bar */}
+            {/* <div className="flex flex-row justify-between">
               <h1 className="text-2xl font-semibold">Privy Auth Demo</h1>
               <button
                 onClick={logout}
@@ -61,6 +78,12 @@ export default function DashboardPage() {
               </button>
 
               <Button
+                onClick={exportWallet}
+                disabled={!isAuthenticated || !hasEmbeddedWallet}
+              >
+                Export my wallet
+              </Button>
+              <Button
                 onClick={() => requestFarcasterSigner()}
                 // Prevent requesting a Farcaster signer if a user has not already linked a Farcaster account
                 // or if they have already requested a signer
@@ -68,8 +91,9 @@ export default function DashboardPage() {
               >
                 Authorize my Farcaster signer
               </Button>
-            </div>
-            <div className="mt-12 flex gap-4 flex-wrap">
+            </div> */}
+            {/* body */}
+            {/* <div className="mt-12 flex gap-4 flex-wrap">
               {farcasterSubject ? (
                 <button
                   onClick={() => {
@@ -90,9 +114,9 @@ export default function DashboardPage() {
                   Link Farcaster
                 </button>
               )}
-            </div>
+            </div> */}
 
-            <p className="mt-6 font-bold uppercase text-sm text-gray-600">
+            {/* <p className="mt-6 font-bold uppercase text-sm text-gray-600">
               User object
             </p>
             <textarea
@@ -100,6 +124,24 @@ export default function DashboardPage() {
               className="max-w-4xl bg-slate-700 text-slate-50 font-mono p-4 text-xs sm:text-sm rounded-md mt-2"
               rows={20}
               disabled
+            /> */}
+
+            <Navbar
+              authObj={{
+                ready,
+                authenticated,
+                user,
+                logout,
+                linkFarcaster,
+                unlinkFarcaster,
+                exportWallet,
+                farcasterAccount,
+                farcasterSubject,
+                requestFarcasterSigner,
+                canRemoveAccount,
+                hasEmbeddedWallet,
+                isAuthenticated,
+              }}
             />
           </>
         ) : null}
