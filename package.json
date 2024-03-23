@@ -9,9 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@farcaster/core": "^0.14.7",
+    "@noble/ed25519": "^2.0.0",
+    "@privy-io/react-auth": "^1.59.5",
+    "@radix-ui/react-slot": "^1.0.2",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "frames.js": "^0.9.0",
+    "lucide-react": "^0.362.0",
+    "next": "14.1.0",
+    "next-themes": "^0.3.0",
+    "pinata-fdk": "^3.6.1",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.1.0"
+    "react-dropzone": "^14.2.3",
+    "tailwind-merge": "^2.2.2",
+    "tailwindcss-animate": "^1.0.7",
+    "viem": "^2.8.18"
   },
   "devDependencies": {
     "autoprefixer": "^10.0.1",
