@@ -1,10 +1,10 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { usePrivy, useExperimentalFarcasterSigner } from "@privy-io/react-auth";
+import {useRouter} from "next/navigation";
+import {useEffect, useRef, useState} from "react";
+import {usePrivy, useExperimentalFarcasterSigner} from "@privy-io/react-auth";
 import Head from "next/head";
 import Navbar from "@/components/ui/Navbar";
-import { Button } from "@/components/ui/button";
+import {Button} from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -12,11 +12,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Toggle } from "@/components/ui/toggle";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Formik, Field, Form } from "formik";
+import {Label} from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
+import {Toggle} from "@/components/ui/toggle";
+import {Checkbox} from "@/components/ui/checkbox";
+import {Formik, Field, Form, FieldArray, useFormikContext} from "formik";
+import Dropzone from "react-dropzone";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -75,7 +76,7 @@ export default function DashboardPage() {
 
   //   console.log(farcasterSubject, user, "farcaster");
 
-  const { requestFarcasterSigner, submitCast } = useExperimentalFarcasterSigner();
+  const {requestFarcasterSigner, submitCast} = useExperimentalFarcasterSigner();
 
   //   const farcasterAccount = user.linkedAccounts.find(
   //     (account) => account.type === "farcaster"
@@ -83,9 +84,46 @@ export default function DashboardPage() {
   console.log(farcasterAccount, "acc");
   const isAuthenticated = ready && authenticated;
 
-  // ui states
-  const [numberOfbuttons, setNumberOfbuttons] = useState(0);
-  console.log(numberOfbuttons, "num");
+  // const handleFormikChange = (formikValues) => {
+  //   // Update the button properties state based on the formik values
+  //   const newButtonProperties = Array.from(
+  //     {length: formikValues.noOfButtons},
+  //     (_, index) => ({
+  //       action: formikValues.buttonProperties[index]?.action || "",
+  //       buttonContent:
+  //         formikValues.buttonProperties[index]?.buttonContent || "",
+  //       target: formikValues.buttonProperties[index]?.target || "",
+  //     })
+  //   );
+  //   setButtonProperties(newButtonProperties);
+  //   setNumberOfbuttons(formikValues.noOfButtons);
+  // };
+
+  const [formikState, setFormikState] = useState({});
+  const ExternalStateSyncComponent = () => {
+    const formik = useFormikContext(); // Access Formik context
+
+    // Effect to sync external state with Formik state
+    useEffect(() => {
+      // Update external state whenever Formik state changes
+      // For example, you can update Redux state, or any other external state management system
+      // console.log("Formik values updated:", formik.values);
+      setFormikState(formik.values);
+    }, [formik.values]);
+
+    return null; // This component doesn't render anything visible
+  };
+
+  // console.log(formikState, "state");
+
+  // formik ref
+  const formikRef = useRef(null);
+
+  const handleExternalSubmit = () => {
+    if (formikRef.current) {
+      formikRef.current.handleSubmit();
+    }
+  };
 
   return (
     <div>
@@ -156,6 +194,7 @@ export default function DashboardPage() {
             /> */}
 
             <Navbar
+              handleExternalSubmit={handleExternalSubmit}
               authObj={{
                 ready,
                 authenticated,
@@ -174,25 +213,68 @@ export default function DashboardPage() {
             />
 
             <div className="w-full min-h-[90%] lg:h-[90%] flex flex-col lg:flex-row justify-center">
-              <div className="h-full w-full lg:w-1/2 bg-white rounded-lg p-5">
+              <div className="h-fit mb-6 w-full lg:w-1/2 bg-white rounded-lg p-5">
                 <Formik
+                  innerRef={formikRef}
                   initialValues={{
                     video: "",
-                    picture: "",
+                    fallbackimage: "",
                     noOfButtons: 0,
                     needInputButton: false,
+                    playbackId: "",
+                    buttonProperties: {
+                      action: "",
+                      buttonContent: "", // Ensure buttonContent is initialized
+                      target: "",
+                    },
+                    // onchange,
                   }}
                   onSubmit={(value, _) => console.log(value)}
                 >
                   {(formik) => (
-                    <Form className="flex flex-col gap-10">
-                      <div className="border-2 border-dotted flex justify-center items-center h-[200px] w-full rounded-lg border-slate-400">
-                        Drag and drop your video here
-                      </div>
+                    <Form className="flex flex-col gap-8 mb-6">
+                      <ExternalStateSyncComponent />
+                      <Dropzone
+                        accept="video/*"
+                        onDrop={(acceptedFiles) => console.log(acceptedFiles)}
+                      >
+                        {({getRootProps, getInputProps}) => (
+                          <section className="cursor-pointer">
+                            <div {...getRootProps()}>
+                              <input {...getInputProps()} />
+                              <div className="border-2 border-dotted flex justify-center items-center h-[200px] w-full rounded-lg border-slate-400">
+                                Drag and drop your video here
+                              </div>
+                            </div>
+                          </section>
+                        )}
+                      </Dropzone>
+                      <Field
+                        as={Input}
+                        type="text"
+                        id={`playbackId`}
+                        name={`playbackId`}
+                        className="w-full"
+                        placeholder="Livepeer Playback ID"
+                      />
                       <Select
                         className="w-full"
                         onValueChange={(val) => {
-                          setNumberOfbuttons(val);
+                          formik.setFieldValue("noOfButtons", val);
+                          // push the button properties to the formik values
+                          const newButtonProperties = Array.from(
+                            {length: val},
+                            (_, index) => ({
+                              action: "",
+                              buttonContent: "",
+                              target: "",
+                            })
+                          );
+
+                          formik.setFieldValue(
+                            "buttonProperties",
+                            newButtonProperties
+                          );
                         }}
                       >
                         <SelectTrigger className="w-full focus-visible:ring-0">
@@ -205,34 +287,127 @@ export default function DashboardPage() {
                           <SelectItem value="4">4</SelectItem>
                         </SelectContent>
                       </Select>
+                      <div className="flex flex-col gap-5">
+                        {Array.from(
+                          {length: formik.values.noOfButtons},
+                          (_, index) => (
+                            <div key={index} className="flex flex-col gap-1">
+                              <Label
+                                htmlFor={`buttonContent-${index}`}
+                                className="ml-1 mb-1"
+                              >
+                                Button Content {index + 1}
+                              </Label>
+                              <div className="flex gap-3">
+                                {/* for each button render select */}
+                                <Select
+                                  onValueChange={(val) => {
+                                    formik.setFieldValue(
+                                      `buttonProperties[${index}].action`,
+                                      val
+                                    );
+                                  }}
+                                >
+                                  <SelectTrigger className="w-[180px] focus-visible:ring-0">
+                                    <SelectValue placeholder="Select Action" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="post">Post</SelectItem>
+                                    <SelectItem value="link">Link</SelectItem>
+                                    <SelectItem value="mint">Mint</SelectItem>
+                                    <SelectItem value="tx">Tx</SelectItem>
+                                    <SelectItem value="post_redirect">
+                                      Post Redirect
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
+
+                                <Field
+                                  as={Input}
+                                  type="text"
+                                  id={`buttonProperties[${index}].buttonContent`}
+                                  name={`buttonProperties[${index}].buttonContent`}
+                                  className="w-full"
+                                  placeholder="Button Title"
+                                />
+
+                                <Field
+                                  as={Input}
+                                  type="text"
+                                  id={`buttonProperties[${index}].target`}
+                                  name={`buttonProperties[${index}].target`}
+                                  className="w-full"
+                                  placeholder="Target URL"
+                                />
+                              </div>
+                              {/* You can add more input fields for other button properties */}
+                            </div>
+                          )
+                        )}
+                      </div>
                       <div className="grid w-full max-w-full items-center gap-1.5">
                         <Label htmlFor="picture" className="ml-2 mb-2">
                           Choose Fallback Image
                         </Label>
-                        <Input id="picture" type="file" />
+                        <Field
+                          as={Input}
+                          name="fallbackimage"
+                          id="fallbackimage"
+                          type="file"
+                        />
                       </div>
                       <div className="flex items-center space-x-2 pl-2">
-                        <Checkbox id="terms" />
-                        <label
-                          htmlFor="terms"
+                        <Checkbox
+                          id="needInputButton"
+                          onCheckedChange={(val) => {
+                            formik.setFieldValue("needInputButton", val);
+                            // setNeedInput(val);
+                          }}
+                        />
+                        <Label
+                          htmlFor="needInputButton"
                           className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                         >
-                          Need Input Button
-                        </label>
+                          Need Input Field
+                        </Label>
                       </div>
-                      <Button className="w-full" type="submit">
+                      {/* <Button className="w-full" type="submit">
                         Publish
-                      </Button>
+                      </Button> */}
                     </Form>
                   )}
                 </Formik>
               </div>
 
               <div className="h-[600px] lg:h-full w-full lg:w-1/2 bg-white p-4 flex flex-col gap-3">
-                <div className="border-2 border-slate-300 h-full w-full rounded-lg p-5">
+                <div className="border-2 border-slate-300 h-full w-full rounded-lg p-5 flex flex-col gap-6">
                   <div className="w-full h-[300px] bg-slate-400 rounded-lg flex justify-center items-center">
                     Your Video here
                   </div>
+                  {formikState.needInputButton && (
+                    <Input type="text" placeholder="Video URL" />
+                  )}
+
+                  {formikState.noOfButtons > 0 && (
+                    <div className="grid grid-cols-2 gap-4">
+                      {Array.from(
+                        {length: formikState.noOfButtons},
+                        (_, index) => (
+                          <Button
+                            key={index}
+                            className="col-span-1"
+                            // variant="outline"
+                          >
+                            {formikState.buttonProperties[index]
+                              .buttonContent === ""
+                              ? "Button1"
+                              : formikState.buttonProperties[index]
+                                  .buttonContent}
+                          </Button>
+                        )
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

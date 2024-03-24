@@ -12,7 +12,7 @@ import {
 import {Video} from "lucide-react";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 
-export default function Navbar({authObj}) {
+export default function Navbar({authObj, handleExternalSubmit}) {
   return (
     <div className="flex w-full p-5 justify-between h-[10%]">
       <div className="text-2xl font-bold">
@@ -21,8 +21,8 @@ export default function Navbar({authObj}) {
 
       <div className="flex gap-4">
         <div>
-          <Button>
-            <Video className="mr-2 h-4 w-4" /> Create
+          <Button onClick={() => handleExternalSubmit()}>
+            <Video className="mr-2 h-4 w-4" /> Publish
           </Button>
         </div>
         <DropdownMenu>
