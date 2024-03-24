@@ -1,10 +1,10 @@
 "use client";
-import {useRouter} from "next/navigation";
-import {useEffect, useRef, useState} from "react";
-import {usePrivy, useExperimentalFarcasterSigner} from "@privy-io/react-auth";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { usePrivy, useExperimentalFarcasterSigner } from "@privy-io/react-auth";
 import Head from "next/head";
 import Navbar from "@/components/ui/Navbar";
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -12,12 +12,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
-import {Toggle} from "@/components/ui/toggle";
-import {Checkbox} from "@/components/ui/checkbox";
-import {Formik, Field, Form, FieldArray, useFormikContext} from "formik";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Toggle } from "@/components/ui/toggle";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Formik, Field, Form, FieldArray, useFormikContext } from "formik";
 import Dropzone from "react-dropzone";
+import axios from 'axios';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -76,7 +77,7 @@ export default function DashboardPage() {
 
   //   console.log(farcasterSubject, user, "farcaster");
 
-  const {requestFarcasterSigner, submitCast} = useExperimentalFarcasterSigner();
+  const { requestFarcasterSigner, submitCast } = useExperimentalFarcasterSigner();
 
   //   const farcasterAccount = user.linkedAccounts.find(
   //     (account) => account.type === "farcaster"
@@ -124,6 +125,18 @@ export default function DashboardPage() {
       formikRef.current.handleSubmit();
     }
   };
+
+  const publishFrame = async (values) => {
+    values = { ...values, uname: farcasterAccount.username }
+    console.log(values, "values");
+    try {
+      const response = await axios.post("/api/publishFrames", values);
+      console.log("Response:", response.data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
 
   return (
     <div>
@@ -230,7 +243,10 @@ export default function DashboardPage() {
                     },
                     // onchange,
                   }}
-                  onSubmit={(value, _) => console.log(value)}
+                  onSubmit={(value, _) => {
+                    publishFrame(value)
+                    console.log(value)
+                  }}
                 >
                   {(formik) => (
                     <Form className="flex flex-col gap-8 mb-6">
@@ -239,7 +255,7 @@ export default function DashboardPage() {
                         accept="video/*"
                         onDrop={(acceptedFiles) => console.log(acceptedFiles)}
                       >
-                        {({getRootProps, getInputProps}) => (
+                        {({ getRootProps, getInputProps }) => (
                           <section className="cursor-pointer">
                             <div {...getRootProps()}>
                               <input {...getInputProps()} />
@@ -275,6 +291,7 @@ export default function DashboardPage() {
                           name={`playbackId`}
                           className="w-full"
                           placeholder="Livepeer Playback ID"
+
                         />
                       </div>
 
@@ -284,7 +301,7 @@ export default function DashboardPage() {
                           formik.setFieldValue("noOfButtons", val);
                           // push the button properties to the formik values
                           const newButtonProperties = Array.from(
-                            {length: val},
+                            { length: val },
                             (_, index) => ({
                               action: "",
                               buttonContent: "",
@@ -310,7 +327,7 @@ export default function DashboardPage() {
                       </Select>
                       <div className="flex flex-col gap-5">
                         {Array.from(
-                          {length: formik.values.noOfButtons},
+                          { length: formik.values.noOfButtons },
                           (_, index) => (
                             <div key={index} className="flex flex-col gap-1">
                               <Label
@@ -368,13 +385,22 @@ export default function DashboardPage() {
                       </div>
                       <div className="grid w-full max-w-full items-center gap-1.5">
                         <Label htmlFor="picture" className="ml-2 mb-2">
-                          Choose Fallback Image
+                          Fallback Image Link
                         </Label>
-                        <Field
+                        {/* <Field
                           as={Input}
                           name="fallbackimage"
                           id="fallbackimage"
                           type="file"
+                        /> */}
+                        <Field
+                          as={Input}
+                          type="text"
+                          name="fallbackimage"
+                          id="fallbackimage"
+                          className="w-full"
+                          placeholder="Image"
+
                         />
                       </div>
                       <div className="flex items-center space-x-2 pl-2">
@@ -403,7 +429,8 @@ export default function DashboardPage() {
               <div className="h-[600px] lg:h-full w-full lg:w-1/2 bg-white p-4 flex flex-col gap-3">
                 <div className="border-2 border-slate-300 h-full w-full rounded-lg p-5 flex flex-col gap-6">
                   <div className="w-full h-[300px] bg-slate-400 rounded-lg flex justify-center items-center">
-                    Your Video here
+                    {/* Your Video here */}
+                    <iframe className="w-full h-full rounded-lg" src={"https://lvpr.tv?v=" + formikState.playbackId} frameborder="0"></iframe>
                   </div>
                   {formikState.needInputButton && (
                     <Input type="text" placeholder="Video URL" />
@@ -412,18 +439,18 @@ export default function DashboardPage() {
                   {formikState.noOfButtons > 0 && (
                     <div className="grid grid-cols-2 gap-4">
                       {Array.from(
-                        {length: formikState.noOfButtons},
+                        { length: formikState.noOfButtons },
                         (_, index) => (
                           <Button
                             key={index}
                             className="col-span-1"
-                            // variant="outline"
+                          // variant="outline"
                           >
                             {formikState.buttonProperties[index]
                               .buttonContent === ""
                               ? "Button1"
                               : formikState.buttonProperties[index]
-                                  .buttonContent}
+                                .buttonContent}
                           </Button>
                         )
                       )}

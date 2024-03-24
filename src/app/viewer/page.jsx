@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 "use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -9,15 +8,6 @@ export default function Viewer() {
 
   const [casts, setCasts] = useState([]);
 
-=======
-"use client";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-// import { fetchCasts } from "@/utils/fetchfeed";
-import axios from "axios";
-import {useEffect} from "react";
-
-export default function Viewer() {
->>>>>>> Stashed changes
   useEffect(() => {
     const fetchData = async () => {
       try {
