@@ -132,6 +132,7 @@ export default function DashboardPage() {
     try {
       const response = await axios.post("/api/publishFrames", values);
       console.log("Response:", response.data);
+      alert("Frame published successfully! Check it out: https://no-code-frames.vercel.app/examples/" + values.nameOfFrameURL + "-" + farcasterAccount.username);
     } catch (error) {
       console.error("Error:", error);
     }
