@@ -30,9 +30,12 @@ export async function scrapeMetaData(url) {
 
     // Extract value for 'fc:frame:video'
     const fcFrameVideo = metaTags["fc:frame:video"];
-    console.log("fc:frame:video value:", fcFrameVideo);
+    // console.log("fc:frame:video value:", fcFrameVideo);
 
-    return fcFrameVideo;
+    return {
+      fcFrameVideo,
+      metaTags
+    };
   } catch (error) {
     console.error("Error scraping metadata:", error);
   }

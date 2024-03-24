@@ -18,7 +18,12 @@ import { Toggle } from "@/components/ui/toggle";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Formik, Field, Form, FieldArray, useFormikContext } from "formik";
 import Dropzone from "react-dropzone";
+<<<<<<< Updated upstream
 import axios from 'axios';
+=======
+import {Livepeer} from "livepeer";
+import axios from "axios";
+>>>>>>> Stashed changes
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -115,7 +120,7 @@ export default function DashboardPage() {
     return null; // This component doesn't render anything visible
   };
 
-  // console.log(formikState, "state");
+  console.log(formikState, "state");
 
   // formik ref
   const formikRef = useRef(null);
@@ -165,7 +170,7 @@ export default function DashboardPage() {
                 Export my wallet
               </Button>
               <Button
-                onClick={() => requestFarcasterSigner()}
+                // onClick={() => requestFarcasterSigner()}
                 // Prevent requesting a Farcaster signer if a user has not already linked a Farcaster account
                 // or if they have already requested a signer
                 disabled={!farcasterAccount || farcasterAccount.signerPublicKey}
@@ -219,12 +224,14 @@ export default function DashboardPage() {
                 exportWallet,
                 farcasterAccount,
                 farcasterSubject,
-                requestFarcasterSigner,
+                // requestFarcasterSigner,
                 canRemoveAccount,
                 hasEmbeddedWallet,
                 isAuthenticated,
               }}
             />
+
+            {/* <Button onClick={createAsset}>Create</Button> */}
 
             <div className="w-full min-h-[90%] lg:h-[90%] flex flex-col lg:flex-row justify-center">
               <div className="h-fit mb-6 w-full lg:w-1/2 bg-white rounded-lg p-5">
@@ -237,11 +244,7 @@ export default function DashboardPage() {
                     noOfButtons: 0,
                     needInputButton: false,
                     playbackId: "",
-                    buttonProperties: {
-                      action: "",
-                      buttonContent: "", // Ensure buttonContent is initialized
-                      target: "",
-                    },
+                    buttonProperties: [],
                     // onchange,
                   }}
                   onSubmit={(value, _) => {
@@ -254,7 +257,9 @@ export default function DashboardPage() {
                       <ExternalStateSyncComponent />
                       <Dropzone
                         accept="video/*"
-                        onDrop={(acceptedFiles) => console.log(acceptedFiles)}
+                        onDrop={(acceptedFiles) =>
+                          console.log(acceptedFiles[0], "acceptedFiles")
+                        }
                       >
                         {({ getRootProps, getInputProps }) => (
                           <section className="cursor-pointer">
