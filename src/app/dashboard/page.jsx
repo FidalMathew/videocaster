@@ -218,6 +218,7 @@ export default function DashboardPage() {
                   innerRef={formikRef}
                   initialValues={{
                     video: "",
+                    nameOfFrameURL: "",
                     fallbackimage: "",
                     noOfButtons: 0,
                     needInputButton: false,
@@ -249,14 +250,34 @@ export default function DashboardPage() {
                           </section>
                         )}
                       </Dropzone>
-                      <Field
-                        as={Input}
-                        type="text"
-                        id={`playbackId`}
-                        name={`playbackId`}
-                        className="w-full"
-                        placeholder="Livepeer Playback ID"
-                      />
+                      <div className="grid w-full max-w-full items-center gap-1.5">
+                        <Label htmlFor={`nameOfFrameURL`} className="ml-1 mb-2">
+                          Name of Frame URL
+                        </Label>
+                        <Field
+                          as={Input}
+                          type="text"
+                          id={`nameOfFrameURL`}
+                          name={`nameOfFrameURL`}
+                          className="w-full"
+                          placeholder="Name of Frame URL"
+                        />
+                      </div>
+
+                      <div className="grid w-full max-w-full items-center gap-1.5">
+                        <Label htmlFor={`playbackId`} className="ml-1 mb-2">
+                          Livepeer Playback ID
+                        </Label>
+                        <Field
+                          as={Input}
+                          type="text"
+                          id={`playbackId`}
+                          name={`playbackId`}
+                          className="w-full"
+                          placeholder="Livepeer Playback ID"
+                        />
+                      </div>
+
                       <Select
                         className="w-full"
                         onValueChange={(val) => {
