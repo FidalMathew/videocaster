@@ -1,10 +1,10 @@
 "use client";
-import {useRouter} from "next/navigation";
-import {useEffect, useState} from "react";
-import {usePrivy, useExperimentalFarcasterSigner} from "@privy-io/react-auth";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { usePrivy, useExperimentalFarcasterSigner } from "@privy-io/react-auth";
 import Head from "next/head";
 import Navbar from "@/components/ui/Navbar";
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -12,11 +12,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
-import {Toggle} from "@/components/ui/toggle";
-import {Checkbox} from "@/components/ui/checkbox";
-import {Formik, Field, Form} from "formik";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Toggle } from "@/components/ui/toggle";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Formik, Field, Form } from "formik";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -75,7 +75,7 @@ export default function DashboardPage() {
 
   //   console.log(farcasterSubject, user, "farcaster");
 
-  const {requestFarcasterSigner, submitCast} = useExperimentalFarcasterSigner();
+  const { requestFarcasterSigner, submitCast } = useExperimentalFarcasterSigner();
 
   //   const farcasterAccount = user.linkedAccounts.find(
   //     (account) => account.type === "farcaster"

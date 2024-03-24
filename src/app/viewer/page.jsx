@@ -1,6 +1,31 @@
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+"use client"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { fetchCasts } from "@/utils/fetchfeed";
+import axios from 'axios';
+import { useEffect } from 'react';
 
 export default function Viewer() {
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('/api/casts', {
+          params: {
+            fid: '394606'
+          }
+        });
+
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+
+
+  }, []);
+
   return (
     <div className="min-h-screen w-full bg-red-400 justify-center flex p-4">
       <div className="flex flex-col gap-4">
