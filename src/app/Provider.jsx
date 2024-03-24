@@ -17,9 +17,9 @@ export default function Providers({children, ...props}) {
           accentColor: "#676FFF",
         },
         // Create embedded wallets for users who don't have a wallet
-        // embeddedWallets: {
-        //   createOnLogin: "users-without-wallets",
-        // },
+        embeddedWallets: {
+          createOnLogin: "users-without-wallets",
+        },
       }}
     >
       <NextThemesProvider {...props}>{children}</NextThemesProvider>

@@ -1,10 +1,22 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { usePrivy, useExperimentalFarcasterSigner } from "@privy-io/react-auth";
+import {useRouter} from "next/navigation";
+import {useEffect, useState} from "react";
+import {usePrivy, useExperimentalFarcasterSigner} from "@privy-io/react-auth";
 import Head from "next/head";
 import Navbar from "@/components/ui/Navbar";
-import { Button } from "@/components/ui/button";
+import {Button} from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {Label} from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
+import {Toggle} from "@/components/ui/toggle";
+import {Checkbox} from "@/components/ui/checkbox";
+import {Formik, Field, Form} from "formik";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -36,9 +48,21 @@ export default function DashboardPage() {
         )
       );
     }
+    const castBody = {
+      text: "fidal",
+      embeds: [
+        {
+          url: "https://fc-polls.vercel.app/polls/054aee65-c63d-46c1-a1f9-a05b747860f6",
+        },
+      ],
+      embedsDeprecated: [],
+      mentions: [],
+      mentionsPositions: [],
+      // parentUrl: parentUrl,
+    };
     // if (farcasterAccount && farcasterAccount.signerPublicKey)
     //   (async function () {
-    //     const {hash} = await submitCast({text: "Hello world!"});
+    //     const {hash} = await submitCast(castBody);
     //     console.log(hash, "hash");
     //   })();
   }, [ready, authenticated, router, user]);
@@ -51,7 +75,7 @@ export default function DashboardPage() {
 
   //   console.log(farcasterSubject, user, "farcaster");
 
-  const { requestFarcasterSigner, submitCast } = useExperimentalFarcasterSigner();
+  const {requestFarcasterSigner, submitCast} = useExperimentalFarcasterSigner();
 
   //   const farcasterAccount = user.linkedAccounts.find(
   //     (account) => account.type === "farcaster"
@@ -59,17 +83,21 @@ export default function DashboardPage() {
   console.log(farcasterAccount, "acc");
   const isAuthenticated = ready && authenticated;
 
-  return (
-    <>
-      <Head>
-        <title>Privy Auth Demo</title>
-      </Head>
+  // ui states
+  const [numberOfbuttons, setNumberOfbuttons] = useState(0);
+  console.log(numberOfbuttons, "num");
 
-      <main className="flex flex-col min-h-screen">
+  return (
+    <div>
+      {/* <Head>
+        <title>Privy Auth Demo</title>
+      </Head> */}
+
+      <main className="h-screen w-full">
         {ready && authenticated ? (
-          <>
+          <div className="h-full w-full">
             {/* top bar */}
-            <div className="flex flex-row justify-between">
+            {/* <div className="flex flex-row justify-between">
               <h1 className="text-2xl font-semibold">Privy Auth Demo</h1>
               <button
                 onClick={logout}
@@ -92,9 +120,9 @@ export default function DashboardPage() {
               >
                 Authorize my Farcaster signer
               </Button>
-            </div>
+            </div> */}
             {/* body */}
-            <div className="mt-12 flex gap-4 flex-wrap">
+            {/* <div className="mt-12 flex gap-4 flex-wrap">
               {farcasterSubject ? (
                 <button
                   onClick={() => {
@@ -115,7 +143,7 @@ export default function DashboardPage() {
                   Link Farcaster
                 </button>
               )}
-            </div>
+            </div> */}
 
             {/* <p className="mt-6 font-bold uppercase text-sm text-gray-600">
               User object
@@ -144,9 +172,73 @@ export default function DashboardPage() {
                 isAuthenticated,
               }}
             />
-          </>
+
+            <div className="w-full min-h-[90%] lg:h-[90%] flex flex-col lg:flex-row justify-center">
+              <div className="h-full w-full lg:w-1/2 bg-white rounded-lg p-5">
+                <Formik
+                  initialValues={{
+                    video: "",
+                    picture: "",
+                    noOfButtons: 0,
+                    needInputButton: false,
+                  }}
+                  onSubmit={(value, _) => console.log(value)}
+                >
+                  {(formik) => (
+                    <Form className="flex flex-col gap-10">
+                      <div className="border-2 border-dotted flex justify-center items-center h-[200px] w-full rounded-lg border-slate-400">
+                        Drag and drop your video here
+                      </div>
+                      <Select
+                        className="w-full"
+                        onValueChange={(val) => {
+                          setNumberOfbuttons(val);
+                        }}
+                      >
+                        <SelectTrigger className="w-full focus-visible:ring-0">
+                          <SelectValue placeholder="Select number of buttons" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1">1</SelectItem>
+                          <SelectItem value="2">2</SelectItem>
+                          <SelectItem value="3">3</SelectItem>
+                          <SelectItem value="4">4</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <div className="grid w-full max-w-full items-center gap-1.5">
+                        <Label htmlFor="picture" className="ml-2 mb-2">
+                          Choose Fallback Image
+                        </Label>
+                        <Input id="picture" type="file" />
+                      </div>
+                      <div className="flex items-center space-x-2 pl-2">
+                        <Checkbox id="terms" />
+                        <label
+                          htmlFor="terms"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          Need Input Button
+                        </label>
+                      </div>
+                      <Button className="w-full" type="submit">
+                        Publish
+                      </Button>
+                    </Form>
+                  )}
+                </Formik>
+              </div>
+
+              <div className="h-[600px] lg:h-full w-full lg:w-1/2 bg-white p-4 flex flex-col gap-3">
+                <div className="border-2 border-slate-300 h-full w-full rounded-lg p-5">
+                  <div className="w-full h-[300px] bg-slate-400 rounded-lg flex justify-center items-center">
+                    Your Video here
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         ) : null}
       </main>
-    </>
+    </div>
   );
 }
