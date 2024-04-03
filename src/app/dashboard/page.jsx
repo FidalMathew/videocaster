@@ -257,8 +257,8 @@ export default function DashboardPage() {
 
             {/* <Button onClick={createAsset}>Create</Button> */}
 
-            <div className="w-full min-h-[90%] lg:h-[90%] flex flex-col lg:flex-row justify-center gap-4 px-5 mb-5">
-              <fieldset className="h-fit mb-6 w-full lg:w-1/2 bg-white rounded-lg p-5 border border-slate-300">
+            <div className="w-full min-h-[90%] flex flex-col lg:flex-row justify-center gap-4 px-6 pb-6">
+              <fieldset className="h-full w-full lg:w-1/2 bg-white rounded-lg p-5 border-2">
                 <legend className="-ml-1 px-1 text-sm font-medium">
                   Settings
                 </legend>
@@ -460,14 +460,17 @@ export default function DashboardPage() {
                 </Formik>
               </fieldset>
 
-              <div className="h-full lg:h-full w-full lg:w-1/2 flex flex-col gap-3 items-center mt-2 rounded-lg border p-3">
+              <fieldset className="min-h-full w-full lg:w-1/2 flex flex-col gap-3 items-center rounded-lg border-2 p-3">
+                <legend className="-ml-1 px-1 text-sm font-medium">
+                  Output
+                </legend>
                 <div className="flex justify-end w-full">
                   <Badge variant="" className="">
                     Output
                   </Badge>
                 </div>
 
-                <div className="h-full w-full rounded-lg p-5 flex flex-col gap-6">
+                <div className="h-fit w-full rounded-lg p-5 flex flex-col gap-6 border">
                   <div className="w-full h-[300px] rounded-lg flex justify-center items-center">
                     {/* Your Video here */}
                     {!formikState.playbackId ? (
@@ -508,7 +511,7 @@ export default function DashboardPage() {
                     </div>
                   )}
                 </div>
-              </div>
+              </fieldset>
             </div>
           </div>
         ) : null}
