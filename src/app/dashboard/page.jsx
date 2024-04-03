@@ -373,7 +373,7 @@ export default function DashboardPage() {
                 </legend>
                 <div className="flex justify-end w-full">
                   <Badge variant="" className="">
-                    Output
+                    Video Frames
                   </Badge>
                 </div>
 

@@ -18,6 +18,8 @@ import {Textarea} from "@/components/ui/textarea";
 import {Formik, Form, Field} from "formik";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
+import {Video} from "lucide-react";
+
 export default function Viewer() {
   const [casts, setCasts] = useState([]);
   const {submitCast} = useExperimentalFarcasterSigner();
@@ -75,7 +77,7 @@ export default function Viewer() {
       <div className="min-h-screen w-full px-4">
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           {/* <DialogTrigger>Open</DialogTrigger> */}
-          <DialogContent>
+          <DialogContent className="fixed left-1/2 z-50 grid w-full -translate-x-1/2 gap-4 rounded-b-lg border bg-background p-6 shadow-lg top-1/2 max-w-lg -translate-y-1/2 rounded-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in data-[state=closed]:slide-out-to-left-1/2 data-[state=open]:slide-in-from-left-1/2 data-[state=closed]:duration-400 data-[state=open]:duration-400 data-[state=closed]:slide-out-to-top-1/2 data-[state=open]:slide-in-from-top-1/2">
             <DialogHeader>
               <DialogTitle>Send Casts</DialogTitle>
               <DialogDescription className="h-fit">
@@ -118,9 +120,11 @@ export default function Viewer() {
 
         <div className="justify-center flex p-4 flex-col items-center">
           <div className="h-[100px] w-full flex justify-between">
-            <h1 className="text-2xl font-bold">Video caster</h1>
-            <Button onClick={() => setDialogOpen((prev) => !prev)}>
-              Create Cast
+            <div className="text-2xl font-bold font-LeagueSpartan">
+              <p>VideoCaster.</p>
+            </div>
+            <Button size="sm" onClick={() => setDialogOpen((prev) => !prev)}>
+              <Video className="mr-2 h-4 w-4" /> Create Cast
             </Button>
           </div>
           <div className="w-1/2">
