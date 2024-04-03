@@ -21,6 +21,7 @@ export default function Providers({children, ...props}) {
           createOnLogin: "users-without-wallets",
         },
       }}
+      showWalletLoginFirst={true}
     >
       <NextThemesProvider {...props}>{children}</NextThemesProvider>
     </PrivyProvider>

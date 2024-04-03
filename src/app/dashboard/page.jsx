@@ -17,30 +17,6 @@ import {Input} from "@/components/ui/input";
 import {Checkbox} from "@/components/ui/checkbox";
 import {Formik, Field, Form, FieldArray, useFormikContext} from "formik";
 import Dropzone from "react-dropzone";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  TooltipProvider,
-} from "@/components/ui/tooltip";
-import {
-  Bird,
-  Book,
-  Bot,
-  Code2,
-  CornerDownLeft,
-  LifeBuoy,
-  Mic,
-  Paperclip,
-  Rabbit,
-  Settings,
-  Settings2,
-  Share,
-  SquareTerminal,
-  SquareUser,
-  Triangle,
-  Turtle,
-} from "lucide-react";
 import {Livepeer} from "livepeer";
 import axios from "axios";
 import {Badge} from "@/components/ui/badge";
@@ -126,15 +102,17 @@ export default function DashboardPage() {
   // };
 
   const [formikState, setFormikState] = useState({});
-  const ExternalStateSyncComponent = () => {
-    const formik = useFormikContext(); // Access Formik context
+  const [formikSetterFunc, setFormikSetterFunc] = useState(null);
 
+  const ExternalStateSyncComponent = () => {
+    const formik = useFormikContext();
+    // const specificFormikFunction = formik.setFieldValue;
     // Effect to sync external state with Formik state
     useEffect(() => {
-      // Update external state whenever Formik state changes
-      // For example, you can update Redux state, or any other external state management system
-      // console.log("Formik values updated:", formik.values);
       setFormikState(formik.values);
+      // setFormikSetterFunc((fieldName, value, shouldValidate) =>
+      //   specificFormikFunction(fieldName, value, shouldValidate)
+      // );
     }, [formik.values]);
 
     return null; // This component doesn't render anything visible
@@ -149,6 +127,14 @@ export default function DashboardPage() {
     if (formikRef.current) {
       formikRef.current.handleSubmit();
     }
+  };
+
+  const handleInputFieldChange = (e) => {
+    const {value} = e.target;
+    setFormikState((prevState) => ({
+      ...prevState,
+      inputFieldUrl: value, // Update inputFieldUrl state with the new value
+    }));
   };
 
   const publishFrame = async (values) => {
@@ -170,72 +156,9 @@ export default function DashboardPage() {
 
   return (
     <div>
-      {/* <Head>
-        <title>Privy Auth Demo</title>
-      </Head> */}
-
       <main className="h-screen w-full">
         {ready && authenticated ? (
           <div className="h-full w-full">
-            {/* top bar */}
-            {/* <div className="flex flex-row justify-between">
-              <h1 className="text-2xl font-semibold">Privy Auth Demo</h1>
-              <button
-                onClick={logout}
-                className="text-sm bg-violet-200 hover:text-violet-900 py-2 px-4 rounded-md text-violet-700"
-              >
-                Logout
-              </button>
-
-              <Button
-                onClick={exportWallet}
-                disabled={!isAuthenticated || !hasEmbeddedWallet}
-              >
-                Export my wallet
-              </Button>
-              <Button
-                // onClick={() => requestFarcasterSigner()}
-                // Prevent requesting a Farcaster signer if a user has not already linked a Farcaster account
-                // or if they have already requested a signer
-                disabled={!farcasterAccount || farcasterAccount.signerPublicKey}
-              >
-                Authorize my Farcaster signer
-              </Button>
-            </div> */}
-            {/* body */}
-            {/* <div className="mt-12 flex gap-4 flex-wrap">
-              {farcasterSubject ? (
-                <button
-                  onClick={() => {
-                    unlinkFarcaster(farcasterSubject);
-                  }}
-                  className="text-sm border border-violet-600 hover:border-violet-700 py-2 px-4 rounded-md text-violet-600 hover:text-violet-700 disabled:border-gray-500 disabled:text-gray-500 hover:disabled:text-gray-500"
-                  disabled={!canRemoveAccount}
-                >
-                  Unlink Farcaster
-                </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    linkFarcaster();
-                  }}
-                  className="text-sm bg-violet-600 hover:bg-violet-700 py-2 px-4 rounded-md text-white"
-                >
-                  Link Farcaster
-                </button>
-              )}
-            </div> */}
-
-            {/* <p className="mt-6 font-bold uppercase text-sm text-gray-600">
-              User object
-            </p>
-            <textarea
-              value={JSON.stringify(user, null, 2)}
-              className="max-w-4xl bg-slate-700 text-slate-50 font-mono p-4 text-xs sm:text-sm rounded-md mt-2"
-              rows={20}
-              disabled
-            /> */}
-
             <Navbar
               handleExternalSubmit={handleExternalSubmit}
               authObj={{
@@ -257,7 +180,7 @@ export default function DashboardPage() {
 
             {/* <Button onClick={createAsset}>Create</Button> */}
 
-            <div className="w-full min-h-[90%] flex flex-col lg:flex-row justify-center gap-4 px-6 pb-6">
+            <div className="w-full min-h-[90%] lg:min-h-fit flex flex-col lg:flex-row justify-center gap-4 px-6 pb-6">
               <fieldset className="h-full w-full lg:w-1/2 bg-white rounded-lg p-5 border-2">
                 <legend className="-ml-1 px-1 text-sm font-medium">
                   Settings
@@ -269,13 +192,12 @@ export default function DashboardPage() {
                     nameOfFrameURL: "",
                     fallbackimage: "",
                     noOfButtons: 0,
-                    needInputButton: false,
                     playbackId: "",
                     buttonProperties: [],
                     // onchange,
                   }}
                   onSubmit={(value, _) => {
-                    publishFrame(value);
+                    // publishFrame(value);
                     console.log(value);
                   }}
                 >
@@ -437,21 +359,6 @@ export default function DashboardPage() {
                           placeholder="Image"
                         />
                       </div>
-                      <div className="flex items-center space-x-2 pl-2">
-                        <Checkbox
-                          id="needInputButton"
-                          onCheckedChange={(val) => {
-                            formik.setFieldValue("needInputButton", val);
-                            // setNeedInput(val);
-                          }}
-                        />
-                        <Label
-                          htmlFor="needInputButton"
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          Need Input Field
-                        </Label>
-                      </div>
                       {/* <Button className="w-full" type="submit">
                         Publish
                       </Button> */}
@@ -460,7 +367,7 @@ export default function DashboardPage() {
                 </Formik>
               </fieldset>
 
-              <fieldset className="min-h-full w-full lg:w-1/2 flex flex-col gap-3 items-center rounded-lg border-2 p-3">
+              <fieldset className="min-h-[480px] w-full lg:w-1/2 flex flex-col gap-3 items-center rounded-lg border-2 p-3">
                 <legend className="-ml-1 px-1 text-sm font-medium">
                   Output
                 </legend>
@@ -485,9 +392,6 @@ export default function DashboardPage() {
                       ></iframe>
                     )}
                   </div>
-                  {formikState.needInputButton && (
-                    <Input type="text" placeholder="Video URL" />
-                  )}
 
                   {formikState.noOfButtons > 0 && (
                     <div className="grid grid-cols-2 gap-4">
