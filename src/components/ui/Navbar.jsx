@@ -15,7 +15,7 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 export default function Navbar({authObj, handleExternalSubmit}) {
   return (
     <div className="flex w-full p-5 justify-between h-[10%]">
-      <div className="text-4xl font-bold font-LeagueSpartan">
+      <div className="text-2xl font-bold font-LeagueSpartan">
         <p>VideoCaster.</p>
       </div>
 

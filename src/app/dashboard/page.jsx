@@ -17,9 +17,33 @@ import {Input} from "@/components/ui/input";
 import {Checkbox} from "@/components/ui/checkbox";
 import {Formik, Field, Form, FieldArray, useFormikContext} from "formik";
 import Dropzone from "react-dropzone";
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
+import {
+  Bird,
+  Book,
+  Bot,
+  Code2,
+  CornerDownLeft,
+  LifeBuoy,
+  Mic,
+  Paperclip,
+  Rabbit,
+  Settings,
+  Settings2,
+  Share,
+  SquareTerminal,
+  SquareUser,
+  Triangle,
+  Turtle,
+} from "lucide-react";
 import {Livepeer} from "livepeer";
 import axios from "axios";
+import {Badge} from "@/components/ui/badge";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -233,8 +257,141 @@ export default function DashboardPage() {
 
             {/* <Button onClick={createAsset}>Create</Button> */}
 
-            <div className="w-full min-h-[90%] lg:h-[90%] flex flex-col lg:flex-row justify-center">
-              <div className="h-fit mb-6 w-full lg:w-1/2 bg-white rounded-lg p-5">
+            <div className="w-full min-h-[90%] lg:h-[90%] flex flex-col lg:flex-row justify-center gap-4">
+              <aside className="z-20 flex h-full flex-col border">
+                <div className="border-b p-2">
+                  <Button variant="outline" size="icon" aria-label="Home">
+                    <Triangle className="size-5 fill-foreground" />
+                  </Button>
+                </div>
+                <nav className="grid gap-1 p-2">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="rounded-lg bg-muted"
+                          aria-label="Playground"
+                        >
+                          <SquareTerminal className="size-5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" sideOffset={5}>
+                        Playground
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="rounded-lg"
+                          aria-label="Models"
+                        >
+                          <Bot className="size-5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" sideOffset={5}>
+                        Models
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="rounded-lg"
+                          aria-label="API"
+                        >
+                          <Code2 className="size-5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" sideOffset={5}>
+                        API
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="rounded-lg"
+                          aria-label="Documentation"
+                        >
+                          <Book className="size-5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" sideOffset={5}>
+                        Documentation
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="rounded-lg"
+                          aria-label="Settings"
+                        >
+                          <Settings2 className="size-5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" sideOffset={5}>
+                        Settings
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </nav>
+                <nav className="mt-auto grid gap-1 p-2">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="mt-auto rounded-lg"
+                          aria-label="Help"
+                        >
+                          <LifeBuoy className="size-5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" sideOffset={5}>
+                        Help
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="mt-auto rounded-lg"
+                          aria-label="Account"
+                        >
+                          <SquareUser className="size-5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" sideOffset={5}>
+                        Account
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </nav>
+              </aside>
+              <fieldset className="h-fit mb-6 w-full lg:w-1/2 bg-white rounded-lg p-5 border border-slate-300">
+                <legend className="-ml-1 px-1 text-sm font-medium">
+                  Settings
+                </legend>
                 <Formik
                   innerRef={formikRef}
                   initialValues={{
@@ -324,70 +481,73 @@ export default function DashboardPage() {
                           <SelectValue placeholder="Select number of buttons" />
                         </SelectTrigger>
                         <SelectContent>
+                          <SelectItem value="0">0</SelectItem>
                           <SelectItem value="1">1</SelectItem>
                           <SelectItem value="2">2</SelectItem>
                           <SelectItem value="3">3</SelectItem>
                           <SelectItem value="4">4</SelectItem>
                         </SelectContent>
                       </Select>
-                      <div className="flex flex-col gap-5">
-                        {Array.from(
-                          {length: formik.values.noOfButtons},
-                          (_, index) => (
-                            <div key={index} className="flex flex-col gap-1">
-                              <Label
-                                htmlFor={`buttonContent-${index}`}
-                                className="ml-1 mb-1"
-                              >
-                                Button Content {index + 1}
-                              </Label>
-                              <div className="flex gap-3">
-                                {/* for each button render select */}
-                                <Select
-                                  onValueChange={(val) => {
-                                    formik.setFieldValue(
-                                      `buttonProperties[${index}].action`,
-                                      val
-                                    );
-                                  }}
+                      {formikState.noOfButtons > 0 && (
+                        <div className="flex flex-col gap-5">
+                          {Array.from(
+                            {length: formik.values.noOfButtons},
+                            (_, index) => (
+                              <div key={index} className="flex flex-col gap-1">
+                                <Label
+                                  htmlFor={`buttonContent-${index}`}
+                                  className="ml-1 mb-1"
                                 >
-                                  <SelectTrigger className="w-[180px] focus-visible:ring-0">
-                                    <SelectValue placeholder="Select Action" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="post">Post</SelectItem>
-                                    <SelectItem value="link">Link</SelectItem>
-                                    <SelectItem value="mint">Mint</SelectItem>
-                                    <SelectItem value="tx">Tx</SelectItem>
-                                    <SelectItem value="post_redirect">
-                                      Post Redirect
-                                    </SelectItem>
-                                  </SelectContent>
-                                </Select>
+                                  Button Content {index + 1}
+                                </Label>
+                                <div className="flex gap-3">
+                                  {/* for each button render select */}
+                                  <Select
+                                    onValueChange={(val) => {
+                                      formik.setFieldValue(
+                                        `buttonProperties[${index}].action`,
+                                        val
+                                      );
+                                    }}
+                                  >
+                                    <SelectTrigger className="w-[180px] focus-visible:ring-0">
+                                      <SelectValue placeholder="Select Action" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="post">Post</SelectItem>
+                                      <SelectItem value="link">Link</SelectItem>
+                                      <SelectItem value="mint">Mint</SelectItem>
+                                      <SelectItem value="tx">Tx</SelectItem>
+                                      <SelectItem value="post_redirect">
+                                        Post Redirect
+                                      </SelectItem>
+                                    </SelectContent>
+                                  </Select>
 
-                                <Field
-                                  as={Input}
-                                  type="text"
-                                  id={`buttonProperties[${index}].buttonContent`}
-                                  name={`buttonProperties[${index}].buttonContent`}
-                                  className="w-full"
-                                  placeholder="Button Title"
-                                />
+                                  <Field
+                                    as={Input}
+                                    type="text"
+                                    id={`buttonProperties[${index}].buttonContent`}
+                                    name={`buttonProperties[${index}].buttonContent`}
+                                    className="w-full"
+                                    placeholder="Button Title"
+                                  />
 
-                                <Field
-                                  as={Input}
-                                  type="text"
-                                  id={`buttonProperties[${index}].target`}
-                                  name={`buttonProperties[${index}].target`}
-                                  className="w-full"
-                                  placeholder="Target URL"
-                                />
+                                  <Field
+                                    as={Input}
+                                    type="text"
+                                    id={`buttonProperties[${index}].target`}
+                                    name={`buttonProperties[${index}].target`}
+                                    className="w-full"
+                                    placeholder="Target URL"
+                                  />
+                                </div>
+                                {/* You can add more input fields for other button properties */}
                               </div>
-                              {/* You can add more input fields for other button properties */}
-                            </div>
-                          )
-                        )}
-                      </div>
+                            )
+                          )}
+                        </div>
+                      )}
                       <div className="grid w-full max-w-full items-center gap-1.5">
                         <Label htmlFor="picture" className="ml-2 mb-2">
                           Fallback Image Link
@@ -428,14 +588,20 @@ export default function DashboardPage() {
                     </Form>
                   )}
                 </Formik>
-              </div>
+              </fieldset>
 
-              <div className="h-[600px] lg:h-full w-full lg:w-1/2 bg-white p-4 flex flex-col gap-3">
-                <div className="border-2 border-slate-300 h-full w-full rounded-lg p-5 flex flex-col gap-6">
+              <div className="h-full lg:h-full w-full lg:w-1/2 flex flex-col gap-3 items-center mt-2 rounded-lg border p-3">
+                <div className="flex justify-end w-full">
+                  <Badge variant="" className="">
+                    Output
+                  </Badge>
+                </div>
+
+                <div className="h-full w-full rounded-lg p-5 flex flex-col gap-6">
                   <div className="w-full h-[300px] rounded-lg flex justify-center items-center">
                     {/* Your Video here */}
                     {!formikState.playbackId ? (
-                      <div className="w-full h-[300px] bg-slate-400 rounded-lg flex justify-center items-center">
+                      <div className="w-full h-[300px] bg-slate-100 rounded-lg flex justify-center items-center">
                         Your Video here
                       </div>
                     ) : (
@@ -457,7 +623,7 @@ export default function DashboardPage() {
                         (_, index) => (
                           <Button
                             key={index}
-                            variant="secondary"
+                            variant="outline"
                             className="col-span-1"
                             // variant="outline"
                           >

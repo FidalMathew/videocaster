@@ -60,7 +60,7 @@ export default function Home() {
   useEffect(() => setMounted(true), []);
   if (!mounted) return null;
   return (
-    <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
+    <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-screen h-screen">
       <div className="hidden bg-muted lg:block">
         {/* <Image
           src="/placeholder.svg"
@@ -79,7 +79,7 @@ export default function Home() {
               <img src="/livepeer.png" alt="livepeer" className="h-16 w-16" />
             </div>
 
-            <div className="bottom-0 right-1/2 flex gap-3 absolute m-6 items-center text-sm font-semibold">
+            <div className="bottom-7 left-1/4 flex gap-3 absolute items-center text-sm font-semibold">
               <img
                 src="https://assets-global.website-files.com/6364e65656ab107e465325d2/637aede94d31498505bc9412_DpYIEpePqjDcHIbux04cOKhrRwBhi7F0-dBF_JCdCYY.png"
                 alt="farcaster"
@@ -90,7 +90,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-center py-12">
+      <div className="flex items-center justify-center h-full">
         <div className="mx-auto grid w-[450px] gap-6">
           <div className="grid gap-2 text-center">
             <h1 className="text-3xl font-bold">Get Started.</h1>
