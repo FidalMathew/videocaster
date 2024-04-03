@@ -1,6 +1,6 @@
 "use client";
 import React, {useEffect, useState} from "react";
-import {scrapeMetaData} from "@/utils/scrape";
+import {scrapeMetaData} from "../../../scrape";
 import axios from "axios";
 import {Button} from "./button";
 import {SquareArrowOutUpRight} from "lucide-react";

@@ -7,7 +7,7 @@ settings:
 dependencies:
   '@farcaster/core':
     specifier: ^0.14.7
-    version: 0.14.8
+    version: 0.14.8(typescript@5.4.3)
   '@noble/ed25519':
     specifier: ^2.0.0
     version: 2.0.0
@@ -16,7 +16,7 @@ dependencies:
     version: 2.1.0
   '@privy-io/react-auth':
     specifier: 1.59.6-beta-20240322214908
-    version: 1.59.6-beta-20240322214908(@babel/core@7.24.3)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
+    version: 1.59.6-beta-20240322214908(@babel/core@7.24.3)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)(typescript@5.4.3)
   '@radix-ui/react-avatar':
     specifier: ^1.0.4
     version: 1.0.4(react-dom@18.2.0)(react@18.2.0)
@@ -58,7 +58,7 @@ dependencies:
     version: 2.4.5(react@18.2.0)
   frames.js:
     specifier: ^0.9.0
-    version: 0.9.5(@xmtp/frames-validator@0.5.2)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)
+    version: 0.9.5(@xmtp/frames-validator@0.5.2)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)(typescript@5.4.3)
   livepeer:
     specifier: ^3.0.2
     version: 3.0.2
@@ -73,7 +73,7 @@ dependencies:
     version: 0.3.0(react-dom@18.2.0)(react@18.2.0)
   pinata-fdk:
     specifier: ^3.6.1
-    version: 3.6.1
+    version: 3.6.1(typescript@5.4.3)
   react:
     specifier: ^18
     version: 18.2.0
@@ -91,7 +91,7 @@ dependencies:
     version: 1.0.7(tailwindcss@3.4.1)
   viem:
     specifier: ^2.8.18
-    version: 2.8.18
+    version: 2.8.18(typescript@5.4.3)
   yup:
     specifier: ^1.4.0
     version: 1.4.0
@@ -106,6 +106,9 @@ devDependencies:
   tailwindcss:
     specifier: ^3.3.0
     version: 3.4.1
+  typescript:
+    specifier: 5.4.3
+    version: 5.4.3
 
 packages:
 
@@ -644,14 +647,14 @@ packages:
       '@ethersproject/strings': 5.7.0
     dev: false
 
-  /@farcaster/core@0.14.8:
+  /@farcaster/core@0.14.8(typescript@5.4.3):
     resolution: {integrity: sha512-vMN0InOXgzwzgsurcp1rlJaALfZJ6v82QEZS9Do5XZYnB636wfBugHiQD7u+Zdw5EMkEWlVBdNJ9yjAixP2kmA==}
     dependencies:
       '@noble/curves': 1.4.0
       '@noble/hashes': 1.4.0
       bs58: 5.0.0
       neverthrow: 6.1.0
-      viem: 1.21.4
+      viem: 1.21.4(typescript@5.4.3)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -1238,7 +1241,7 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@privy-io/react-auth@1.59.6-beta-20240322214908(@babel/core@7.24.3)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0):
+  /@privy-io/react-auth@1.59.6-beta-20240322214908(@babel/core@7.24.3)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)(typescript@5.4.3):
     resolution: {integrity: sha512-GipzmT+77Sq9tXOwb7zUs2vui8FekjTLusuQV+FgBDeyz94rEGkNUe1Z8cmjHkwh1nPC3zhNckmV5+IUUXp22g==}
     peerDependencies:
       react: ^18
@@ -1271,7 +1274,7 @@ packages:
       libphonenumber-js: 1.10.58
       lokijs: 1.5.12
       md5: 2.3.0
-      mipd: 0.0.5
+      mipd: 0.0.5(typescript@5.4.3)
       ofetch: 1.3.4
       pino-pretty: 10.3.1
       qrcode: 1.5.3
@@ -2608,14 +2611,14 @@ packages:
       tslib: 1.14.1
     dev: false
 
-  /@xmtp/frames-validator@0.5.2:
+  /@xmtp/frames-validator@0.5.2(typescript@5.4.3):
     resolution: {integrity: sha512-m62HoAs47Dz3MHpW1Ec9fdmnvK9GJYyPJl6mWifKblWmoA4s67zAuTF3V8qXv8hEUag6t1XBRF6BpfeKDva4HQ==}
     engines: {node: '>=18'}
     dependencies:
       '@noble/curves': 1.4.0
       '@noble/hashes': 1.4.0
       '@xmtp/proto': 3.45.0
-      viem: 2.8.18
+      viem: 2.8.18(typescript@5.4.3)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -2636,7 +2639,7 @@ packages:
     resolution: {integrity: sha512-N8tkAACJx2ww8vFMneJmaAgmjAG1tnVBZJRLRcx061tmsLRZHSEZSLuGWnwPtunsSLvSqXQ2wfp7Mgqg1I+2dQ==}
     dev: false
 
-  /abitype@0.9.8:
+  /abitype@0.9.8(typescript@5.4.3):
     resolution: {integrity: sha512-puLifILdm+8sjyss4S+fsUN09obiT1g2YW6CtcQF+QDzxR0euzgEB29MZujC6zMk2a6SVmtttq1fc6+YFA7WYQ==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -2646,9 +2649,11 @@ packages:
         optional: true
       zod:
         optional: true
+    dependencies:
+      typescript: 5.4.3
     dev: false
 
-  /abitype@1.0.0:
+  /abitype@1.0.0(typescript@5.4.3):
     resolution: {integrity: sha512-NMeMah//6bJ56H5XRj8QCV4AwuW6hB6zqz2LnhhLdcWVQOsXki6/Pn3APeqxCma62nXIcmZWdu1DlHWS74umVQ==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -2658,6 +2663,8 @@ packages:
         optional: true
       zod:
         optional: true
+    dependencies:
+      typescript: 5.4.3
     dev: false
 
   /abort-controller@3.0.0:
@@ -3806,7 +3813,7 @@ packages:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
     dev: true
 
-  /frames.js@0.9.5(@xmtp/frames-validator@0.5.2)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0):
+  /frames.js@0.9.5(@xmtp/frames-validator@0.5.2)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)(typescript@5.4.3):
     resolution: {integrity: sha512-PsSyxXjujb9DxCo53WmCz1yUiMJQY8PB4hIRmfFnPAS4wF8APi5p6FOLjdMwlWMTeZQboWuCDl3M2aIA/NtvHw==}
     peerDependencies:
       '@xmtp/frames-validator': ^0.5.2
@@ -3814,15 +3821,15 @@ packages:
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
-      '@farcaster/core': 0.14.8
+      '@farcaster/core': 0.14.8(typescript@5.4.3)
       '@vercel/og': 0.6.2
-      '@xmtp/frames-validator': 0.5.2
+      '@xmtp/frames-validator': 0.5.2(typescript@5.4.3)
       cheerio: 1.0.0-rc.12
       next: 14.1.0(@babel/core@7.24.3)(react-dom@18.2.0)(react@18.2.0)
       protobufjs: 7.2.6
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      viem: 2.8.18
+      viem: 2.8.18(typescript@5.4.3)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -4547,7 +4554,7 @@ packages:
     resolution: {integrity: sha512-jYofLM5Dam9279rdkWzqHozUo4ybjdZmCsDHePy5V/PbBcVMiSZR97gmAy45aqi8CK1lG2ECd356FU86avfwUQ==}
     engines: {node: '>=16 || 14 >=14.17'}
 
-  /mipd@0.0.5:
+  /mipd@0.0.5(typescript@5.4.3):
     resolution: {integrity: sha512-gbKA784D2WKb5H/GtqEv+Ofd1S9Zj+Z/PGDIl1u1QAbswkxD28BQ5bSXQxkeBzPBABg1iDSbiwGG1XqlOxRspA==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -4555,7 +4562,8 @@ packages:
       typescript:
         optional: true
     dependencies:
-      viem: 1.21.4
+      typescript: 5.4.3
+      viem: 1.21.4(typescript@5.4.3)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -4990,11 +4998,11 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /pinata-fdk@3.6.1:
+  /pinata-fdk@3.6.1(typescript@5.4.3):
     resolution: {integrity: sha512-pyrorpZfaZnVw1uK5D8bnoEQeEhiJJuy7r9xErdOZNxgVUg1tZaT1VOYn8jfieqANS51ThOQns6Bc7pNbz4H7w==}
     hasBin: true
     dependencies:
-      '@farcaster/core': 0.14.8
+      '@farcaster/core': 0.14.8(typescript@5.4.3)
       app-root-path: 3.1.0
       auto-changelog: 2.4.0
       axios: 1.6.8
@@ -5966,6 +5974,11 @@ packages:
       is-typedarray: 1.0.0
     dev: false
 
+  /typescript@5.4.3:
+    resolution: {integrity: sha512-KrPd3PKaCLr78MalgiwJnA25Nm8HAmdwN3mYUYZgG/wizIo9EainNVQI9/yDavtVFRN2h3k8uf3GLHuhDMgEHg==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
   /ua-parser-js@1.0.37:
     resolution: {integrity: sha512-bhTyI94tZofjo+Dn8SN6Zv8nBDvyXTymAdM3LDI/0IboIUwTu1rEhW7v2TfiVsoYWgkQ4kOVqnI8APUFbIQIFQ==}
     dev: false
@@ -6204,7 +6217,7 @@ packages:
     resolution: {integrity: sha512-lKxKYG6H03yCZUpAGOPOsMcGxd1RHCu1iKvEHYDPmTyq2HueGhD73ssNBqqQWfvYs04G9iUFRvmAVLW20Jw6ow==}
     dev: false
 
-  /viem@1.21.4:
+  /viem@1.21.4(typescript@5.4.3):
     resolution: {integrity: sha512-BNVYdSaUjeS2zKQgPs+49e5JKocfo60Ib2yiXOWBT6LuVxY1I/6fFX3waEtpXvL1Xn4qu+BVitVtMh9lyThyhQ==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -6217,8 +6230,9 @@ packages:
       '@noble/hashes': 1.3.2
       '@scure/bip32': 1.3.2
       '@scure/bip39': 1.2.1
-      abitype: 0.9.8
+      abitype: 0.9.8(typescript@5.4.3)
       isows: 1.0.3(ws@8.13.0)
+      typescript: 5.4.3
       ws: 8.13.0
     transitivePeerDependencies:
       - bufferutil
@@ -6226,7 +6240,7 @@ packages:
       - zod
     dev: false
 
-  /viem@2.8.18:
+  /viem@2.8.18(typescript@5.4.3):
     resolution: {integrity: sha512-Kq3kwkKziJ8rQeLkmdbSLheHDnA+tx2EdLKLmQ3N4FVtjKYjBP9tPL1r+fI6KltVUM1TDOhIHOdslDSp57VMMg==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -6239,8 +6253,9 @@ packages:
       '@noble/hashes': 1.3.2
       '@scure/bip32': 1.3.2
       '@scure/bip39': 1.2.1
-      abitype: 1.0.0
+      abitype: 1.0.0(typescript@5.4.3)
       isows: 1.0.3(ws@8.13.0)
+      typescript: 5.4.3
       ws: 8.13.0
     transitivePeerDependencies:
       - bufferutil

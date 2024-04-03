@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/select";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
-import {Toggle} from "@/components/ui/toggle";
 import {Checkbox} from "@/components/ui/checkbox";
 import {Formik, Field, Form, FieldArray, useFormikContext} from "formik";
 import Dropzone from "react-dropzone";
@@ -433,13 +432,19 @@ export default function DashboardPage() {
 
               <div className="h-[600px] lg:h-full w-full lg:w-1/2 bg-white p-4 flex flex-col gap-3">
                 <div className="border-2 border-slate-300 h-full w-full rounded-lg p-5 flex flex-col gap-6">
-                  <div className="w-full h-[300px] bg-slate-400 rounded-lg flex justify-center items-center">
+                  <div className="w-full h-[300px] rounded-lg flex justify-center items-center">
                     {/* Your Video here */}
-                    <iframe
-                      className="w-full h-full rounded-lg"
-                      src={"https://lvpr.tv?v=" + formikState.playbackId}
-                      frameborder="0"
-                    ></iframe>
+                    {!formikState.playbackId ? (
+                      <div className="w-full h-[300px] bg-slate-400 rounded-lg flex justify-center items-center">
+                        Your Video here
+                      </div>
+                    ) : (
+                      <iframe
+                        className="w-full h-full rounded-lg"
+                        src={"https://lvpr.tv?v=" + formikState.playbackId}
+                        frameborder="0"
+                      ></iframe>
+                    )}
                   </div>
                   {formikState.needInputButton && (
                     <Input type="text" placeholder="Video URL" />
@@ -452,12 +457,13 @@ export default function DashboardPage() {
                         (_, index) => (
                           <Button
                             key={index}
+                            variant="secondary"
                             className="col-span-1"
                             // variant="outline"
                           >
                             {formikState.buttonProperties[index]
                               .buttonContent === ""
-                              ? "Button1"
+                              ? `Button ${index + 1}`
                               : formikState.buttonProperties[index]
                                   .buttonContent}
                           </Button>
