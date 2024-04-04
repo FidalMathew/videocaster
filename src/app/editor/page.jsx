@@ -156,7 +156,7 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <main className="h-screen w-full">
+      <main className="w-full h-full">
         {ready && authenticated ? (
           <div className="h-full w-full">
             <Navbar
@@ -180,8 +180,10 @@ export default function DashboardPage() {
 
             {/* <Button onClick={createAsset}>Create</Button> */}
 
-            <div className="w-full min-h-[90%] lg:min-h-fit flex flex-col lg:flex-row justify-center gap-4 px-6 pb-6">
-              <fieldset className="h-full w-full lg:w-1/2 bg-white rounded-lg p-5 border-2">
+            <div className="w-full min-h-[90%] lg:min-h-full grid lg:grid-cols-5 grid-cols-1 gap-4 p-5 lg:p-0 lg:pr-5 pb-5">
+              <div className="hidden lg:block lg:w-full">hello</div>
+              {/* <div className="w-full min-h-[90%] lg:min-h-fit flex flex-col lg:flex-row justify-center gap-4 px-6 pb-6"> */}
+              <fieldset className="h-fit w-auto bg-white rounded-lg p-5 border-2 lg:col-span-2">
                 <legend className="-ml-1 px-1 text-sm font-medium">
                   Settings
                 </legend>
@@ -367,7 +369,7 @@ export default function DashboardPage() {
                 </Formik>
               </fieldset>
 
-              <fieldset className="min-h-[480px] w-full lg:w-1/2 flex flex-col gap-3 items-center rounded-lg border-2 p-3">
+              <fieldset className="h-[480px] lg:h-[660px] w-auto flex flex-col gap-3 items-center rounded-lg border-2 p-3 lg:col-span-2">
                 <legend className="-ml-1 px-1 text-sm font-medium">
                   Output
                 </legend>

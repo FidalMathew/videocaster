@@ -53,7 +53,7 @@ export default function Home() {
   const router = useRouter();
   useEffect(() => {
     if (ready && authenticated) {
-      router.push("/dashboard");
+      router.push("/client/feed");
     }
   }, [router, ready, authenticated]);
 
