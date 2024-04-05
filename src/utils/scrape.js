@@ -34,13 +34,13 @@ export async function scrapeMetaData(url) {
 
     return {
       fcFrameVideo,
-      metaTags
+      metaTags,
     };
   } catch (error) {
     console.error("Error scraping metadata:", error);
   }
 }
 
-// Example usage:
-const url = "https://far-from-frames.vercel.app/";
-scrapeMetaData(url);
+// // Example usage:
+// const url = "https://far-from-frames.vercel.app/";
+// scrapeMetaData(url);

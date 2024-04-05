@@ -1,10 +1,10 @@
 "use client";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {Button} from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import Frame from "@/components/ui/Frame";
-import {useExperimentalFarcasterSigner} from "@privy-io/react-auth";
+import { useExperimentalFarcasterSigner } from "@privy-io/react-auth";
 import axios from "axios";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,15 +14,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {Textarea} from "@/components/ui/textarea";
-import {Formik, Form, Field} from "formik";
-import {Input} from "@/components/ui/input";
-import {Label} from "@/components/ui/label";
-import {Video} from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Formik, Form, Field } from "formik";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Video } from "lucide-react";
 
 export default function Viewer() {
   const [casts, setCasts] = useState([]);
-  const {submitCast} = useExperimentalFarcasterSigner();
+  const { submitCast } = useExperimentalFarcasterSigner();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -64,7 +64,7 @@ export default function Viewer() {
         mentionsPositions: [],
         // parentUrl: parentUrl,
       };
-      const {hash} = await submitCast(castBody);
+      const { hash } = await submitCast(castBody);
       console.log(hash, "hash");
     } catch (err) {
       console.log(err);
@@ -82,7 +82,7 @@ export default function Viewer() {
               <DialogTitle>Send Casts</DialogTitle>
               <DialogDescription className="h-fit">
                 <Formik
-                  initialValues={{castText: "", embedUrl: ""}}
+                  initialValues={{ castText: "", embedUrl: "" }}
                   onSubmit={(values) => {
                     // console.log(values);
                     addCastToFarcaster(values).then((err) => {
@@ -106,7 +106,7 @@ export default function Viewer() {
                           placeholder="Embed URL"
                         />
 
-                        <Button type="submit" style={{marginTop: "20px"}}>
+                        <Button type="submit" style={{ marginTop: "20px" }}>
                           Submit
                         </Button>
                       </div>
@@ -129,9 +129,9 @@ export default function Viewer() {
           </div>
           <div className="w-1/2">
             <Formik
-              initialValues={{castUrl: ""}}
+              initialValues={{ castUrl: "" }}
               onSubmit={(values) => {
-                // console.log(values);
+                console.log(values);
 
                 setGetFrameUrl(values.castUrl);
               }}
@@ -184,7 +184,7 @@ export default function Viewer() {
                 <div className="pb-4 h-full w-full">
                   {item && item.embeds[0] && (
                     <div className="rounded-lg p-6 h-full w-full">
-                      <Frame frameUrl={item?.embeds[0]?.url} />
+                      {/* <Frame frameUrl={item?.embeds[0]?.url} /> */}
                       {/* <Frame frameUrl={"https://far-from-frames.vercel.app"} /> */}
                     </div>
                   )}

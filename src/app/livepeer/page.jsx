@@ -8,27 +8,16 @@ function Page() {
     const apiKey = process.env.NEXT_PUBLIC_LIVEPEER_API_KEY;
     const [file, setFile] = useState('');
     const [videoUrl, setVideoUrl] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
     const livepeer = new Livepeer({ apiKey });
+    const [image, setImage] = useState('');
 
-    // const checkProgress = async (id: string) => {
-    //     const interval = setInterval(async () => {
-    //         const { asset } = axios.get(/api/asset / { id });
-    //   const phase = asset?.status?.phase;
-    //         const progress = asset?.status?.progress;
-    //         console.log("phase", phase);
-    //         console.log("phase", progress);
-
-    //         if (phase === "ready") {
-    //             console.log("video is ready, time to play!");
-    //             clearInterval(interval);
-    //         }
-    //     }, 5000);
-    // };
 
     const createAsset = async () => {
         const assetData = {
             name: file.name
         };
+
 
         const url = 'https://livepeer.studio/api/asset/request-upload';
 
@@ -77,63 +66,35 @@ function Page() {
         var file = e.target.files[0]
 
         setFile(file);
-        // const url = URL.createObjectURL(file);
-        // setVideoUrl(url);
-        // console.log(url, "hellooo")
 
     }
 
-    // input.addEventListener('change', function (e) {
-    //     // Get the selected file from the input element
-    //     var file = e.target.files[0]
+    const pinFileToIPFS = (image) => {
+        const form = new FormData();
+        form.append("file", image);
+        form.append("pinataMetadata", JSON.stringify({
+            "name": "test"
+        }));
+        form.append("pinataOptions", JSON.stringify({
+            "cidVersion": 1
+        }));
 
+        const options = {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_API_KEY}`
+            },
+            body: form // No need to set options.body separately, you can directly include it here
+        };
 
-    //     // Create a new tus upload
-    //     var upload = new tus.Upload(file, {
-    //         endpoint: 'http://localhost:1080/files/',
-    //         retryDelays: [0, 3000, 5000, 10000, 20000],
-    //         metadata: {
-    //             filename: file.name,
-    //             filetype: file.type,
-    //         },
-    //         onError: function (error) {
-    //             console.log('Failed because: ' + error)
-    //         },
-    //         onProgress: function (bytesUploaded, bytesTotal) {
-    //             var percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
-    //             console.log(bytesUploaded, bytesTotal, percentage + '%')
-    //         },
-    //         onSuccess: function () {
-    //             console.log('Download %s from %s', upload.file.name, upload.url)
-    //         },
-    //     })
-
-    //     // Check if there are any previous uploads to continue.
-    //     upload.findPreviousUploads().then(function (previousUploads) {
-    //         // Found previous uploads so we select the first one.
-    //         if (previousUploads.length) {
-    //             upload.resumeFromPreviousUpload(previousUploads[0])
-    //         }
-
-    //         // Start the upload
-    //         upload.start()
-    //     })
-    // })
-
-    // useEffect(() => {
-    //     // console.log(file);
-    //     const func = async () => {
-    //         const playbackId = '01faw9p23up7bwwe'
-    //         try {
-    //             const playbackInfo = await livepeer.playback.get(playbackId);
-    //             const videoUrl = playbackInfo.playbackInfo?.meta.source[0]?.url;
-    //             console.log(videoUrl)
-    //         } catch (error) {
-    //             console.log(error)
-    //         }
-    //     }
-    //     func();
-    // }, [file]);
+        fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', options)
+            .then(response => response.json())
+            .then(response => {
+                console.log(response)
+                setImageUrl(`https://gateway.pinata.cloud/ipfs/${response.IpfsHash}`)
+            })
+            .catch(err => console.error(err));
+    }
 
     return (
         <div>
@@ -143,6 +104,8 @@ function Page() {
                 onChange={handleFileChange}
             />
             <button onClick={createAsset}>Create Asset</button>
+            <input type="file" placeholder="upload fallback image" onChange={(e) => setImage(e.target.files[0])} />
+            <button onClick={() => pinFileToIPFS(image)}>Pin to IPFS</button>
             {/* <iframe
                 src="https://lvpr.tv?v=01faw9p23up7bwwe"
                 allowfullscreen
@@ -160,6 +123,17 @@ function Page() {
                     <p>Filename: {videoUrl.substring(videoUrl.lastIndexOf('/') + 1)}</p>
                 </div>
             )}
+            {
+                image && (
+                    <div>
+                        <img
+                            src={URL.createObjectURL(image)}
+                            alt="Preview Image"
+                            style={{ maxWidth: '100%', maxHeight: '200px' }}
+                        />
+                        <p>Filename: {imageUrl.substring(imageUrl.lastIndexOf('/') + 1)}</p>
+                    </div>)
+            }
         </div>
     )
 }

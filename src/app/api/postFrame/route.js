@@ -1,0 +1,82 @@
+import { NextResponse } from "next/server";
+import cheerio from "cheerio";
+import axios from "axios";
+
+const extractButtonProperties = (exampleJson) => {
+  const buttonProperties = [];
+
+  Object.keys(exampleJson).forEach((key) => {
+    if (key.startsWith("fc:frame:button")) {
+      const buttonIndex = key.split(":")[3];
+      const actionKey = `fc:frame:button:${buttonIndex}:action`;
+      const buttonTarget = `fc:frame:button:${buttonIndex}:target`;
+      const buttonName = exampleJson[key];
+      const action = exampleJson[actionKey];
+
+      if (buttonIndex && buttonProperties[buttonIndex] === undefined) {
+        buttonProperties[buttonIndex] = {
+          buttonIndex: buttonIndex,
+          buttonContent: exampleJson[key],
+        };
+      }
+
+      if (buttonProperties[buttonIndex] && action) {
+        buttonProperties[buttonIndex].action = action;
+      }
+
+      if (buttonProperties[buttonIndex] && exampleJson[buttonTarget]) {
+        buttonProperties[buttonIndex].target = exampleJson[buttonTarget];
+      }
+    }
+  });
+
+  // if any index is coming null, filter it and return
+  return buttonProperties.filter((item) => item != null);
+};
+
+export async function POST(request) {
+  try {
+    const data = await request.json();
+    const framesUrl = data.framesUrl;
+
+    console.log(framesUrl, "postFrame");
+    const response = await axios.post(framesUrl);
+    const html = response.data;
+
+    console.log(html, "html");
+
+    const $ = cheerio.load(html);
+
+    const metaTags = {};
+    $("meta").each((index, element) => {
+      const name = $(element).attr("name");
+      const property = $(element).attr("property");
+      const content = $(element).attr("content");
+
+      // Check if the meta tag has either name or property attribute
+      if (name || property) {
+        metaTags[name || property] = content;
+      }
+    });
+
+    const extractedButtonProperties = extractButtonProperties(metaTags);
+
+    console.log({
+      metaTags,
+      buttonProperties: extractedButtonProperties || {},
+      video: metaTags["fc:frame:video"] || "",
+      image: metaTags["fc:frame:image"] || "",
+      fallbackImage: metaTags["og:image"] || "",
+    });
+    return NextResponse.json({
+      metaTags,
+      buttonProperties: extractedButtonProperties || [],
+      video: metaTags["fc:frame:video"] || "",
+      image: metaTags["fc:frame:image"] || "",
+      fallbackImage: metaTags["og:image"] || "",
+    });
+  } catch (err) {
+    console.log(err.message, "errrorr");
+    return NextResponse.json(err);
+  }
+}
