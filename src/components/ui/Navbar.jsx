@@ -32,37 +32,6 @@ export default function Navbar({authObj, handleExternalSubmit}) {
       </div>
       {/* <div className="absolute bottom-5 right-5"></div> */}
       <div className="flex items-center space-x-6">
-        {
-          pathname.split("/client")[1] !== "feed" && (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => router.push("/client/feed")}
-            >
-              <img
-                src="https://assets-global.website-files.com/6364e65656ab107e465325d2/637aede94d31498505bc9412_DpYIEpePqjDcHIbux04cOKhrRwBhi7F0-dBF_JCdCYY.png"
-                alt="farcaster"
-                className="w-5 aspect-square"
-              />{" "}
-              <span className="ml-2">Feed</span>
-            </Button>
-          )
-          // : (
-          //   <TooltipProvider>
-          //     <Tooltip>
-          //       <TooltipTrigger>
-          //         <Button size="sm" className="rounded-full h-10 w-10">
-          //           <Pencil className="h-6 w-6" />
-
-          //           {/* <span className="ml-2 text-sm">Create Cast</span> */}
-          //         </Button>
-          //       </TooltipTrigger>
-          //       <TooltipContent className="mr-10">
-          //         <p>Create Cast</p>
-          //       </TooltipContent>
-          //     </Tooltip>
-          //   </TooltipProvider>
-        }
         {authObj && (
           <div className="flex gap-4 items-center">
             <div>
@@ -77,7 +46,7 @@ export default function Navbar({authObj, handleExternalSubmit}) {
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="mr-4">
+              <DropdownMenuContent className="mr-4 z-[1000]">
                 {authObj.farcasterSubject ? (
                   <DropdownMenuLabel
                     onClick={() => {

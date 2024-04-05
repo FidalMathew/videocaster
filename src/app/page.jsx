@@ -51,6 +51,7 @@ export default function Home() {
   const {login, ready, authenticated} = usePrivy();
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
+
   useEffect(() => {
     if (ready && authenticated) {
       router.push("/client/feed");

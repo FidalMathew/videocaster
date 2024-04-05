@@ -1,10 +1,10 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { usePrivy, useExperimentalFarcasterSigner } from "@privy-io/react-auth";
+import {useRouter} from "next/navigation";
+import {useEffect, useRef, useState} from "react";
+import {usePrivy, useExperimentalFarcasterSigner} from "@privy-io/react-auth";
 import Head from "next/head";
 import Navbar from "@/components/ui/Navbar";
-import { Button } from "@/components/ui/button";
+import {Button} from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -12,14 +12,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Formik, Field, Form, FieldArray, useFormikContext } from "formik";
+import {Label} from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
+import {Checkbox} from "@/components/ui/checkbox";
+import {Formik, Field, Form, FieldArray, useFormikContext} from "formik";
 import Dropzone from "react-dropzone";
-import { Livepeer } from "livepeer";
+import {Livepeer} from "livepeer";
 import axios from "axios";
-import { Badge } from "@/components/ui/badge";
+import {Badge} from "@/components/ui/badge";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {Clapperboard, Newspaper, Scan} from "lucide-react";
+import {usePathname} from "next/navigation";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -78,7 +81,7 @@ export default function DashboardPage() {
 
   //   console.log(farcasterSubject, user, "farcaster");
 
-  const { requestFarcasterSigner, submitCast } = useExperimentalFarcasterSigner();
+  const {requestFarcasterSigner, submitCast} = useExperimentalFarcasterSigner();
 
   //   const farcasterAccount = user.linkedAccounts.find(
   //     (account) => account.type === "farcaster"
@@ -130,7 +133,7 @@ export default function DashboardPage() {
   };
 
   const handleInputFieldChange = (e) => {
-    const { value } = e.target;
+    const {value} = e.target;
     setFormikState((prevState) => ({
       ...prevState,
       inputFieldUrl: value, // Update inputFieldUrl state with the new value
@@ -138,23 +141,25 @@ export default function DashboardPage() {
   };
 
   const publishFrame = async (values) => {
-    values = { ...values, uname: farcasterAccount.username };
+    values = {...values, uname: farcasterAccount.username};
     console.log(values, "values");
     try {
       const response = await axios.post("/api/publishFrames", values);
       console.log("Response:", response.data);
       alert(
         "Frame published successfully! Check it out: https://no-code-frames.vercel.app/examples/" +
-        values.nameOfFrameURL +
-        "-" +
-        farcasterAccount.username
+          values.nameOfFrameURL +
+          "-" +
+          farcasterAccount.username
       );
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-
+  const pathname = usePathname();
+  const path = pathname.split("/")[1];
+  console.log(path, "pathname");
 
   return (
     <div>
@@ -182,8 +187,71 @@ export default function DashboardPage() {
 
             {/* <Button onClick={createAsset}>Create</Button> */}
 
-            <div className="w-full min-h-[90%] lg:min-h-full grid lg:grid-cols-5 grid-cols-1 gap-4 p-5 lg:p-0 lg:pr-5 pb-5">
-              <div className="hidden lg:block lg:w-full">hello</div>
+            <div className="w-full min-h-[90%] lg:min-h-full grid lg:grid-cols-5 grid-cols-1 gap-4 p-5 lg:p-0 lg:pr-5 pb-5 mt-4">
+              <div className="hidden lg:block lg:w-full">
+                <div
+                  className="lg:flex lg:flex-col lg:py-4 hidden rounded-lg bg-white lg:pt-5 border h-[89vh] sticky top-[10vh]"
+                  style={{alignSelf: "start"}}
+                >
+                  {/* profile info */}
+                  <div className="z-0 w-[90%] h-[80px] border rounded-lg flex items-center just gap-3 pl-3 ml-3 hover:bg-gray-100 cursor-pointer">
+                    <Avatar className="">
+                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+
+                    <div className="flex flex-col">
+                      <p className="font-bold">Farcaster Id</p>
+                      <p className="text-sm font-normal">@farcasterid</p>
+                    </div>
+                  </div>
+                  <div className="w-full h-full flex flex-col gap-2">
+                    {/* <div
+                className={`flex items-center rounded-r-lg relative ${
+                  path === "mycasts" &&
+                  "text-green-900 font-semibold bg-gray-100"
+                } py-3 mt-4 px-6 gap-4 cursor-pointer`}
+                onClick={() => router.push("/client/mycasts")}
+              >
+                {path === "mycasts" && (
+                  <div className="bg-green-600 w-[5px] rounded-r-lg h-[80%] absolute left-0 top-2" />
+                )}
+
+                <Clapperboard />
+                <p className="ml-2 text-md">My Casts</p>
+              </div> */}
+
+                    <div
+                      className={`mt-5 flex items-center p-4 px-6 gap-4 mr-4 rounded-lg relative py-3 cursor-pointer`}
+                      onClick={() => router.push("/client/mycasts")}
+                    >
+                      <Clapperboard />
+                      <p className="ml-2 text-md">My Casts</p>
+                    </div>
+                    <div
+                      className={`flex items-center p-4 px-6 gap-4 mr-4 rounded-lg relative py-3 cursor-pointer`}
+                      onClick={() => router.push("/client/feed")}
+                    >
+                      <Newspaper />
+                      <p className="ml-2 text-md">My Feed</p>
+                    </div>
+                    <div
+                      className={`flex items-center px-6 gap-4 mr-4 rounded-lg relative ${
+                        path === "editor" &&
+                        "text-purple-900 font-semibold bg-gray-100"
+                      } py-3 cursor-pointer`}
+                      onClick={() => router.push("/editor")}
+                    >
+                      {path === "editor" && (
+                        <div className="bg-purple-600 w-[5px] rounded-r-lg h-[80%] absolute left-0 top-1" />
+                      )}
+
+                      <Scan />
+                      <p className="ml-2 text-md">Frames Editor</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
               {/* <div className="w-full min-h-[90%] lg:min-h-fit flex flex-col lg:flex-row justify-center gap-4 px-6 pb-6"> */}
               <fieldset className="h-fit w-auto bg-white rounded-lg p-5 border-2 lg:col-span-2">
                 <legend className="-ml-1 px-1 text-sm font-medium">
@@ -214,7 +282,7 @@ export default function DashboardPage() {
                           console.log(acceptedFiles[0], "acceptedFiles")
                         }
                       >
-                        {({ getRootProps, getInputProps }) => (
+                        {({getRootProps, getInputProps}) => (
                           <section className="cursor-pointer">
                             <div {...getRootProps()}>
                               <input {...getInputProps()} />
@@ -259,7 +327,7 @@ export default function DashboardPage() {
                           formik.setFieldValue("noOfButtons", val);
                           // push the button properties to the formik values
                           const newButtonProperties = Array.from(
-                            { length: val },
+                            {length: val},
                             (_, index) => ({
                               action: "",
                               buttonContent: "",
@@ -287,7 +355,7 @@ export default function DashboardPage() {
                       {formikState.noOfButtons > 0 && (
                         <div className="flex flex-col gap-5">
                           {Array.from(
-                            { length: formik.values.noOfButtons },
+                            {length: formik.values.noOfButtons},
                             (_, index) => (
                               <div key={index} className="flex flex-col gap-1">
                                 <Label
@@ -400,19 +468,19 @@ export default function DashboardPage() {
                   {formikState.noOfButtons > 0 && (
                     <div className="grid grid-cols-2 gap-4">
                       {Array.from(
-                        { length: formikState.noOfButtons },
+                        {length: formikState.noOfButtons},
                         (_, index) => (
                           <Button
                             key={index}
                             variant="outline"
                             className="col-span-1"
-                          // variant="outline"
+                            // variant="outline"
                           >
                             {formikState.buttonProperties[index]
                               .buttonContent === ""
                               ? `Button ${index + 1}`
                               : formikState.buttonProperties[index]
-                                .buttonContent}
+                                  .buttonContent}
                           </Button>
                         )
                       )}

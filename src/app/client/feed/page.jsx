@@ -59,8 +59,10 @@ export default function Feed() {
                   </Avatar>
 
                   <div className="flex flex-col">
-                    <p className="font-bold">Shad</p>
-                    <p className="text-sm font-normal">5 minutes ago</p>
+                    <p className="font-bold">
+                      Shad <span className="font-normal text-sm">@shad</span>
+                    </p>
+                    <p className="text-xs font-normal">5 minutes ago</p>
                   </div>
                 </CardTitle>
               </CardHeader>
