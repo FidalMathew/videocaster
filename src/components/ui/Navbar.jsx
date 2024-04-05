@@ -26,7 +26,7 @@ export default function Navbar({authObj, handleExternalSubmit}) {
   // console.log(pathname.split("/")[1] === "feed", "pathname");
 
   return (
-    <div className="flex w-full p-5 justify-between h-[10vh] items-center bg-transparent">
+    <div className="flex w-full p-5 justify-between h-[8vh] items-center bg-transparent border-b bg-white sticky top-0 z-[100]">
       <div className="text-xl font-bold font-LeagueSpartan">
         <p>VideoCaster.</p>
       </div>
