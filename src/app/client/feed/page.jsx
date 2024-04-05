@@ -12,10 +12,55 @@ import {
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {Input} from "@/components/ui/input";
 import {ScrollArea} from "@/components/ui/scroll-area";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {Button} from "@/components/ui/button";
+import {Pencil} from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {Textarea} from "@/components/ui/textarea";
 
 export default function Feed() {
+  const [modalOpen, setModalOpen] = useState(false);
+
   return (
     <>
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <DialogContent className="p-0 top-[28vh]">
+          <DialogHeader className={""}>
+            <DialogTitle className="px-4 py-4"></DialogTitle>
+            <DialogDescription className="px-5 pt-1 w-full h-full">
+              <div className="h-full w-full flex gap-2">
+                <Avatar>
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+
+                <Textarea
+                  className="border-none outline-none focus-visible:ring-0 focus:placeholder-slate-700 text-md placeholder-slate-300 resize-none"
+                  placeholder="Start typing your text here"
+                />
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className={"py-2 pr-2 border-t"}>
+            <Button size="sm" className="bg-purple-700 hover:bg-purple-800">
+              Casts
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <div className="flex flex-col gap-5 w-auto lg:col-span-3 pt-0 relative mx-4">
         {/* <Card className="h-[20vh] mb-1 z-10 rounded-lg sticky top-[10vh]">
           <CardHeader className="p-0">
@@ -43,7 +88,23 @@ export default function Feed() {
           </CardContent>
           
         </Card> */}
-
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                size="sm"
+                className="rounded-full h-12 w-12 fixed bottom-5 right-5"
+                onClick={() => setModalOpen(true)}
+              >
+                <Pencil className="h-7 w-7" />
+                {/* <span className="ml-2 text-sm">Create Cast</span> */}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent className="mr-10">
+              <p>Create Cast</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         {/*  */}
         <div className="h-full flex flex-col space-y-5 w-full">
           {[1, 2, 3, 4, 5].map((_, index) => (

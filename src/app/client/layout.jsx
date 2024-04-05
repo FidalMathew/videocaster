@@ -4,25 +4,7 @@ import Navbar from "@/components/ui/Navbar";
 import {Clapperboard, Newspaper, Scan} from "lucide-react";
 import {usePathname} from "next/navigation";
 import {useRouter} from "next/navigation";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {Button} from "@/components/ui/button";
-import {Pencil} from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import {useEffect, useState} from "react";
-import {Textarea} from "@/components/ui/textarea";
 import {usePrivy} from "@privy-io/react-auth";
 
 export default function ClientLayout({children}) {
@@ -30,7 +12,6 @@ export default function ClientLayout({children}) {
   console.log(pathname.split("/client"));
   const path = pathname.split("/client")[1].split("/")[1];
   const router = useRouter();
-  const [modalOpen, setModalOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   console.log(path, "path");
@@ -48,57 +29,13 @@ export default function ClientLayout({children}) {
 
   return (
     <>
-      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-        <DialogContent className="p-0 top-[28vh]">
-          <DialogHeader className={""}>
-            <DialogTitle className="px-4 py-4"></DialogTitle>
-            <DialogDescription className="px-5 pt-1 w-full h-full">
-              <div className="h-full w-full flex gap-2">
-                <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-
-                <Textarea
-                  className="border-none outline-none focus-visible:ring-0 focus:placeholder-slate-700 text-md placeholder-slate-300 resize-none"
-                  placeholder="Start typing your text here"
-                />
-              </div>
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className={"py-2 pr-2 border-t"}>
-            <Button size="sm" className="bg-purple-700 hover:bg-purple-800">
-              Casts
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
       <Navbar />
       <div className="relative flex bg-muted/40 pt-3">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>
-              <Button
-                size="sm"
-                className="rounded-full h-12 w-12 fixed bottom-5 right-5"
-                onClick={() => setModalOpen(true)}
-              >
-                <Pencil className="h-7 w-7" />
-                {/* <span className="ml-2 text-sm">Create Cast</span> */}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent className="mr-10">
-              <p>Create Cast</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
         <div
           className="grid lg:grid-cols-5 grid-cols-1 h-full w-full pr-4 items-start"
           // style={{alignSelf: "start"}}
         >
-          <div className="lg:flex lg:flex-col lg:py-4 hidden rounded-lg bg-white lg:pt-5 border h-[89vh]">
+          <div className="lg:flex lg:flex-col lg:py-4 hidden rounded-lg bg-white lg:pt-5 border h-[89vh] sticky top-[10vh]">
             {/* profile info */}
             <div className="z-0 w-[90%] h-[80px] border rounded-lg flex items-center just gap-3 pl-3 ml-3 hover:bg-gray-100 cursor-pointer">
               <Avatar className="">
