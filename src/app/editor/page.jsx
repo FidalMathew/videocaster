@@ -23,6 +23,7 @@ import {Badge} from "@/components/ui/badge";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {Clapperboard, Newspaper, Scan} from "lucide-react";
 import {usePathname} from "next/navigation";
+import {Switch} from "@/components/ui/switch";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -160,6 +161,10 @@ export default function DashboardPage() {
   const pathname = usePathname();
   const path = pathname.split("/")[1];
   console.log(path, "pathname");
+
+  const [toggleMedia, setToggleMedia] = useState(false);
+  console.log(toggleMedia, "toggleMedia"); // true for video, false for image
+  console.log(formikState, "formikState");
 
   return (
     <div>
@@ -413,7 +418,7 @@ export default function DashboardPage() {
                         </div>
                       )}
                       <div className="grid w-full max-w-full items-center gap-1.5">
-                        <Label htmlFor="picture" className="ml-2 mb-2">
+                        <Label htmlFor="fallbackimage" className="ml-2 mb-2">
                           Fallback Image Link
                         </Label>
                         {/* <Field
@@ -424,11 +429,17 @@ export default function DashboardPage() {
                         /> */}
                         <Field
                           as={Input}
-                          type="text"
+                          type="file"
                           name="fallbackimage"
                           id="fallbackimage"
                           className="w-full"
                           placeholder="Image"
+                          // onChange={(event) => {
+                          //   formik.setFieldValue(
+                          //     "fallbackimage",
+                          //     event.target.files[0]
+                          //   );
+                          // }}
                         />
                       </div>
                       {/* <Button className="w-full" type="submit">
@@ -448,23 +459,36 @@ export default function DashboardPage() {
                     Video Frames
                   </Badge>
                 </div>
-
                 <div className="h-fit w-full rounded-lg p-5 flex flex-col gap-6 border">
+                  <div className="flex gap-2 items-center">
+                    <Switch
+                      // className="w-10 h-5"
+                      checked={toggleMedia}
+                      onCheckedChange={setToggleMedia}
+                    />
+                    <span className="text-sm">
+                      {toggleMedia ? "Video" : "Image"}
+                    </span>
+                  </div>
                   <div className="w-full h-[300px] rounded-lg flex justify-center items-center">
                     {/* Your Video here */}
                     {!formikState.playbackId ? (
                       <div className="w-full h-[300px] bg-slate-100 rounded-lg flex justify-center items-center">
                         Your Video here
                       </div>
-                    ) : (
+                    ) : toggleMedia === true ? (
                       <iframe
                         className="w-full h-full rounded-lg"
                         src={"https://lvpr.tv?v=" + formikState.playbackId}
                         frameborder="0"
                       ></iframe>
+                    ) : (
+                      <img
+                        className="w-full h-full rounded-lg"
+                        src={formikState.fallbackimage}
+                      />
                     )}
                   </div>
-
                   {formikState.noOfButtons > 0 && (
                     <div className="grid grid-cols-2 gap-4">
                       {Array.from(
