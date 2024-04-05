@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Video } from "lucide-react";
 
-export default function Viewer() {
+function Test() {
   const [casts, setCasts] = useState([]);
   const { submitCast } = useExperimentalFarcasterSigner();
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function Viewer() {
     fetchData();
   }, []);
 
-  const convertDate = async (utcTimestamp) => {
+  const convertDate = (utcTimestamp) => {
     let date = new Date(utcTimestamp);
     let localDate = date.toLocaleString();
     return localDate;
@@ -197,3 +197,5 @@ export default function Viewer() {
     </>
   );
 }
+
+export default Test;

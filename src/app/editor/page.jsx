@@ -1,10 +1,10 @@
 "use client";
-import {useRouter} from "next/navigation";
-import {useEffect, useRef, useState} from "react";
-import {usePrivy, useExperimentalFarcasterSigner} from "@privy-io/react-auth";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { usePrivy, useExperimentalFarcasterSigner } from "@privy-io/react-auth";
 import Head from "next/head";
 import Navbar from "@/components/ui/Navbar";
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -12,18 +12,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
-import {Checkbox} from "@/components/ui/checkbox";
-import {Formik, Field, Form, FieldArray, useFormikContext} from "formik";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Formik, Field, Form, FieldArray, useFormikContext } from "formik";
 import Dropzone from "react-dropzone";
-import {Livepeer} from "livepeer";
+import { Livepeer } from "livepeer";
 import axios from "axios";
-import {Badge} from "@/components/ui/badge";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {Clapperboard, Newspaper, Scan} from "lucide-react";
-import {usePathname} from "next/navigation";
-import {Switch} from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Clapperboard, Newspaper, Scan } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Switch } from "@/components/ui/switch";
+import * as tus from 'tus-js-client';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -82,7 +83,7 @@ export default function DashboardPage() {
 
   //   console.log(farcasterSubject, user, "farcaster");
 
-  const {requestFarcasterSigner, submitCast} = useExperimentalFarcasterSigner();
+  const { requestFarcasterSigner, submitCast } = useExperimentalFarcasterSigner();
 
   //   const farcasterAccount = user.linkedAccounts.find(
   //     (account) => account.type === "farcaster"
@@ -134,7 +135,7 @@ export default function DashboardPage() {
   };
 
   const handleInputFieldChange = (e) => {
-    const {value} = e.target;
+    const { value } = e.target;
     setFormikState((prevState) => ({
       ...prevState,
       inputFieldUrl: value, // Update inputFieldUrl state with the new value
@@ -142,21 +143,70 @@ export default function DashboardPage() {
   };
 
   const publishFrame = async (values) => {
-    values = {...values, uname: farcasterAccount.username};
+    values = { ...values, uname: farcasterAccount.username };
     console.log(values, "values");
     try {
       const response = await axios.post("/api/publishFrames", values);
       console.log("Response:", response.data);
       alert(
         "Frame published successfully! Check it out: https://no-code-frames.vercel.app/examples/" +
-          values.nameOfFrameURL +
-          "-" +
-          farcasterAccount.username
+        values.nameOfFrameURL +
+        "-" +
+        farcasterAccount.username
       );
     } catch (error) {
       console.error("Error:", error);
     }
   };
+
+
+  const apiKey = process.env.NEXT_PUBLIC_LIVEPEER_API_KEY;
+
+  const createAsset = async (file) => {
+    const assetData = {
+      name: file.name
+    };
+
+
+    const url = 'https://livepeer.studio/api/asset/request-upload';
+
+    axios.post(url, assetData, {
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        console.log(response.data); // Handle the response data here
+
+        let res = response.data;
+        let tusEndpoint = res.tusEndpoint;
+
+        const upload = new tus.Upload(file, {
+          endpoint: tusEndpoint, // tus endpoint which you get from the API response
+          chunkSize: 100 * 1024 * 1024, // 1KB
+          onError: (error) => {
+            console.log("Failed because: " + error);
+          },
+          onProgress: (bytesUploaded, bytesTotal) => {
+            const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+            console.log(bytesUploaded, bytesTotal, percentage + "%");
+          },
+          onSuccess: () => {
+            // checkProgress(res.object?.asset.id);
+            console.log("Upload finished: " + upload);
+          },
+        });
+
+        upload.start();
+
+        console.log("upload started");
+      })
+      .catch(error => {
+        console.error('There was a problem with the request:', error);
+      });
+  }
+
 
   const pathname = usePathname();
   const path = pathname.split("/")[1];
@@ -196,7 +246,7 @@ export default function DashboardPage() {
               <div className="hidden lg:block lg:w-full">
                 <div
                   className="lg:flex lg:flex-col lg:py-4 hidden rounded-lg bg-white lg:pt-5 border h-[89vh] sticky top-[10vh]"
-                  style={{alignSelf: "start"}}
+                  style={{ alignSelf: "start" }}
                 >
                   {/* profile info */}
                   <div className="z-0 w-[90%] h-[80px] border rounded-lg flex items-center just gap-3 pl-3 ml-3 hover:bg-gray-100 cursor-pointer">
@@ -241,10 +291,9 @@ export default function DashboardPage() {
                       <p className="ml-2 text-md">My Feed</p>
                     </div>
                     <div
-                      className={`flex items-center px-6 gap-4 mr-4 rounded-lg relative ${
-                        path === "editor" &&
+                      className={`flex items-center px-6 gap-4 mr-4 rounded-lg relative ${path === "editor" &&
                         "text-purple-900 font-semibold bg-gray-100"
-                      } py-3 cursor-pointer`}
+                        } py-3 cursor-pointer`}
                       onClick={() => router.push("/editor")}
                     >
                       {path === "editor" && (
@@ -283,11 +332,13 @@ export default function DashboardPage() {
                       <ExternalStateSyncComponent />
                       <Dropzone
                         accept="video/*"
-                        onDrop={(acceptedFiles) =>
+                        onDrop={(acceptedFiles) => {
                           console.log(acceptedFiles[0], "acceptedFiles")
+                          createAsset(acceptedFiles[0]);
+                        }
                         }
                       >
-                        {({getRootProps, getInputProps}) => (
+                        {({ getRootProps, getInputProps }) => (
                           <section className="cursor-pointer">
                             <div {...getRootProps()}>
                               <input {...getInputProps()} />
@@ -332,7 +383,7 @@ export default function DashboardPage() {
                           formik.setFieldValue("noOfButtons", val);
                           // push the button properties to the formik values
                           const newButtonProperties = Array.from(
-                            {length: val},
+                            { length: val },
                             (_, index) => ({
                               action: "",
                               buttonContent: "",
@@ -360,7 +411,7 @@ export default function DashboardPage() {
                       {formikState.noOfButtons > 0 && (
                         <div className="flex flex-col gap-5">
                           {Array.from(
-                            {length: formik.values.noOfButtons},
+                            { length: formik.values.noOfButtons },
                             (_, index) => (
                               <div key={index} className="flex flex-col gap-1">
                                 <Label
@@ -434,12 +485,12 @@ export default function DashboardPage() {
                           id="fallbackimage"
                           className="w-full"
                           placeholder="Image"
-                          // onChange={(event) => {
-                          //   formik.setFieldValue(
-                          //     "fallbackimage",
-                          //     event.target.files[0]
-                          //   );
-                          // }}
+                        // onChange={(event) => {
+                        //   formik.setFieldValue(
+                        //     "fallbackimage",
+                        //     event.target.files[0]
+                        //   );
+                        // }}
                         />
                       </div>
                       {/* <Button className="w-full" type="submit">
@@ -492,19 +543,19 @@ export default function DashboardPage() {
                   {formikState.noOfButtons > 0 && (
                     <div className="grid grid-cols-2 gap-4">
                       {Array.from(
-                        {length: formikState.noOfButtons},
+                        { length: formikState.noOfButtons },
                         (_, index) => (
                           <Button
                             key={index}
                             variant="outline"
                             className="col-span-1"
-                            // variant="outline"
+                          // variant="outline"
                           >
                             {formikState.buttonProperties[index]
                               .buttonContent === ""
                               ? `Button ${index + 1}`
                               : formikState.buttonProperties[index]
-                                  .buttonContent}
+                                .buttonContent}
                           </Button>
                         )
                       )}
