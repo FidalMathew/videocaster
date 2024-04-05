@@ -75,7 +75,7 @@ export default function Navbar({authObj, handleExternalSubmit}) {
           {authObj && (
             <div className="flex gap-4 items-center">
               <div>
-                <Button onClick={() => handleExternalSubmit()}>
+                <Button size="sm" onClick={() => handleExternalSubmit()}>
                   <Video className="mr-2 h-4 w-4" /> Publish
                 </Button>
               </div>
