@@ -210,6 +210,7 @@ const reducer: FrameReducer<State> = (state, action) => {
   };
 };
 
+
 // This is a react server component only
 export default async function Home({ searchParams }: NextServerPageProps) {
   const url = currentURL("/examples/mint-button");

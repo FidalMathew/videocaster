@@ -16,16 +16,16 @@ export async function GET(req) {
     // Make the GET request
     const response = params
       ? await axios.get(posturl, {
-        params: params,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+          params: params,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
       : await axios.get(posturl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
     return NextResponse.json({ message: response.data });
   } catch (error) {
