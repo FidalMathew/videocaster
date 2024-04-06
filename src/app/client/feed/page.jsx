@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {
   Card,
   CardContent,
@@ -31,9 +31,20 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {Textarea} from "@/components/ui/textarea";
+import {Field, Form, Formik} from "formik";
 
 export default function Feed() {
   const [modalOpen, setModalOpen] = useState(false);
+
+  const formikRef = useRef(null);
+
+  const handleSubmit = () => {
+    // Call submitForm() method on the Formik instance
+    if (formikRef.current) {
+      formikRef.current.handleSubmit();
+      // console.log(formikRef.current);
+    }
+  };
 
   return (
     <>
@@ -41,22 +52,50 @@ export default function Feed() {
         <DialogContent className="p-0 top-[28vh]">
           <DialogHeader className={""}>
             <DialogTitle className="px-4 py-4"></DialogTitle>
-            <DialogDescription className="px-5 pt-1 w-full h-full">
-              <div className="h-full w-full flex gap-2">
-                <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-
-                <Textarea
-                  className="border-none outline-none focus-visible:ring-0 focus:placeholder-slate-700 text-md placeholder-slate-300 resize-none"
-                  placeholder="Start typing your text here"
-                />
-              </div>
-            </DialogDescription>
           </DialogHeader>
+          <DialogDescription>
+            <Formik
+              innerRef={formikRef}
+              initialValues={{castText: ""}}
+              onSubmit={(actions, values) => console.log(actions)}
+            >
+              {(formik) => (
+                <Form>
+                  <div className="px-5 pt-1 w-full h-full">
+                    <div className="h-full w-full flex gap-2">
+                      <Avatar>
+                        <AvatarImage src="https://github.com/shadcn.png" />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
+
+                      <Field
+                        as={Textarea}
+                        className="border-none outline-none focus-visible:ring-0 focus:placeholder-slate-700 text-md placeholder-slate-300 resize-none"
+                        placeholder="Start typing your text here"
+                        name="castText"
+                        id="castText"
+                        rows={4}
+                      />
+                    </div>
+                  </div>
+                  {/* <Button
+                    size="sm"
+                    className="bg-purple-700 hover:bg-purple-800"
+                    type="submit"
+                  >
+                    Casts
+                  </Button> */}
+                </Form>
+              )}
+            </Formik>
+          </DialogDescription>
+
           <DialogFooter className={"py-2 pr-2 border-t"}>
-            <Button size="sm" className="bg-purple-700 hover:bg-purple-800">
+            <Button
+              size="sm"
+              className="bg-purple-700 hover:bg-purple-800"
+              onClick={handleSubmit}
+            >
               Casts
             </Button>
           </DialogFooter>
@@ -89,23 +128,26 @@ export default function Feed() {
           </CardContent>
           
         </Card> */}
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>
-              <Button
-                size="sm"
-                className="rounded-full h-12 w-12 fixed bottom-5 right-5"
-                onClick={() => setModalOpen(true)}
-              >
-                <Pencil className="h-7 w-7" />
-                {/* <span className="ml-2 text-sm">Create Cast</span> */}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent className="mr-10">
-              <p>Create Cast</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <div className="fixed bottom-5 right-5">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  size="sm"
+                  className="rounded-full h-12 w-12"
+                  onClick={() => setModalOpen(true)}
+                >
+                  <Pencil className="h-7 w-7" />
+                  {/* <span className="ml-2 text-sm">Create Cast</span> */}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent className="mr-10">
+                <p>Create Cast</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+
         {/*  */}
         <div className="h-full flex flex-col space-y-5 w-full">
           {[1, 2, 3, 4, 5].map((_, index) => (
