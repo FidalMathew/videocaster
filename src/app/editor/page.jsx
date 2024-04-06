@@ -40,71 +40,35 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {ArrowLeftIcon, ReloadIcon} from "@radix-ui/react-icons";
+import {useFarcasterContext} from "../context/farcasterContext";
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [farcasterAccount, setFarcasterAccount] = useState(null);
-  const [hasEmbeddedWallet, setHasEmbeddedWallet] = useState(false);
   const pathname = usePathname();
   const path = pathname.split("/")[1];
 
+  // media states
   const [toggleMedia, setToggleMedia] = useState(false);
   const [progress, setProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState("idle");
   const [playbackId, setPlaybackId] = useState("");
 
   const {
-    ready,
-    authenticated,
-    user,
-    logout,
+    farcasterAccount,
+    hasEmbeddedWallet,
+    farcasterSubject,
+    requestFarcasterSigner,
+    submitCast,
+    isAuthenticated,
+    canRemoveAccount,
     linkFarcaster,
     unlinkFarcaster,
     exportWallet,
-  } = usePrivy();
-
-  useEffect(() => {
-    if (ready && !authenticated) {
-      router.push("/");
-    }
-    if (user) {
-      setFarcasterAccount(
-        user.linkedAccounts.find((account) => account.type === "farcaster")
-      );
-
-      setHasEmbeddedWallet(
-        !!user.linkedAccounts.find(
-          (account) =>
-            account.type === "wallet" && account.walletClient === "privy"
-        )
-      );
-    }
-    const castBody = {
-      text: "fidal",
-      embeds: [
-        {
-          url: "https://fc-polls.vercel.app/polls/054aee65-c63d-46c1-a1f9-a05b747860f6",
-        },
-      ],
-      embedsDeprecated: [],
-      mentions: [],
-      mentionsPositions: [],
-      // parentUrl: parentUrl,
-    };
-    // if (farcasterAccount && farcasterAccount.signerPublicKey)
-    //   (async function () {
-    //     const {hash} = await submitCast(castBody);
-    //     console.log(hash, "hash");
-    //   })();
-  }, [ready, authenticated, router, user]);
-
-  const numAccounts = user?.linkedAccounts?.length || 0;
-  const canRemoveAccount = numAccounts > 1;
-
-  //   farcaster
-  const farcasterSubject = user?.farcaster?.fid || null;
-  const {requestFarcasterSigner, submitCast} = useExperimentalFarcasterSigner();
-  const isAuthenticated = ready && authenticated;
+    logout,
+    ready,
+    authenticated,
+    user,
+  } = useFarcasterContext();
 
   // formik
   const [formikState, setFormikState] = useState({});
@@ -152,7 +116,6 @@ export default function DashboardPage() {
 
   // livepeer
   const apiKey = process.env.NEXT_PUBLIC_LIVEPEER_API_KEY;
-
   const createAsset = async (file) => {
     const assetData = {
       name: file.name,
@@ -275,6 +238,8 @@ export default function DashboardPage() {
     }
   };
 
+  console.log(ready, authenticated, "ready");
+
   return (
     <>
       <Dialog
@@ -334,24 +299,7 @@ export default function DashboardPage() {
         <main className="w-full h-full">
           {ready && authenticated ? (
             <div className="h-full w-full">
-              <Navbar
-                setOpenPublishModal={setOpenPublishModal}
-                authObj={{
-                  ready,
-                  authenticated,
-                  user,
-                  logout,
-                  linkFarcaster,
-                  unlinkFarcaster,
-                  exportWallet,
-                  farcasterAccount,
-                  farcasterSubject,
-                  // requestFarcasterSigner,
-                  canRemoveAccount,
-                  hasEmbeddedWallet,
-                  isAuthenticated,
-                }}
-              />
+              <Navbar setOpenPublishModal={setOpenPublishModal} />
 
               {/* <Button onClick={createAsset}>Create</Button> */}
 
@@ -363,14 +311,21 @@ export default function DashboardPage() {
                   >
                     {/* profile info */}
                     <div className="z-0 w-[90%] h-[80px] border rounded-lg flex items-center just gap-3 pl-3 ml-3 hover:bg-gray-100 cursor-pointer">
-                      <Avatar className="">
-                        <AvatarImage src="https://github.com/shadcn.png" />
+                      <Avatar className="h-12 w-12">
+                        <AvatarImage
+                          src={
+                            farcasterAccount?.pfp ||
+                            "https://github.com/shadcn.png"
+                          }
+                        />
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
 
                       <div className="flex flex-col">
-                        <p className="font-bold">Farcaster Id</p>
-                        <p className="text-sm font-normal">@farcasterid</p>
+                        <p className="font-bold">
+                          {farcasterAccount?.displayName}
+                        </p>
+                        <p className="text-sm font-normal">{`@${farcasterAccount?.username}`}</p>
                       </div>
                     </div>
                     <div className="w-full h-full flex flex-col gap-2">

@@ -6,6 +6,7 @@ import {usePathname} from "next/navigation";
 import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 import {usePrivy} from "@privy-io/react-auth";
+import {useFarcasterContext} from "../context/farcasterContext";
 
 export default function ClientLayout({children}) {
   const pathname = usePathname();
@@ -14,7 +15,7 @@ export default function ClientLayout({children}) {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
-  console.log(path, "path");
+  const {farcasterAccount} = useFarcasterContext();
 
   const {ready, authenticated, user} = usePrivy();
   console.log(user, "user");
@@ -38,14 +39,16 @@ export default function ClientLayout({children}) {
           <div className="lg:flex lg:flex-col lg:py-4 hidden rounded-lg bg-white lg:pt-5 border h-[89vh] sticky top-[10vh]">
             {/* profile info */}
             <div className="z-0 w-[90%] h-[80px] border rounded-lg flex items-center just gap-3 pl-3 ml-3 hover:bg-gray-100 cursor-pointer">
-              <Avatar className="">
-                <AvatarImage src="https://github.com/shadcn.png" />
+              <Avatar className="h-12 w-12">
+                <AvatarImage
+                  src={farcasterAccount?.pfp || "https://github.com/shadcn.png"}
+                />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
 
               <div className="flex flex-col">
-                <p className="font-bold">Farcaster Id</p>
-                <p className="text-sm font-normal">@farcasterid</p>
+                <p className="font-bold">{farcasterAccount?.displayName}</p>
+                <p className="text-xs font-normal">{`@${farcasterAccount?.username}`}</p>
               </div>
             </div>
             <div className="w-full h-full flex flex-col gap-2">

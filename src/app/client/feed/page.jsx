@@ -10,8 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {Input} from "@/components/ui/input";
-import {ScrollArea} from "@/components/ui/scroll-area";
 import {
   Tooltip,
   TooltipContent,
@@ -32,6 +30,7 @@ import {
 } from "@/components/ui/dialog";
 import {Textarea} from "@/components/ui/textarea";
 import {Field, Form, Formik} from "formik";
+import {useFarcasterContext} from "@/app/context/farcasterContext";
 
 export default function Feed() {
   const [modalOpen, setModalOpen] = useState(false);
