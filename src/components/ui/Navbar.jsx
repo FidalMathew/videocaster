@@ -23,7 +23,7 @@ import {
 import {Clapperboard, Newspaper, PanelLeft} from "lucide-react";
 import Link from "next/link";
 
-export default function Navbar({authObj, handleExternalSubmit}) {
+export default function Navbar({authObj, setOpenPublishModal}) {
   const router = useRouter();
   const pathname = usePathname();
   // console.log(pathname.split("/")[1] === "feed", "pathname");
@@ -75,7 +75,10 @@ export default function Navbar({authObj, handleExternalSubmit}) {
           {authObj && (
             <div className="flex gap-4 items-center">
               <div>
-                <Button size="sm" onClick={() => handleExternalSubmit()}>
+                <Button
+                  size="sm"
+                  onClick={() => setOpenPublishModal((prev) => !prev)}
+                >
                   <Video className="mr-2 h-4 w-4" /> Publish
                 </Button>
               </div>

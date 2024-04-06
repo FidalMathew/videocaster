@@ -26,7 +26,16 @@ import {usePathname} from "next/navigation";
 import {Switch} from "@/components/ui/switch";
 import * as tus from "tus-js-client";
 import {Progress} from "@/components/ui/progress";
-import {File} from "lucide-react";
+import {File, CircleCheck} from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -223,13 +232,28 @@ export default function DashboardPage() {
 
   console.log(uploadStatus, "uploadStatus");
 
+  const [currentFile, setCurrentFile] = useState(null);
+  const [openPublishModal, setOpenPublishModal] = useState(false);
+
   return (
     <div>
+      <Dialog open={openPublishModal} onOpenChange={setOpenPublishModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Are you absolutely sure?</DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. This will permanently delete your
+              account and remove your data from our servers.
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+
       <main className="w-full h-full">
         {ready && authenticated ? (
           <div className="h-full w-full">
             <Navbar
-              handleExternalSubmit={handleExternalSubmit}
+              setOpenPublishModal={setOpenPublishModal}
               authObj={{
                 ready,
                 authenticated,
@@ -252,7 +276,7 @@ export default function DashboardPage() {
             <div className="w-full min-h-[90%] lg:min-h-full grid lg:grid-cols-5 grid-cols-1 gap-4 p-5 lg:p-0 lg:pr-5 pb-5 mt-4">
               <div className="hidden lg:block lg:w-full">
                 <div
-                  className="lg:flex lg:flex-col lg:py-4 hidden rounded-lg bg-white lg:pt-5 border h-[89vh] sticky top-[10vh]"
+                  className="lg:flex lg:flex-col lg:py-4 hidden rounded-lg bg-white lg:pt-5 border h-[89vh] sticky top-[8vh]"
                   style={{alignSelf: "start"}}
                 >
                   {/* profile info */}
@@ -315,7 +339,7 @@ export default function DashboardPage() {
                 </div>
               </div>
               {/* <div className="w-full min-h-[90%] lg:min-h-fit flex flex-col lg:flex-row justify-center gap-4 px-6 pb-6"> */}
-              <fieldset className="h-fit w-auto bg-white rounded-lg p-5 border-2 lg:col-span-2">
+              <fieldset className="h-fit w-auto bg-white rounded-lg p-5 border-2 lg:col-span-2 lg:mb-7">
                 <legend className="-ml-1 px-1 text-sm font-medium">
                   Settings
                 </legend>
@@ -342,6 +366,7 @@ export default function DashboardPage() {
                         accept="video/*"
                         onDrop={(acceptedFiles) => {
                           console.log(acceptedFiles[0], "acceptedFiles");
+                          setCurrentFile(acceptedFiles[0]);
                           createAsset(acceptedFiles[0]);
                         }}
                       >
@@ -355,14 +380,22 @@ export default function DashboardPage() {
                               )}
                               <div className="border-2 border-dotted flex justify-center items-center h-[200px] w-full rounded-lg border-slate-400">
                                 {uploadStatus === "success" &&
-                                  acceptedFiles[0] && (
+                                  (currentFile || acceptedFiles[0]) && (
                                     <div className="flex flex-col w-full justify-center items-center gap-4">
                                       <File />
                                       <p className="text-xs font-semibold text-center">
-                                        {acceptedFiles
+                                        {acceptedFiles[0]
                                           ? acceptedFiles[0]?.name
+                                          : currentFile != null
+                                          ? currentFile.name
                                           : "file.mp4"}
                                       </p>
+                                      <div className="flex gap-3 items-center font-semibold">
+                                        <CircleCheck className="text-green-600" />
+                                        <p className="text-sm text-green-600">
+                                          Upload Successful
+                                        </p>
+                                      </div>
                                     </div>
                                   )}
                                 {/* {
@@ -408,7 +441,6 @@ export default function DashboardPage() {
                                     </div>
                                   </div>
                                 )}
-                                {/* bug:  */}
                                 {uploadStatus === "error" && (
                                   <div>
                                     <p className="text-red-500 text-xs">
@@ -417,6 +449,7 @@ export default function DashboardPage() {
                                   </div>
                                 )}
 
+                                {/* bug:  */}
                                 {uploadStatus === "idle" && (
                                   <p>Drag and drop your video here</p>
                                 )}
@@ -482,11 +515,8 @@ export default function DashboardPage() {
                           <SelectValue placeholder="Select number of buttons" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="0">0</SelectItem>
                           <SelectItem value="1">1</SelectItem>
                           <SelectItem value="2">2</SelectItem>
-                          <SelectItem value="3">3</SelectItem>
-                          <SelectItem value="4">4</SelectItem>
                         </SelectContent>
                       </Select>
                       {formikState.noOfButtons > 0 && (
@@ -517,8 +547,6 @@ export default function DashboardPage() {
                                     <SelectContent>
                                       <SelectItem value="post">Post</SelectItem>
                                       <SelectItem value="link">Link</SelectItem>
-                                      <SelectItem value="mint">Mint</SelectItem>
-                                      <SelectItem value="tx">Tx</SelectItem>
                                       <SelectItem value="post_redirect">
                                         Post Redirect
                                       </SelectItem>
@@ -582,7 +610,17 @@ export default function DashboardPage() {
                 </Formik>
               </fieldset>
 
-              <fieldset className="min-h-[480px] lg:h-[660px] w-auto flex flex-col gap-3 items-center rounded-lg border-2 p-3 lg:col-span-2">
+              <fieldset className="h-[600px] lg:h-[660px] w-auto flex flex-col gap-3 items-center rounded-lg border-2 p-3 lg:col-span-2 sticky top-[8vh]">
+                <div className="absolute bottom-2 right-3">
+                  <div className="flex gap-2 items-center">
+                    <span className="text-xs">Powered By</span>
+                    <img
+                      src="/livepeer.png"
+                      className="h-5 w-5"
+                      alt="livepeer"
+                    />
+                  </div>
+                </div>
                 <legend className="-ml-1 px-1 text-sm font-medium">
                   Output
                 </legend>
@@ -614,6 +652,7 @@ export default function DashboardPage() {
                       </div>
                     ) : toggleMedia === true && playbackId !== "" ? (
                       <iframe
+                        key={playbackId}
                         className="w-full h-full rounded-lg"
                         src={`https://lvpr.tv?v=${playbackId}`}
                         frameborder="0"
