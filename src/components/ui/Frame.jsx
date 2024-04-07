@@ -1,10 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { scrapeMetaData } from "@/utils/scrape";
+import React, {useEffect, useState} from "react";
+import {scrapeMetaData} from "@/utils/scrape";
 import axios from "axios";
-import { Button } from "./button";
-import { SquareArrowOutUpRight } from "lucide-react";
-function Frame({ frameUrl }) {
+import {Button} from "./button";
+import {SquareArrowOutUpRight} from "lucide-react";
+function Frame({frameUrl}) {
   const [responseFrames, setResponseFrames] = useState(null);
   const [mainURL, setMainURL] = useState("");
 
@@ -14,21 +14,19 @@ function Frame({ frameUrl }) {
     console.log("post frame", post_url);
 
     try {
-
       const res = await axios.post("/api/postFrame", {
         framesUrl: post_url,
       });
       console.log(res.data, "res");
       setResponseFrames(res.data);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const postRedirectFrame = (redirect_url) => {
     console.log("post redirect frame");
     try {
-
       const res = axios.post("/api/scrape", {
         framesUrl: post_url,
       });
@@ -36,9 +34,9 @@ function Frame({ frameUrl }) {
 
       // using something redirect to the url
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const linkFrame = (link_url) => {
     console.log("link frame");
@@ -46,10 +44,9 @@ function Frame({ frameUrl }) {
       // warning before leaving the page
       window.open(link_url, "_blank");
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
-
+  };
 
   useEffect(() => {
     (async function () {
@@ -72,9 +69,9 @@ function Frame({ frameUrl }) {
   // console.log(frameUrl, "res");
 
   return (
-    <div className="h-full w-full flex flex-col gap-5">
+    <div className="h-fit w-full flex flex-col gap-5">
       <iframe
-        className="h-[70%] w-full rounded-lg"
+        className="aspect-video w-full rounded-lg my-5"
         src={
           responseFrames?.video ||
           responseFrames?.image ||
@@ -87,7 +84,7 @@ function Frame({ frameUrl }) {
         // }
         allowfullscreen
         allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-        frameborder="0"
+        // frameborder="0"
       />
       <p>{mainURL}</p>
 
@@ -107,23 +104,21 @@ function Frame({ frameUrl }) {
                   postFrame(responseFrames.metaTags["fc:frame:post_url"]);
                 } else if (buttonItem.action === "post_redirect") {
                   postRedirectFrame(buttonItem.url);
-                }
-                else {
+                } else {
                   postFrame(responseFrames.metaTags["fc:frame:post_url"]);
                 }
               }}
             >
               {(buttonItem.action === "link" ||
                 buttonItem.action === "post_redirect") && (
-                  <SquareArrowOutUpRight className="h-3 w-3" />
-                )}
+                <SquareArrowOutUpRight className="h-3 w-3" />
+              )}
               <span
               // className={
               //   (buttonItem.action === "link" ||
               //     buttonItem.action === "post_redirect") &&
               //   "ml-2"
               // }
-
               >
                 {buttonItem && buttonItem.buttonContent}
               </span>

@@ -278,7 +278,7 @@ export default function DashboardPage() {
             </DialogHeader>
           </DialogContent>
         ) : (
-          <DialogContent className="h-[500px] duration-200 ease-in-out transition-all">
+          <DialogContent className="h-[300px] duration-200 ease-in-out transition-all">
             <div
               className="absolute left-5 top-5 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground cursor-pointer"
               onClick={() => setCurrentStep(0)}

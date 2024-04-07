@@ -15,6 +15,7 @@ export default function Providers({children, ...props}) {
         appearance: {
           theme: "light",
           accentColor: "#676FFF",
+          logo: "/livepeer.png",
         },
         // Create embedded wallets for users who don't have a wallet
         embeddedWallets: {
