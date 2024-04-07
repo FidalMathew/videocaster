@@ -70,23 +70,39 @@ function Frame({frameUrl}) {
 
   return (
     <div className="h-fit w-full flex flex-col gap-5">
-      <iframe
-        className="aspect-video w-full rounded-lg my-5"
-        src={
-          responseFrames?.video ||
-          responseFrames?.image ||
-          responseFrames?.fallbackImage ||
-          `https://lvpr.tv?v=01faw9p23up7bwwe`
-        }
-        // src={responseFrames.video}
-        // src={
-        //   "https://ipfs.decentralized-content.com/ipfs/bafybeifs7vasy5zbmnpixt7tb6efi35kcrmpoz53d3vg5pwjz52q7fl6pq/cook.png"
-        // }
-        allowfullscreen
-        allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-        // frameborder="0"
-      />
-      <p>{mainURL}</p>
+      <div className="flex justify-center">
+        {responseFrames && responseFrames.video && (
+          <iframe
+            src={responseFrames?.video}
+            className="aspect-video rounded"
+            width="100%" // Set width to 100% to fill the container
+            height="100%" // Set height to 100% to fill the container
+            allowfullscreen
+            allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+            frameborder="0" // Add frameborder attribute
+            scrolling="no" // Add scrolling attribute to prevent scrolling bars
+            // onLoad={(event) => {
+            //   // Access the iframe's content window
+            //   const iframe = event.target;
+            //   const iframeContent = iframe.contentWindow;
+
+            //   // Check if the iframe content is accessible and contains a video element
+            //   if (
+            //     iframeContent &&
+            //     iframeContent.document.querySelector("video")
+            //   ) {
+            //     // Pause the video
+            //     iframeContent.document.querySelector("video").pause();
+            //   }
+            // }}
+          />
+        )}
+      </div>
+      {responseFrames && responseFrames.fallbackImage && (
+        <img src={responseFrames?.fallbackImage} width="100%" alt="" />
+      )}
+
+      <p className="text-sm text-right">{mainURL}</p>
 
       <div className="grid grid-cols-2 gap-4 h-[30%] w-full">
         {responseFrames &&
@@ -95,7 +111,7 @@ function Frame({frameUrl}) {
             <Button
               key={index}
               className="col-span-1"
-              // variant="outline"
+              variant="outline"
               onClick={() => {
                 console.log("buttonItem", buttonItem);
                 if (buttonItem.action === "link") {
@@ -111,7 +127,7 @@ function Frame({frameUrl}) {
             >
               {(buttonItem.action === "link" ||
                 buttonItem.action === "post_redirect") && (
-                <SquareArrowOutUpRight className="h-3 w-3" />
+                <SquareArrowOutUpRight className="mr-1 h-3 w-3" />
               )}
               <span
               // className={

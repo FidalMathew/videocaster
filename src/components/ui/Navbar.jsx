@@ -102,14 +102,17 @@ export default function Navbar({setOpenPublishModal}) {
         <div className="flex items-center space-x-6">
           {ready && authenticated && (
             <div className="flex gap-4 items-center">
-              <div>
-                <Button
-                  size="sm"
-                  onClick={() => setOpenPublishModal((prev) => !prev)}
-                >
-                  <Video className="mr-2 h-4 w-4" /> Publish
-                </Button>
-              </div>
+              {pathname.split("/")[1] === "editor" && (
+                <div>
+                  <Button
+                    size="sm"
+                    onClick={() => setOpenPublishModal((prev) => !prev)}
+                  >
+                    <Video className="mr-2 h-4 w-4" /> Publish
+                  </Button>
+                </div>
+              )}
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar>

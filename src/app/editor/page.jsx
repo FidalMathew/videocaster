@@ -23,6 +23,7 @@ import {
   Newspaper,
   Scan,
   SquareArrowOutUpRight,
+  Eye,
 } from "lucide-react";
 import {usePathname} from "next/navigation";
 import {Switch} from "@/components/ui/switch";
@@ -152,7 +153,9 @@ export default function DashboardPage() {
           onSuccess: () => {
             // checkProgress(res.object?.asset.id);
             console.log("Upload finished: " + upload);
-            setUploadStatus("success");
+            setTimeout(() => {
+              setUploadStatus("success");
+            }, 9000);
             setPlaybackId(response.data.asset.playbackId);
           },
         });
@@ -169,7 +172,7 @@ export default function DashboardPage() {
   // pinata
   const [currentFile, setCurrentFile] = useState(null);
   const [openPublishModal, setOpenPublishModal] = useState(false);
-
+  console.log(currentFile, "currentFile");
   const [fileUploadLoading, setFileUploadLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
 
@@ -371,6 +374,20 @@ export default function DashboardPage() {
 
                         <Scan />
                         <p className="ml-2 text-md">Frames Editor</p>
+                      </div>
+                      <div
+                        className={`flex items-center px-6 gap-4 mr-4 rounded-lg relative ${
+                          path === "viewer" &&
+                          "text-purple-900 font-semibold bg-gray-100"
+                        } py-3 cursor-pointer`}
+                        onClick={() => router.push("/viewer")}
+                      >
+                        {path === "viewer" && (
+                          <div className="bg-purple-600 w-[5px] rounded-r-lg h-[80%] absolute left-0 top-1" />
+                        )}
+
+                        <Eye />
+                        <p className="ml-2 text-md">Viewer</p>
                       </div>
                     </div>
                   </div>
@@ -729,18 +746,22 @@ export default function DashboardPage() {
                       {/* Your Video here */}
                       {console.log(playbackId, "pid")}
                       {playbackId === "" && toggleMedia === true && (
-                        <div className="w-full h-[300px] bg-slate-100 rounded-lg flex justify-center items-center">
+                        <div className="w-full h-[300px] bg-slate-100 aspec rounded-lg flex justify-center items-center">
                           Your Video here
                         </div>
                       )}
-                      {toggleMedia === true && playbackId !== "" && (
-                        <iframe
-                          key={playbackId}
-                          className="w-full h-full rounded-lg"
-                          src={`https://lvpr.tv?v=${playbackId}`}
-                          frameborder="0"
-                        ></iframe>
-                      )}
+                      {toggleMedia === true &&
+                        playbackId !== "" &&
+                        uploadStatus === "success" &&
+                        currentFile != null && (
+                          <iframe
+                            key={uploadStatus}
+                            className="w-full h-full rounded-lg"
+                            // src={`https://lvpr.tv?v=${playbackId}`}
+                            src={URL.createObjectURL(currentFile)}
+                            frameborder="0"
+                          ></iframe>
+                        )}
 
                       {toggleMedia === false && imageUrl !== "" && (
                         <img

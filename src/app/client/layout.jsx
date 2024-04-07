@@ -1,7 +1,7 @@
 "use client";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import Navbar from "@/components/ui/Navbar";
-import {Clapperboard, Newspaper, Scan} from "lucide-react";
+import {Clapperboard, Newspaper, Scan, Eye} from "lucide-react";
 import {usePathname} from "next/navigation";
 import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
@@ -31,7 +31,7 @@ export default function ClientLayout({children}) {
   return (
     <>
       <Navbar />
-      <div className="relative flex bg-muted/40 pt-3">
+      <div className="relative flex bg-muted/40">
         <div
           className="grid lg:grid-cols-5 grid-cols-1 h-full w-full pr-4 items-start"
           // style={{alignSelf: "start"}}
@@ -108,6 +108,20 @@ export default function ClientLayout({children}) {
 
                 <Scan />
                 <p className="ml-2 text-md">Frames Editor</p>
+              </div>
+              <div
+                className={`flex items-center px-6 gap-4 mr-4 rounded-lg relative ${
+                  path === "viewer" &&
+                  "text-purple-900 font-semibold bg-gray-100"
+                } py-3 cursor-pointer`}
+                onClick={() => router.push("/viewer")}
+              >
+                {path.split("client/")[1] === "editor" && (
+                  <div className="bg-purple-600 w-[5px] rounded-r-lg h-[80%] absolute left-0 top-1" />
+                )}
+
+                <Eye />
+                <p className="ml-2 text-md">Viewer</p>
               </div>
             </div>
           </div>

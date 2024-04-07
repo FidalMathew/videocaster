@@ -40,7 +40,7 @@ import {useFarcasterContext} from "@/app/context/farcasterContext";
 export default function Feed() {
   const [casts, setCasts] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-
+  const formikRef = useRef(null);
   const {submitCast} = useExperimentalFarcasterSigner();
 
   useEffect(() => {
@@ -84,13 +84,13 @@ export default function Feed() {
       console.log(err);
       const formikRef = useRef(null);
     }
-    // const handleSubmit = () => {
-    //   // Call submitForm() method on the Formik instance
-    //   if (formikRef.current) {
-    //     formikRef.current.handleSubmit();
-    //     // console.log(formikRef.current);
-    //   }
-    // };
+  };
+  const handleSubmit = () => {
+    // Call submitForm() method on the Formik instance
+    if (formikRef.current) {
+      formikRef.current.handleSubmit();
+      // console.log(formikRef.current);
+    }
   };
   return (
     <>
@@ -99,10 +99,10 @@ export default function Feed() {
           <DialogHeader className={""}>
             <DialogTitle className="px-4 py-4"></DialogTitle>
           </DialogHeader>
-          {/* <DialogDescription>
+          <DialogDescription>
             <Formik
               innerRef={formikRef}
-              initialValues={{ castText: "" }}
+              initialValues={{castText: ""}}
               onSubmit={(actions, values) => console.log(actions)}
             >
               {(formik) => (
@@ -124,13 +124,12 @@ export default function Feed() {
                       />
                     </div>
                   </div>
-                 
                 </Form>
               )}
             </Formik>
-          </DialogDescription> */}
+          </DialogDescription>
 
-          {/* <DialogFooter className={"py-2 pr-2 border-t"}>
+          <DialogFooter className={"py-2 pr-2 border-t"}>
             <Button
               size="sm"
               className="bg-purple-700 hover:bg-purple-800"
@@ -138,7 +137,7 @@ export default function Feed() {
             >
               Casts
             </Button>
-          </DialogFooter> */}
+          </DialogFooter>
         </DialogContent>
       </Dialog>
       <div className="flex flex-col gap-5 w-auto lg:col-span-3 pt-0 relative mx-4">
@@ -188,7 +187,7 @@ export default function Feed() {
           </TooltipProvider>
         </div>
 
-        {/*  */}
+        {console.log(casts, "casts")}
         <div className="h-full flex flex-col space-y-5 w-full">
           {casts.map((item, idx) => (
             <Card key={idx} className="">
@@ -213,10 +212,21 @@ export default function Feed() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-5 h-fit">
-                {item.content}
+                <p className="mb-5">{item.content}</p>
                 {/* <div className="w-full border-2 h-[100px] rounded-md"> */}
                 {item.embeds.length > 0 && item.embeds[0].url && (
-                  <Frame frameUrl={item.embeds[0].url} />
+                  <>
+                    {item.embeds[0].url &&
+                      item.embeds[0].url.match(/\.(jpeg|jpg|gif|png)$/) !==
+                        null && (
+                        <img
+                          src={item.embeds[0].url}
+                          alt="img"
+                          className="w-1/2 m-auto"
+                        />
+                      )}
+                    <Frame frameUrl={item.embeds[0].url} />
+                  </>
                 )}
                 {/* </div> */}
               </CardContent>
