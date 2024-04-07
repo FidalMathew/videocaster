@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -9,16 +9,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {Input} from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {Button} from "@/components/ui/button";
-import {Pencil} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Pencil } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -29,8 +29,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {Textarea} from "@/components/ui/textarea";
-import {useExperimentalFarcasterSigner} from "@privy-io/react-auth";
+import { Textarea } from "@/components/ui/textarea";
+import { useExperimentalFarcasterSigner } from "@privy-io/react-auth";
 import axios from "axios";
 import Frame from "@/components/ui/Frame";
 
@@ -38,7 +38,7 @@ export default function MyCasts() {
   const [casts, setCasts] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const {submitCast} = useExperimentalFarcasterSigner();
+  const { submitCast } = useExperimentalFarcasterSigner();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,7 +79,7 @@ export default function MyCasts() {
         mentionsPositions: [],
         // parentUrl: parentUrl,
       };
-      const {hash} = await submitCast(castBody);
+      const { hash } = await submitCast(castBody);
       console.log(hash, "hash");
     } catch (err) {
       console.log(err);
@@ -88,7 +88,7 @@ export default function MyCasts() {
 
   return (
     <>
-      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+      {/* <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="p-0 top-[28vh]">
           <DialogHeader className={""}>
             <DialogTitle className="px-4 py-4"></DialogTitle>
@@ -112,7 +112,7 @@ export default function MyCasts() {
             </Button>
           </DialogFooter>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
       <div className="flex flex-col gap-5 w-auto lg:col-span-3 pt-0 relative mx-4">
         {/* <Card className="h-[20vh] mb-1 z-10 rounded-lg sticky top-[10vh]">
           <CardHeader className="p-0">
@@ -140,7 +140,7 @@ export default function MyCasts() {
           </CardContent>
           
         </Card> */}
-        <TooltipProvider>
+        {/* <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
               <Button
@@ -149,14 +149,13 @@ export default function MyCasts() {
                 onClick={() => setModalOpen(true)}
               >
                 <Pencil className="h-7 w-7" />
-                {/* <span className="ml-2 text-sm">Create Cast</span> */}
               </Button>
             </TooltipTrigger>
             <TooltipContent className="mr-10">
               <p>Create Cast</p>
             </TooltipContent>
           </Tooltip>
-        </TooltipProvider>
+        </TooltipProvider> */}
         {/*  */}
         <div className="h-full flex flex-col space-y-5 w-full">
           {casts.map((item, idx) => (
