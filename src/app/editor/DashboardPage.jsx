@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
-import {Formik, Field, Form, FieldArray, useFormikContext} from "formik";
+import {Formik, Field, Form, useFormikContext} from "formik";
 import Dropzone from "react-dropzone";
 import axios from "axios";
 import {Badge} from "@/components/ui/badge";
@@ -23,63 +23,126 @@ import {
   Newspaper,
   Scan,
   SquareArrowOutUpRight,
+  ReloadIcon,
 } from "lucide-react";
 import {usePathname} from "next/navigation";
 import {Switch} from "@/components/ui/switch";
 import * as tus from "tus-js-client";
 import {Progress} from "@/components/ui/progress";
 import {File, CircleCheck} from "lucide-react";
-import Link from "next/link";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogHeader,
-  DialogTitle,
   DialogFooter,
+  DialogHeader,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {ArrowLeftIcon, ReloadIcon} from "@radix-ui/react-icons";
-import {useFarcasterContext} from "../context/farcasterContext";
+import Link from "next/link";
 
 export default function DashboardPage() {
   const router = useRouter();
+  const [farcasterAccount, setFarcasterAccount] = useState(null);
+  const [hasEmbeddedWallet, setHasEmbeddedWallet] = useState(false);
   const pathname = usePathname();
   const path = pathname.split("/")[1];
 
-  // media states
   const [toggleMedia, setToggleMedia] = useState(false);
   const [progress, setProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState("idle");
   const [playbackId, setPlaybackId] = useState("");
 
   const {
-    farcasterAccount,
-    hasEmbeddedWallet,
-    farcasterSubject,
-    requestFarcasterSigner,
-    submitCast,
-    isAuthenticated,
-    canRemoveAccount,
-    linkFarcaster,
-    unlinkFarcaster,
-    exportWallet,
-    logout,
     ready,
     authenticated,
     user,
-  } = useFarcasterContext();
+    logout,
+    linkFarcaster,
+    unlinkFarcaster,
+    exportWallet,
+  } = usePrivy();
 
-  // formik
+  useEffect(() => {
+    if (ready && !authenticated) {
+      router.push("/");
+    }
+    if (user) {
+      setFarcasterAccount(
+        user.linkedAccounts.find((account) => account.type === "farcaster")
+      );
+
+      setHasEmbeddedWallet(
+        !!user.linkedAccounts.find(
+          (account) =>
+            account.type === "wallet" && account.walletClient === "privy"
+        )
+      );
+    }
+    const castBody = {
+      text: "fidal",
+      embeds: [
+        {
+          url: "https://fc-polls.vercel.app/polls/054aee65-c63d-46c1-a1f9-a05b747860f6",
+        },
+      ],
+      embedsDeprecated: [],
+      mentions: [],
+      mentionsPositions: [],
+      // parentUrl: parentUrl,
+    };
+    // if (farcasterAccount && farcasterAccount.signerPublicKey)
+    //   (async function () {
+    //     const {hash} = await submitCast(castBody);
+    //     console.log(hash, "hash");
+    //   })();
+  }, [ready, authenticated, router, user]);
+
+  const numAccounts = user?.linkedAccounts?.length || 0;
+  const canRemoveAccount = numAccounts > 1;
+
+  //   farcaster
+  const farcasterSubject = user?.farcaster?.fid || null;
+
+  //   console.log(farcasterSubject, user, "farcaster");
+  const {requestFarcasterSigner, submitCast} = useExperimentalFarcasterSigner();
+
+  //   const farcasterAccount = user.linkedAccounts.find(
+  //     (account) => account.type === "farcaster"
+  //   );
+  // console.log(farcasterAccount, "acc");
+  const isAuthenticated = ready && authenticated;
+
+  // const handleFormikChange = (formikValues) => {
+  //   // Update the button properties state based on the formik values
+  //   const newButtonProperties = Array.from(
+  //     {length: formikValues.noOfButtons},
+  //     (_, index) => ({
+  //       action: formikValues.buttonProperties[index]?.action || "",
+  //       buttonContent:
+  //         formikValues.buttonProperties[index]?.buttonContent || "",
+  //       target: formikValues.buttonProperties[index]?.target || "",
+  //     })
+  //   );
+  //   setButtonProperties(newButtonProperties);
+  //   setNumberOfbuttons(formikValues.noOfButtons);
+  // };
   const [formikState, setFormikState] = useState({});
+  // const [formikSetterFunc, setFormikSetterFunc] = useState(null);
   const ExternalStateSyncComponent = () => {
     const formik = useFormikContext();
+    // const specificFormikFunction = formik.setFieldValue;
+    // Effect to sync external state with Formik state
     useEffect(() => {
       setFormikState(formik.values);
+      // setFormikSetterFunc((fieldName, value, shouldValidate) =>
+      //   specificFormikFunction(fieldName, value, shouldValidate)
+      // );
     }, [formik.values]);
 
-    return null;
+    return null; // This component doesn't render anything visible
   };
+
+  // console.log(formikState, "state");
   // formik ref
   const formikRef = useRef(null);
 
@@ -114,8 +177,8 @@ export default function DashboardPage() {
     }
   };
 
-  // livepeer
   const apiKey = process.env.NEXT_PUBLIC_LIVEPEER_API_KEY;
+
   const createAsset = async (file) => {
     const assetData = {
       name: file.name,
@@ -158,7 +221,7 @@ export default function DashboardPage() {
         });
 
         upload.start();
-        setUploadStatus("upload_started");
+
         console.log("upload started");
       })
       .catch((error) => {
@@ -166,7 +229,8 @@ export default function DashboardPage() {
       });
   };
 
-  // pinata
+  console.log(uploadStatus, "uploadStatus");
+
   const [currentFile, setCurrentFile] = useState(null);
   const [openPublishModal, setOpenPublishModal] = useState(false);
 
@@ -238,8 +302,6 @@ export default function DashboardPage() {
     }
   };
 
-  console.log(ready, authenticated, "ready");
-
   return (
     <>
       <Dialog
@@ -249,11 +311,11 @@ export default function DashboardPage() {
           setCurrentStep(0);
         }}
       >
-        {/* <DialogTrigger asChild>
+        <DialogTrigger asChild>
           <Button>Open Dialog</Button>
-        </DialogTrigger> */}
+        </DialogTrigger>
         {currentStep === 0 ? (
-          <DialogContent className="h-[500px] duration-200 ease-in-out transition-all">
+          <DialogContent className="h-[400px] duration-200 ease-in-out transition-all">
             <DialogHeader>
               {/* <DialogTitle>Are you absolutely sure?</DialogTitle> */}
               <DialogDescription className="pt-10">
@@ -283,7 +345,7 @@ export default function DashboardPage() {
               className="absolute left-5 top-5 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground cursor-pointer"
               onClick={() => setCurrentStep(0)}
             >
-              <ArrowLeftIcon />
+              {/* <ArrowLeftIcon /> */}
             </div>
             <DialogHeader>
               {/* <DialogTitle>Are you absolutely sure?</DialogTitle> */}
@@ -299,7 +361,24 @@ export default function DashboardPage() {
         <main className="w-full h-full">
           {ready && authenticated ? (
             <div className="h-full w-full">
-              <Navbar setOpenPublishModal={setOpenPublishModal} />
+              <Navbar
+                setOpenPublishModal={setOpenPublishModal}
+                authObj={{
+                  ready,
+                  authenticated,
+                  user,
+                  logout,
+                  linkFarcaster,
+                  unlinkFarcaster,
+                  exportWallet,
+                  farcasterAccount,
+                  farcasterSubject,
+                  // requestFarcasterSigner,
+                  canRemoveAccount,
+                  hasEmbeddedWallet,
+                  isAuthenticated,
+                }}
+              />
 
               {/* <Button onClick={createAsset}>Create</Button> */}
 
@@ -311,38 +390,31 @@ export default function DashboardPage() {
                   >
                     {/* profile info */}
                     <div className="z-0 w-[90%] h-[80px] border rounded-lg flex items-center just gap-3 pl-3 ml-3 hover:bg-gray-100 cursor-pointer">
-                      <Avatar className="h-12 w-12">
-                        <AvatarImage
-                          src={
-                            farcasterAccount?.pfp ||
-                            "https://github.com/shadcn.png"
-                          }
-                        />
+                      <Avatar className="">
+                        <AvatarImage src="https://github.com/shadcn.png" />
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
 
                       <div className="flex flex-col">
-                        <p className="font-bold">
-                          {farcasterAccount?.displayName}
-                        </p>
-                        <p className="text-sm font-normal">{`@${farcasterAccount?.username}`}</p>
+                        <p className="font-bold">Farcaster Id</p>
+                        <p className="text-sm font-normal">@farcasterid</p>
                       </div>
                     </div>
                     <div className="w-full h-full flex flex-col gap-2">
                       {/* <div
-                className={`flex items-center rounded-r-lg relative ${
-                  path === "mycasts" &&
-                  "text-green-900 font-semibold bg-gray-100"
-                } py-3 mt-4 px-6 gap-4 cursor-pointer`}
-                onClick={() => router.push("/client/mycasts")}
-              >
-                {path === "mycasts" && (
-                  <div className="bg-green-600 w-[5px] rounded-r-lg h-[80%] absolute left-0 top-2" />
-                )}
+              className={`flex items-center rounded-r-lg relative ${
+                path === "mycasts" &&
+                "text-green-900 font-semibold bg-gray-100"
+              } py-3 mt-4 px-6 gap-4 cursor-pointer`}
+              onClick={() => router.push("/client/mycasts")}
+            >
+              {path === "mycasts" && (
+                <div className="bg-green-600 w-[5px] rounded-r-lg h-[80%] absolute left-0 top-2" />
+              )}
 
-                <Clapperboard />
-                <p className="ml-2 text-md">My Casts</p>
-              </div> */}
+              <Clapperboard />
+              <p className="ml-2 text-md">My Casts</p>
+            </div> */}
 
                       <div
                         className={`mt-5 flex items-center p-4 px-6 gap-4 mr-4 rounded-lg relative py-3 cursor-pointer`}
@@ -436,25 +508,25 @@ export default function DashboardPage() {
                                       </div>
                                     )}
                                   {/* {
-                                   : uploadStatus === "uploading" ? (
-                                    <div className="flex flex-col gap-2 w-full items-center">
-                                      <p>{progress}</p>
-                                      <Progress
-                                        value={progress}
-                                        className="w-[60%] h-1 rounded-2xl"
-                                      />
-                                      <p>uploading in progress</p>
-                                    </div>
-                                  ) : (
-                                    uploadStatus === "error" && (
-                                      <div>
-                                        <p className="text-red-500 text-xs">
-                                          Error Occured
-                                        </p>
+                                     : uploadStatus === "uploading" ? (
+                                      <div className="flex flex-col gap-2 w-full items-center">
+                                        <p>{progress}</p>
+                                        <Progress
+                                          value={progress}
+                                          className="w-[60%] h-1 rounded-2xl"
+                                        />
+                                        <p>uploading in progress</p>
                                       </div>
-                                    )
-                                  )) 
-                                  } */}
+                                    ) : (
+                                      uploadStatus === "error" && (
+                                        <div>
+                                          <p className="text-red-500 text-xs">
+                                            Error Occured
+                                          </p>
+                                        </div>
+                                      )
+                                    ))
+                                    } */}
 
                                   {uploadStatus === "uploading" && (
                                     <div className="flex flex-col gap-2 w-full items-center justify-center">
@@ -489,12 +561,6 @@ export default function DashboardPage() {
                                   {/* bug:  */}
                                   {uploadStatus === "idle" && (
                                     <p>Drag and drop your video here</p>
-                                  )}
-                                  {uploadStatus === "upload_started" && (
-                                    <div className="flex flex-col gap-2 w-full items-center">
-                                      <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                                      <p className="text-sm">Upload Started</p>
-                                    </div>
                                   )}
                                 </div>
                               </div>
@@ -647,11 +713,11 @@ export default function DashboardPage() {
                             Fallback Image Link
                           </Label>
                           {/* <Field
-                          as={Input}
-                          name="fallbackimage"
-                          id="fallbackimage"
-                          type="file"
-                        /> */}
+                            as={Input}
+                            name="fallbackimage"
+                            id="fallbackimage"
+                            type="file"
+                          /> */}
                           <div className="flex gap-2 items-center">
                             <Field
                               as={Input}
@@ -664,7 +730,7 @@ export default function DashboardPage() {
                                 pinFileToIPFS(file);
                               }}
                             />
-                            {imageUrl && fileUploadLoading === false ? (
+                            {imageUrl && fileUploadLoading === false && (
                               <Link
                                 href={imageUrl}
                                 target="_blank"
@@ -672,12 +738,6 @@ export default function DashboardPage() {
                               >
                                 <SquareArrowOutUpRight className="h-5 w-5" />
                               </Link>
-                            ) : (
-                              fileUploadLoading === true && (
-                                <div className="aspect-square border rounded h-10 grid place-items-center text-gray-500">
-                                  <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                                </div>
-                              )
                             )}
                             {imageUrl && fileUploadLoading === false && (
                               <CircleCheck className="text-green-600" />
@@ -685,8 +745,8 @@ export default function DashboardPage() {
                           </div>
                         </div>
                         {/* <Button className="w-full" type="submit">
-                        Publish
-                      </Button> */}
+                            Publish
+                          </Button> */}
                       </Form>
                     )}
                   </Formik>
@@ -728,33 +788,24 @@ export default function DashboardPage() {
                     >
                       {/* Your Video here */}
                       {console.log(playbackId, "pid")}
-                      {playbackId === "" && toggleMedia === true && (
+                      {playbackId === "" ? (
                         <div className="w-full h-[300px] bg-slate-100 rounded-lg flex justify-center items-center">
                           Your Video here
                         </div>
-                      )}
-                      {toggleMedia === true && playbackId !== "" && (
+                      ) : toggleMedia === true && playbackId !== "" ? (
                         <iframe
                           key={playbackId}
                           className="w-full h-full rounded-lg"
                           src={`https://lvpr.tv?v=${playbackId}`}
                           frameborder="0"
                         ></iframe>
-                      )}
-
-                      {toggleMedia === false && imageUrl !== "" && (
-                        <img
-                          key={imageUrl}
-                          src={imageUrl}
-                          alt="Preview Image"
-                          style={{maxWidth: "100%", maxHeight: "300px"}}
-                        />
-                      )}
-
-                      {toggleMedia === false && imageUrl === "" && (
-                        <div className="w-full h-[300px] bg-slate-100 rounded-lg flex justify-center items-center">
-                          Your Image here
-                        </div>
+                      ) : (
+                        imageUrl && (
+                          <img
+                            className="w-full h-full rounded-lg"
+                            src={imageUrl}
+                          />
+                        )
                       )}
                     </div>
                     {formikState.noOfButtons > 0 && (
@@ -766,7 +817,6 @@ export default function DashboardPage() {
                               key={index}
                               variant="outline"
                               className="col-span-1"
-                              // variant="outline"
                             >
                               {formikState.buttonProperties[index]
                                 .buttonContent === ""

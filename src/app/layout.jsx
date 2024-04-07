@@ -2,6 +2,7 @@ import {Inter} from "next/font/google";
 import "./globals.css";
 const inter = Inter({subsets: ["latin"]});
 import Providers from "./Provider";
+import FarcasterContextProvider from "./context/farcasterContext";
 
 export const metadata = {
   title: "Create Next App",
@@ -18,7 +19,7 @@ export default function RootLayout({children}) {
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <FarcasterContextProvider>{children}</FarcasterContextProvider>
         </Providers>
       </body>
     </html>
