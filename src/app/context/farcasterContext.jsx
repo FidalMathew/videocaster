@@ -21,19 +21,6 @@ const FarcasterContextProvider = ({children}) => {
     exportWallet,
   } = usePrivy();
 
-  console.log(
-    farcasterAccount,
-    hasEmbeddedWallet,
-    ready,
-    authenticated,
-    user,
-    logout,
-    linkFarcaster,
-    unlinkFarcaster,
-    exportWallet,
-    "all val"
-  );
-
   useEffect(() => {
     if (ready && !authenticated) {
       router.push("/");

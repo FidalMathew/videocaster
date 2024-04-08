@@ -50,6 +50,7 @@ export default function DashboardPage() {
 
   // media states
   const [toggleMedia, setToggleMedia] = useState(false);
+  const [toggleMedia1, setToggleMedia1] = useState(false);
   const [progress, setProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState("idle");
   const [playbackId, setPlaybackId] = useState("");
@@ -187,6 +188,7 @@ export default function DashboardPage() {
   const [fileUploadLoading, setFileUploadLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
   const [frameUrl, setFrameUrl] = useState("");
+  const [buildingState, setBuildingState] = useState("not_started");
 
   const pinFileToIPFS = async (image) => {
     const form = new FormData();
@@ -272,23 +274,31 @@ export default function DashboardPage() {
       const data = filteredDeployments[0];
       console.log("Deployment Status:", data.readyState);
 
+      if (data.readyState === "QUEUED") {
+        setBuildingState("queued");
+      }
+
+      if (data.readyState === "BUILDING") {
+        setBuildingState("building");
+      }
+
       if (data.readyState !== "READY") {
         // If deployment is not ready, schedule the next check after 10 seconds
         setTimeout(checkDeploymentStatus, 5000); // 10 seconds (10000 milliseconds)
       } else {
         console.log("Deployment is READY!");
+        setBuildingState("built");
         setCurrentStep(1);
         setLoading(false);
         console.log("Deployment URL:", data.url);
       }
     } catch (error) {
       console.error("Error fetching deployments:", error.message);
+      setBuildingState("error");
     }
   };
 
   const handleStepForm = async () => {
-    setLoading(true);
-
     const url = publishFrame(formikState);
     console.log(url, "url");
     setFrameUrl(url);
@@ -302,6 +312,7 @@ export default function DashboardPage() {
       console.log("Deployment completed");
     } catch (error) {
       console.error("Error handling deployment:", error.message);
+      setBuildingState("error");
     }
   };
 
@@ -320,25 +331,136 @@ export default function DashboardPage() {
           <Button>Open Dialog</Button>
         </DialogTrigger> */}
         {currentStep === 0 ? (
-          <DialogContent className="h-[500px] duration-200 ease-in-out transition-all">
+          <DialogContent className="h-fit duration-200 ease-in-out transition-all">
             <DialogHeader>
-              {/* <DialogTitle>Are you absolutely sure?</DialogTitle> */}
-              <DialogDescription className="pt-10 h-full">
-                Are you sure you want to publish this frame?
-              </DialogDescription>
+              {
+                // check if all the field are filled before proceeding
+                formikState.nameOfFrameURL === "" &&
+                imageUrl === "" &&
+                playbackId === "" ? (
+                  <DialogDescription className="p-10 text-center">
+                    <DialogTitle>No Frames set</DialogTitle>
+                  </DialogDescription>
+                ) : (
+                  <>
+                    <DialogTitle>{formikState.nameOfFrameURL}</DialogTitle>
+
+                    <DialogDescription className="h-full pt-4 pb-6">
+                      <div className="h-fit w-full rounded-lg p-5 flex flex-col gap-6 border">
+                        <div className="flex gap-2 items-center">
+                          <Switch
+                            // className="w-10 h-5"
+                            checked={toggleMedia1}
+                            onCheckedChange={setToggleMedia1}
+                          />
+                          <span className="text-sm">
+                            {toggleMedia1 ? "Video" : "Image"}
+                          </span>
+                        </div>
+                        <div
+                          className="w-full h-[300px] rounded-lg flex justify-center items-center"
+                          key={playbackId}
+                        >
+                          {/* Your Video here */}
+                          {/* {console.log(playbackId, "pid")} */}
+                          {playbackId === "" && toggleMedia1 === true && (
+                            <div className="w-full h-[300px] bg-slate-100 aspec rounded-lg flex justify-center items-center">
+                              Your Video here
+                            </div>
+                          )}
+                          {toggleMedia1 === true &&
+                            playbackId !== "" &&
+                            uploadStatus === "success" &&
+                            currentFile != null && (
+                              <iframe
+                                key={uploadStatus}
+                                className="w-full h-full rounded-lg"
+                                src={`https://lvpr.tv?v=${playbackId}`}
+                                // src={URL.createObjectURL(currentFile)}
+                                frameborder="0"
+                              ></iframe>
+                            )}
+
+                          {toggleMedia1 === false && imageUrl !== "" && (
+                            <img
+                              key={imageUrl}
+                              src={imageUrl}
+                              alt="Preview Image"
+                              style={{maxWidth: "100%", maxHeight: "300px"}}
+                            />
+                          )}
+
+                          {toggleMedia1 === false && imageUrl === "" && (
+                            <div className="w-full h-[300px] bg-slate-100 rounded-lg flex justify-center items-center">
+                              Your Image here
+                            </div>
+                          )}
+                        </div>
+                        {formikState.noOfButtons > 0 && (
+                          <div className="grid grid-cols-2 gap-4">
+                            {Array.from(
+                              {length: formikState.noOfButtons},
+                              (_, index) => (
+                                <Button
+                                  key={index}
+                                  variant="outline"
+                                  className="col-span-1"
+                                  // variant="outline"
+                                >
+                                  {formikState.buttonProperties[index]
+                                    .action === "link" && (
+                                    <SquareArrowOutUpRight className="mr-2 h-4 w-4" />
+                                  )}
+                                  {formikState.buttonProperties[index]
+                                    .buttonContent === ""
+                                    ? `Button ${index + 1}`
+                                    : formikState.buttonProperties[index]
+                                        .buttonContent}
+                                </Button>
+                              )
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </DialogDescription>
+                  </>
+                )
+              }
+
               <DialogFooter>
-                {loading ? (
+                {buildingState === "queued" && (
                   <Button disabled variant={"outline"} className="w-full">
                     <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                    Please wait
+                    Queueing for deployment...
                   </Button>
-                ) : (
+                )}
+
+                {buildingState == "building" && (
+                  <Button disabled variant={"outline"} className="w-full">
+                    <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                    Building...
+                  </Button>
+                )}
+
+                {buildingState === "not_started" && (
                   <Button
-                    // variant={"outline"}
+                    variant={"outline"}
+                    onClick={() => handleStepForm()}
                     className="w-full"
-                    onClick={handleStepForm}
                   >
-                    Publish
+                    Build Frame
+                  </Button>
+                )}
+
+                {buildingState === "built" && (
+                  <Button variant={"outline"} className="w-full">
+                    <CircleCheck className="text-green-600" /> Done
+                  </Button>
+                )}
+
+                {buildingState === "error" && (
+                  <Button variant={"outline"} className="w-full">
+                    Error
                   </Button>
                 )}
               </DialogFooter>
@@ -346,16 +468,30 @@ export default function DashboardPage() {
           </DialogContent>
         ) : (
           <DialogContent className="h-[300px] duration-200 ease-in-out transition-all">
-            <div
+            {/* <div
               className="absolute left-5 top-5 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground cursor-pointer"
               onClick={() => setCurrentStep(0)}
             >
               <ArrowLeftIcon />
-            </div>
+            </div> */}
             <DialogHeader>
               {/* <DialogTitle>Are you absolutely sure?</DialogTitle> */}
-              <DialogDescription className="pt-10">
+              {/* <DialogDescription className="pt-10">
                 Success! View your Frame at {frameUrl}
+              </DialogDescription> */}
+              {console.log(frameUrl, "frameUrl")}
+
+              <DialogDescription className="p-10 text-center flex-col flex items-center justify-center gap-4">
+                <CircleCheck className="text-green-600 h-20 w-20" />
+                <p className="text-lg font-semibold"> Frame Published</p>
+                {/* <Link href={frameUrl} target="_blank">
+                  <Button variant="outline" className="" size="sm">
+                    <SquareArrowOutUpRight className="h-4 w-4 mr-3" />
+                    View Frames
+                  </Button>
+                </Link> */}
+                {/* <Input disabled value={frameUrl} className="w-full" />; */}
+                {frameUrl}
               </DialogDescription>
             </DialogHeader>
           </DialogContent>
@@ -764,9 +900,9 @@ export default function DashboardPage() {
                             )}
                           </div>
                         </div>
-                        <Button className="w-full" type="submit">
+                        {/* <Button className="w-full" type="submit">
                           Publish
-                        </Button>
+                        </Button> */}
                       </Form>
                     )}
                   </Formik>
@@ -852,6 +988,10 @@ export default function DashboardPage() {
                               className="col-span-1"
                               // variant="outline"
                             >
+                              {formikState.buttonProperties[index].action ===
+                                "link" && (
+                                <SquareArrowOutUpRight className="mr-2 h-4 w-4" />
+                              )}
                               {formikState.buttonProperties[index]
                                 .buttonContent === ""
                                 ? `Button ${index + 1}`
