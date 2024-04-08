@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import {Button} from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,9 +9,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Video } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { usePathname, useRouter } from "next/navigation";
+import {Video} from "lucide-react";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {usePathname, useRouter} from "next/navigation";
 import {
   Sheet,
   SheetContent,
@@ -20,11 +20,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Clapperboard, Newspaper, PanelLeft } from "lucide-react";
+import {Clapperboard, Newspaper, PanelLeft} from "lucide-react";
 import Link from "next/link";
-import { useFarcasterContext } from "@/app/context/farcasterContext";
+import {useFarcasterContext} from "@/app/context/farcasterContext";
 
-export default function Navbar({ setOpenPublishModal }) {
+export default function Navbar({setOpenPublishModal}) {
   const router = useRouter();
   const pathname = usePathname();
   // console.log(pathname.split("/")[1] === "feed", "pathname");
@@ -38,7 +38,7 @@ export default function Navbar({ setOpenPublishModal }) {
     unlinkFarcaster,
     canRemoveAccount,
     logout,
-    exportWallet
+    exportWallet,
   } = useFarcasterContext();
 
   return (
@@ -126,7 +126,7 @@ export default function Navbar({ setOpenPublishModal }) {
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="mr-4 z-[1000]">
-                  {farcasterSubject ? (
+                  {/* {farcasterSubject ? (
                     <DropdownMenuLabel
                       onClick={() => {
                         unlinkFarcaster(farcasterSubject);
@@ -145,7 +145,16 @@ export default function Navbar({ setOpenPublishModal }) {
                     >
                       Link Farcaster
                     </DropdownMenuLabel>
-                  )}
+                  )} */}
+
+                  <DropdownMenuLabel
+                    onClick={() => {
+                      exportWallet();
+                    }}
+                    className="text-sm rounded-md cursor-pointer disabled:border-gray-500 disabled:text-gray-500 hover:disabled:text-gray-500"
+                  >
+                    Export Wallet
+                  </DropdownMenuLabel>
 
                   <DropdownMenuSeparator />
                   <DropdownMenuLabel
@@ -159,9 +168,7 @@ export default function Navbar({ setOpenPublishModal }) {
             </div>
           )}
         </div>
-        <Button onClick={exportWallet}>
-          Export Wallet
-        </Button>
+        {/* <Button onClick={exportWallet}>Export Wallet</Button> */}
       </div>
     </>
   );
