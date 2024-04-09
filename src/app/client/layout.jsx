@@ -72,7 +72,7 @@ export default function ClientLayout({children}) {
                   path === "mycasts" &&
                   "text-purple-900 font-semibold bg-gray-100"
                 } py-3 cursor-pointer`}
-                onClick={() => router.push("/client/mycasts")}
+                onClick={() => router.push(`/client/${farcasterAccount.fid}`)}
               >
                 {path === "mycasts" && (
                   <div className="bg-purple-600 w-[5px] rounded-r-lg h-[80%] absolute left-0 top-1" />

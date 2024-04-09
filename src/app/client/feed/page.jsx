@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import {
   Card,
   CardContent,
@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 // import { Input } from "@/components/ui/input";
 // import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -18,8 +18,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {Pencil} from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -30,24 +30,29 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { useExperimentalFarcasterSigner } from "@privy-io/react-auth";
+import {Textarea} from "@/components/ui/textarea";
+import {useExperimentalFarcasterSigner} from "@privy-io/react-auth";
 import axios from "axios";
 import Frame from "@/components/ui/Frame";
-import { Field, Form, Formik } from "formik";
-import { useFarcasterContext } from "@/app/context/farcasterContext";
+import {Field, Form, Formik} from "formik";
+import {useFarcasterContext} from "@/app/context/farcasterContext";
+import Link from "next/link";
 
 export default function Feed() {
   const [casts, setCasts] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const formikRef = useRef(null);
-  const { submitCast } = useExperimentalFarcasterSigner();
+  const {submitCast} = useExperimentalFarcasterSigner();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get("/api/casts");
-        console.log(response, response.data.message.data.casts.slice(0, 40), "data");
+        console.log(
+          response,
+          response.data.message.data.casts.slice(0, 40),
+          "data"
+        );
         // console.log(response.data.message.data.casts);
         setCasts(response.data.message.data.casts.slice(0, 40));
       } catch (error) {
@@ -80,7 +85,7 @@ export default function Feed() {
       };
 
       console.log(castBody, "castBody");
-      const { hash } = await submitCast(castBody);
+      const {hash} = await submitCast(castBody);
       console.log(hash, "hash");
     } catch (err) {
       console.log(err);
@@ -96,18 +101,17 @@ export default function Feed() {
   };
 
   const handleCastContent = (text) => {
-
     console.log(text);
     const words = text.split(/\s+/);
 
     console.log(words, "Cast content");
     let cast = {
       castText: text,
-    }
+    };
 
     for (let i = 0; i < words.length; i++) {
       const word = words[i];
-      if (word.startsWith('http://') || word.startsWith('https://')) {
+      if (word.startsWith("http://") || word.startsWith("https://")) {
         cast["embedUrl"] = word;
       }
     }
@@ -115,8 +119,7 @@ export default function Feed() {
     console.log(cast);
 
     addCastToFarcaster(cast);
-
-  }
+  };
 
   return (
     <>
@@ -128,9 +131,9 @@ export default function Feed() {
           <DialogDescription>
             <Formik
               innerRef={formikRef}
-              initialValues={{ castText: "" }}
+              initialValues={{castText: ""}}
               onSubmit={(actions, values) => {
-                console.log(actions, "value ")
+                console.log(actions, "value ");
                 handleCastContent(actions.castText);
               }}
             >
@@ -217,7 +220,7 @@ export default function Feed() {
         </div>
 
         {console.log(casts, "casts")}
-        <div className="h-full flex flex-col space-y-5 w-full">
+        <div className="h-full flex flex-col space-y-5 w-full mt-4">
           {casts.map((item, idx) => (
             <Card key={idx} className="">
               <CardHeader className="p-0">
@@ -228,12 +231,17 @@ export default function Feed() {
                   </Avatar>
 
                   <div className="flex flex-col">
-                    <p className="font-bold">
-                      {item.author.display_name}{" "}
-                      <span className="font-normal text-sm">
-                        @{item.author.username}
-                      </span>
-                    </p>
+                    <Link
+                      href={`/client/${item.fid}`}
+                      // className="cursor-pointer"
+                    >
+                      <p className="font-bold">
+                        {item.author.display_name}{" "}
+                        <span className="font-normal text-sm">
+                          @{item.author.username}
+                        </span>
+                      </p>
+                    </Link>
                     <p className="text-xs font-normal">
                       {convertDate(item.timestamp)}
                     </p>
@@ -247,7 +255,7 @@ export default function Feed() {
                   <>
                     {item.embeds[0].url &&
                       item.embeds[0].url.match(/\.(jpeg|jpg|gif|png)$/) !==
-                      null && (
+                        null && (
                         <img
                           src={item.embeds[0].url}
                           alt="img"

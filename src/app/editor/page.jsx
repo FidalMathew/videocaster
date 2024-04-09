@@ -447,6 +447,7 @@ export default function DashboardPage() {
                     variant={"outline"}
                     onClick={() => handleStepForm()}
                     className="w-full"
+                    disabled
                   >
                     Build Frame
                   </Button>

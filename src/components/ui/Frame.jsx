@@ -4,7 +4,7 @@ import {scrapeMetaData} from "@/utils/scrape";
 import axios from "axios";
 import {Button} from "./button";
 import {SquareArrowOutUpRight} from "lucide-react";
-function Frame({frameUrl}) {
+function Frame({frameUrl, toggleMedia, setToggleMedia}) {
   const [responseFrames, setResponseFrames] = useState(null);
   const [mainURL, setMainURL] = useState("");
 
@@ -39,10 +39,12 @@ function Frame({frameUrl}) {
   };
 
   const linkFrame = (link_url) => {
-    console.log("link frame");
+    console.log("fucku", link_url);
     try {
-      // warning before leaving the page
-      window.open(link_url, "_blank");
+      if (link_url) {
+        // warning before leaving the page
+        window.open(link_url, "_blank");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -69,9 +71,9 @@ function Frame({frameUrl}) {
   // console.log(frameUrl, "res");
 
   return (
-    <div className="h-fit w-full flex flex-col gap-5">
-      <div className="flex justify-center">
-        {responseFrames && responseFrames.video && (
+    <div className="h-fit w-full flex flex-col gap-5 border-2 border-slate-100 ronuded-lg p-4">
+      <div className="flex justify-center ">
+        {responseFrames && toggleMedia && responseFrames.video && (
           <iframe
             src={responseFrames?.video}
             className="aspect-video rounded"
@@ -98,7 +100,7 @@ function Frame({frameUrl}) {
           />
         )}
       </div>
-      {responseFrames && responseFrames.fallbackImage && (
+      {responseFrames && !toggleMedia && responseFrames.fallbackImage && (
         <img src={responseFrames?.fallbackImage} width="100%" alt="" />
       )}
 
