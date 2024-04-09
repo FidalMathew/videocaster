@@ -14,6 +14,7 @@ export default function ClientLayout({children}) {
   const path = pathname.split("/client")[1].split("/")[1];
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [topFrames, setTopFrames] = useState([]);
 
   const {farcasterAccount} = useFarcasterContext();
 
@@ -23,6 +24,16 @@ export default function ClientLayout({children}) {
     if (ready && !authenticated) {
       router.push("/");
     }
+
+    // (async function () {
+    //   try {
+    //     const response = await axios.get("/api/getTopFrames");
+    //     console.log(response, "fucku response");
+    //     setTopFrames(response.data);
+    //   } catch (error) {
+    //     console.log(error.message, "error from karma");
+    //   }
+    // })();
   }, [router, ready, authenticated]);
 
   useEffect(() => setMounted(true), []);
@@ -31,12 +42,13 @@ export default function ClientLayout({children}) {
   return (
     <>
       <Navbar />
+
       <div className="relative flex bg-muted/40">
         <div
           className="grid lg:grid-cols-5 grid-cols-1 h-full w-full pr-4 items-start"
           // style={{alignSelf: "start"}}
         >
-          <div className="lg:flex lg:flex-col lg:py-4 hidden rounded-lg bg-white lg:pt-5 border h-[89vh] sticky top-[10vh]">
+          <div className="lg:flex lg:flex-col lg:py-4 hidden rounded-lg bg-white lg:pt-5 border h-[89vh] sticky top-[10vh] mt-2 ml-2">
             {/* profile info */}
             <div className="z-0 w-[90%] h-[80px] border rounded-lg flex items-center just gap-3 pl-3 ml-3 hover:bg-gray-100 cursor-pointer">
               <Avatar className="h-12 w-12">
@@ -52,29 +64,14 @@ export default function ClientLayout({children}) {
               </div>
             </div>
             <div className="w-full h-full flex flex-col gap-2">
-              {/* <div
-                className={`flex items-center rounded-r-lg relative ${
-                  path === "mycasts" &&
-                  "text-green-900 font-semibold bg-gray-100"
-                } py-3 mt-4 px-6 gap-4 cursor-pointer`}
-                onClick={() => router.push("/client/mycasts")}
-              >
-                {path === "mycasts" && (
-                  <div className="bg-green-600 w-[5px] rounded-r-lg h-[80%] absolute left-0 top-2" />
-                )}
-
-                <Clapperboard />
-                <p className="ml-2 text-md">My Casts</p>
-              </div> */}
-
               <div
                 className={`mt-5 flex items-center p-4 px-6 gap-4 mr-4 rounded-lg relative ${
-                  path === "mycasts" &&
+                  path === farcasterAccount?.fid.toString() &&
                   "text-purple-900 font-semibold bg-gray-100"
                 } py-3 cursor-pointer`}
-                onClick={() => router.push(`/client/${farcasterAccount.fid}`)}
+                onClick={() => router.push(`/client/${farcasterAccount?.fid}`)}
               >
-                {path === "mycasts" && (
+                {path === farcasterAccount?.fid.toString() && (
                   <div className="bg-purple-600 w-[5px] rounded-r-lg h-[80%] absolute left-0 top-1" />
                 )}
 
@@ -93,7 +90,7 @@ export default function ClientLayout({children}) {
                 )}
 
                 <Newspaper />
-                <p className="ml-2 text-md">My Feed</p>
+                <p className="ml-2 text-md">Feed</p>
               </div>
               <div
                 className={`flex items-center px-6 gap-4 mr-4 rounded-lg relative ${

@@ -532,43 +532,44 @@ export default function DashboardPage() {
                       </div>
                     </div>
                     <div className="w-full h-full flex flex-col gap-2">
-                      {/* <div
-                className={`flex items-center rounded-r-lg relative ${
-                  path === "mycasts" &&
-                  "text-green-900 font-semibold bg-gray-100"
-                } py-3 mt-4 px-6 gap-4 cursor-pointer`}
-                onClick={() => router.push("/client/mycasts")}
-              >
-                {path === "mycasts" && (
-                  <div className="bg-green-600 w-[5px] rounded-r-lg h-[80%] absolute left-0 top-2" />
-                )}
-
-                <Clapperboard />
-                <p className="ml-2 text-md">My Casts</p>
-              </div> */}
-
                       <div
-                        className={`mt-5 flex items-center p-4 px-6 gap-4 mr-4 rounded-lg relative py-3 cursor-pointer`}
-                        onClick={() => router.push("/client/mycasts")}
+                        className={`mt-5 flex items-center p-4 px-6 gap-4 mr-4 rounded-lg relative ${
+                          path === farcasterAccount?.fid.toString() &&
+                          "text-purple-900 font-semibold bg-gray-100"
+                        } py-3 cursor-pointer`}
+                        onClick={() =>
+                          router.push(`/client/${farcasterAccount?.fid}`)
+                        }
                       >
+                        {path === farcasterAccount?.fid.toString() && (
+                          <div className="bg-purple-600 w-[5px] rounded-r-lg h-[80%] absolute left-0 top-1" />
+                        )}
+
                         <Clapperboard />
                         <p className="ml-2 text-md">My Casts</p>
                       </div>
                       <div
-                        className={`flex items-center p-4 px-6 gap-4 mr-4 rounded-lg relative py-3 cursor-pointer`}
+                        className={`flex items-center p-4 px-6 gap-4 mr-4 rounded-lg relative ${
+                          path === "feed" &&
+                          "text-purple-900 font-semibold bg-gray-100"
+                        } py-3 cursor-pointer`}
                         onClick={() => router.push("/client/feed")}
                       >
+                        {path === "feed" && (
+                          <div className="bg-purple-600 w-[5px] rounded-r-lg h-[80%] absolute left-0 top-1" />
+                        )}
+
                         <Newspaper />
-                        <p className="ml-2 text-md">My Feed</p>
+                        <p className="ml-2 text-md">Feed</p>
                       </div>
                       <div
                         className={`flex items-center px-6 gap-4 mr-4 rounded-lg relative ${
-                          path === "editor" &&
+                          path.split("client/")[1] === "editor" &&
                           "text-purple-900 font-semibold bg-gray-100"
                         } py-3 cursor-pointer`}
                         onClick={() => router.push("/editor")}
                       >
-                        {path === "editor" && (
+                        {path.split("client/")[1] === "editor" && (
                           <div className="bg-purple-600 w-[5px] rounded-r-lg h-[80%] absolute left-0 top-1" />
                         )}
 
@@ -582,7 +583,7 @@ export default function DashboardPage() {
                         } py-3 cursor-pointer`}
                         onClick={() => router.push("/viewer")}
                       >
-                        {path === "viewer" && (
+                        {path.split("client/")[1] === "editor" && (
                           <div className="bg-purple-600 w-[5px] rounded-r-lg h-[80%] absolute left-0 top-1" />
                         )}
 

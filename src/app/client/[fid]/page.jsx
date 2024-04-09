@@ -69,6 +69,22 @@ export default function YourCasts({params}) {
 
   const [toggleMedia, setToggleMedia] = useState(false); // true - video, false - image
 
+  const [myFarcasterAcc, setMyFarcasterAcc] = useState({});
+
+  useEffect(() => {
+    (async function () {
+      try {
+        const response = await axios.post("/api/getMyFarcaster", {
+          fid: params.fid,
+        });
+        setMyFarcasterAcc(response.data.data);
+        console.log(response.data, "my farcaster");
+      } catch (error) {
+        console.log(error.message, "error :cry:");
+      }
+    })();
+  }, []);
+
   return (
     <>
       {/* <Dialog open={modalOpen} onOpenChange={setModalOpen}>
@@ -96,8 +112,7 @@ export default function YourCasts({params}) {
           </DialogFooter>
         </DialogContent>
       </Dialog> */}
-      <div className="flex flex-col gap-5 w-auto lg:col-span-3 pt-0 relative mx-4">
-        {/* <Card className="h-[20vh] mb-1 z-10 rounded-lg sticky top-[10vh]">
+      {/* <Card className="h-[20vh] mb-1 z-10 rounded-lg sticky top-[10vh]">
           <CardHeader className="p-0">
             <CardTitle className="text-md border-b px-3 py-3">
               Post Something
@@ -123,7 +138,7 @@ export default function YourCasts({params}) {
           </CardContent>
           
         </Card> */}
-        {/* <TooltipProvider>
+      {/* <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
               <Button
@@ -139,17 +154,37 @@ export default function YourCasts({params}) {
             </TooltipContent>
           </Tooltip>
         </TooltipProvider> */}
-        {/*  */}
-
-        <div className="h-full flex flex-col space-y-5 w-full mt-4 relative">
+      {/*  */}
+      <div className="flex flex-col gap-5 w-auto lg:col-span-3 pt-0 relative mx-4">
+        <div className="h-full flex flex-col space-y-5 w-full mt-4 relative mb-7">
+          <div className="w-full border rounded-lg h-[200px] bg-white grid grid-cols-4 gap-3">
+            <div className="col-span-1 h-full w-full flex justify-center items-center">
+              <Avatar className="h-20 w-20   rounded-full">
+                <AvatarImage src={myFarcasterAcc.pfp_url} className="" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            </div>
+            <div className="col-span-3 h-full w-full flex flex-col justify-center">
+              <p className="font-bold text-lg">
+                {myFarcasterAcc.display_name}{" "}
+              </p>
+              <p className="font-normal text-sm">@{myFarcasterAcc.username}</p>
+              <p className="text-lg">{myFarcasterAcc.bio}</p>
+              <div className="flex gap-3 items-center mt-3">
+                <p>
+                  <span className="font-semibold">Followers: </span>
+                  {myFarcasterAcc.follower_count}
+                </p>
+                <p>
+                  <span className="font-semibold">Following: </span>
+                  {myFarcasterAcc.following_count}
+                </p>
+              </div>
+            </div>
+          </div>
           {casts &&
             casts.map((item, idx) => (
               <Card key={idx}>
-                <Switch
-                  className="absolute right-3 top-3 shadow-none"
-                  checked={toggleMedia}
-                  onCheckedChange={setToggleMedia}
-                />
                 <CardHeader className="p-0">
                   <CardTitle className="text-md px-5 py-5 flex gap-3 items-center">
                     <Avatar className="">
@@ -208,13 +243,13 @@ export default function YourCasts({params}) {
           )}
         </div>
       </div>
-      <div className="hidden w-auto col-span-1 lg:flex lg:justify-center h-[70vh] sticky top-[10vh]">
+      {/* <div className="hidden w-auto col-span-1 lg:flex lg:justify-center h-[70vh] sticky top-[10vh]">
         <div className="border bg-white w-full rounded-lg">
           <div className="border-b p-4">
             <h1 className="font-semibold">Recent Video Frames</h1>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

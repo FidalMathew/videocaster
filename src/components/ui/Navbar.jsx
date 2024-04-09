@@ -73,12 +73,32 @@ export default function Navbar({setOpenPublishModal}) {
                 </div>
               </div>
               <Link
-                href="/client/mycasts"
+                href={`/client/${farcasterAccount?.fid}`}
                 className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
               >
                 <Newspaper className="h-5 w-5" />
                 My Casts
               </Link>
+
+              {/* 
+              
+              <div
+                className={`mt-5 flex items-center p-4 px-6 gap-4 mr-4 rounded-lg relative ${
+                  path === farcasterAccount?.fid.toString() &&
+                  "text-purple-900 font-semibold bg-gray-100"
+                } py-3 cursor-pointer`}
+                onClick={() => router.push(`/client/${farcasterAccount?.fid}`)}
+              >
+                {path === farcasterAccount?.fid.toString() && (
+                  <div className="bg-purple-600 w-[5px] rounded-r-lg h-[80%] absolute left-0 top-1" />
+                )}
+
+                <Clapperboard />
+                <p className="ml-2 text-md">My Casts</p>
+              </div>
+              
+              */}
+
               <Link
                 href="/client/feed"
                 className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
