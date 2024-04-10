@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import {
   Card,
   CardContent,
@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 // import { Input } from "@/components/ui/input";
 // import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -18,8 +18,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
-import { Pencil, Heart } from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {Pencil, Heart} from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -30,24 +30,27 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { useExperimentalFarcasterSigner } from "@privy-io/react-auth";
+import {Textarea} from "@/components/ui/textarea";
+import {useExperimentalFarcasterSigner} from "@privy-io/react-auth";
 import axios from "axios";
 import Frame from "@/components/ui/Frame";
-import { Field, Form, Formik } from "formik";
-import { useFarcasterContext } from "@/app/context/farcasterContext";
+import {Field, Form, Formik} from "formik";
+import {useFarcasterContext} from "@/app/context/farcasterContext";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
+import {Skeleton} from "@/components/ui/skeleton";
 
 export default function Feed() {
   const [casts, setCasts] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const formikRef = useRef(null);
-  const { submitCast, likeCast } = useExperimentalFarcasterSigner();
-  const { farcasterAccount } = useFarcasterContext();
+  const {submitCast, likeCast} = useExperimentalFarcasterSigner();
+  const {farcasterAccount} = useFarcasterContext();
   const pathname = usePathname();
+  const [castsLoading, setCastsLoading] = useState(true);
 
   useEffect(() => {
+    setCastsLoading(true);
     const fetchData = async () => {
       try {
         const response = await axios.get("/api/casts");
@@ -60,6 +63,8 @@ export default function Feed() {
         setCasts(response.data.message.data.casts.slice(0, 40));
       } catch (error) {
         console.error(error);
+      } finally {
+        setCastsLoading(false);
       }
     };
 
@@ -76,11 +81,13 @@ export default function Feed() {
     try {
       const castBody = {
         text: values.castText,
-        embeds: values.embedUrl ? [
-          {
-            url: values.embedUrl,
-          },
-        ] : [],
+        embeds: values.embedUrl
+          ? [
+              {
+                url: values.embedUrl,
+              },
+            ]
+          : [],
         embedsDeprecated: [],
         mentions: [],
         mentionsPositions: [],
@@ -88,7 +95,7 @@ export default function Feed() {
       };
 
       console.log(castBody, "castBody");
-      const { hash } = await submitCast(castBody);
+      const {hash} = await submitCast(castBody);
       console.log(hash, "hash");
     } catch (err) {
       console.log(err);
@@ -152,7 +159,7 @@ export default function Feed() {
   console.log(farcasterAccount, "account please");
 
   const likeCastAction = async (castId) => {
-    const { hash: likeMessageHash } = await likeCast({
+    const {hash: likeMessageHash} = await likeCast({
       castHash: castId,
       castAuthorFid: farcasterAccount.fid,
     });
@@ -174,7 +181,7 @@ export default function Feed() {
           <DialogDescription>
             <Formik
               innerRef={formikRef}
-              initialValues={{ castText: "" }}
+              initialValues={{castText: ""}}
               onSubmit={(actions, values) => {
                 console.log(actions, "value ");
                 handleCastContent(actions.castText);
@@ -264,63 +271,131 @@ export default function Feed() {
 
         {console.log(casts, "casts")}
         <div className="h-full flex flex-col space-y-5 w-full mt-4">
-          {casts.map((item, idx) => (
-            <Card
-              key={idx}
-              className="cursor-pointer"
-              onClick={() => router.push(`/client/cast/${item.hash}`)}
-            >
-              {console.log(item, "casts from component")}
-              <CardHeader className="p-0">
-                <CardTitle className="text-md px-5 pt-5 pb-2 flex gap-3 items-center">
-                  <Avatar className="">
-                    <AvatarImage src={item.author.pfp_url} className="" />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
+          {!casts && (
+            <div className="w-full h-full flex justify-center items-center">
+              <p className="text-lg">No Casts Found</p>
+            </div>
+          )}
 
-                  <div className="flex flex-col">
-                    <Link
-                      href={`/client/${item.fid}`}
-                    // className="cursor-pointer"
-                    >
-                      <p className="font-bold">
-                        {item.author.display_name}{" "}
-                        <span className="font-normal text-sm">
-                          @{item.author.username}
-                        </span>
-                      </p>
-                    </Link>
-                    <p className="text-xs font-normal">
-                      {convertDate(item.timestamp)}
-                    </p>
-                  </div>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-5 h-fit">
-                <p className="mb-5">{item.content}</p>
-                {/* <div className="w-full border-2 h-[100px] rounded-md"> */}
-                {/* {item.embeds.length > 0 && item.embeds[0].url && (
+          {castsLoading ? (
+            <div className="flex flex-col gap-4">
+              <Card className="shadow-none border-0">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-4">
+                    <Skeleton className="w-10 h-10 rounded-full" />
+                    <Skeleton className="w-1/3 h-[20px] rounded-full" />
+                  </CardTitle>
+                  {/* <CardDescription>
+                  <Skeleton className="w-3/4 h-[20px] rounded-full mt-10" />
+                </CardDescription> */}
+                </CardHeader>
+                <CardContent className="flex flex-col w-full gap-4">
+                  <Skeleton className="w-3/4 h-[20px] rounded-full" />
+                  <Skeleton className="w-3/4 h-[20px] rounded-full" />
+                  <Skeleton className="w-3/4 h-[20px] rounded-full" />
+                </CardContent>
+                <CardFooter>
+                  <Skeleton className="w-3/4 h-[20px] rounded-full mt-4" />
+                </CardFooter>
+              </Card>
+              <Card className="shadow-none border-0">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-4">
+                    <Skeleton className="w-10 h-10 rounded-full" />
+                    <Skeleton className="w-1/3 h-[20px] rounded-full" />
+                  </CardTitle>
+                  {/* <CardDescription>
+                  <Skeleton className="w-3/4 h-[20px] rounded-full mt-10" />
+                </CardDescription> */}
+                </CardHeader>
+                <CardContent className="flex flex-col w-full gap-4">
+                  <Skeleton className="w-3/4 h-[20px] rounded-full" />
+                  <Skeleton className="w-3/4 h-[20px] rounded-full" />
+                  <Skeleton className="w-3/4 h-[20px] rounded-full" />
+                </CardContent>
+                <CardFooter>
+                  <Skeleton className="w-3/4 h-[20px] rounded-full mt-4" />
+                </CardFooter>
+              </Card>
+              <Card className="shadow-none border-0">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-4">
+                    <Skeleton className="w-10 h-10 rounded-full" />
+                    <Skeleton className="w-1/3 h-[20px] rounded-full" />
+                  </CardTitle>
+                  {/* <CardDescription>
+                  <Skeleton className="w-3/4 h-[20px] rounded-full mt-10" />
+                </CardDescription> */}
+                </CardHeader>
+                <CardContent className="flex flex-col w-full gap-4">
+                  <Skeleton className="w-3/4 h-[20px] rounded-full" />
+                  <Skeleton className="w-3/4 h-[20px] rounded-full" />
+                  <Skeleton className="w-3/4 h-[20px] rounded-full" />
+                </CardContent>
+                <CardFooter>
+                  <Skeleton className="w-3/4 h-[20px] rounded-full mt-4" />
+                </CardFooter>
+              </Card>
+            </div>
+          ) : (
+            <>
+              {casts.map((item, idx) => (
+                <Card
+                  key={idx}
+                  className="cursor-pointer"
+                  onClick={() => router.push(`/client/cast/${item.hash}`)}
+                >
+                  {console.log(item, "casts from component")}
+                  <CardHeader className="p-0">
+                    <CardTitle className="text-md px-5 pt-5 pb-2 flex gap-3 items-center">
+                      <Avatar className="">
+                        <AvatarImage src={item.author.pfp_url} className="" />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
+
+                      <div className="flex flex-col">
+                        <Link
+                          href={`/client/${item.fid}`}
+                          // className="cursor-pointer"
+                        >
+                          <p className="font-bold">
+                            {item.author.display_name}{" "}
+                            <span className="font-normal text-sm">
+                              @{item.author.username}
+                            </span>
+                          </p>
+                        </Link>
+                        <p className="text-xs font-normal">
+                          {convertDate(item.timestamp)}
+                        </p>
+                      </div>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-5 h-fit">
+                    <p className="mb-5">{item.content}</p>
+                    {/* <div className="w-full border-2 h-[100px] rounded-md"> */}
+                    {/* {item.embeds.length > 0 && item.embeds[0].url && (
                   <>
                     <Frame frameUrl={item.embeds[0].url} />
                   </>
                 )} */}
-                {item.embeds.length > 0 && item.embeds[0].url && (
-                  <>
-                    {item.embeds[0].url &&
-                      item.embeds[0].url.match(/\.(jpeg|jpg|gif|png)$/) !==
-                      null && (
-                        <img
-                          src={item.embeds[0].url}
-                          alt="img"
-                          className="w-1/2 m-auto"
-                        />
-                      )}
-                    <Frame frameUrl={item.embeds[0].url} />
-                  </>
-                )}
-                {/* </div> */}
-              </CardContent>
-              {/* <CardFooter className="flex w-full gap-3">
+                    {item.embeds.length > 0 && item.embeds[0].url && (
+                      <>
+                        {item.embeds[0].url &&
+                          item.embeds[0].url.match(/\.(jpeg|jpg|gif|png)$/) !==
+                            null && (
+                            <img
+                              src={item.embeds[0].url}
+                              alt="img"
+                              className="w-1/2 m-auto"
+                            />
+                          )}
+                        <Frame frameUrl={item.embeds[0].url} />
+                      </>
+                    )}
+                    {/* </div> */}
+                  </CardContent>
+                  {/* <CardFooter className="flex w-full gap-3">
                 <div>
                   <Heart
                     onClick={() => likeCastAction(item.hash)}
@@ -328,13 +403,9 @@ export default function Feed() {
                   />
                 </div>
               </CardFooter> */}
-            </Card>
-          ))}
-
-          {!casts && (
-            <div className="w-full h-full flex justify-center items-center">
-              <p className="text-lg">No Casts Found</p>
-            </div>
+                </Card>
+              ))}
+            </>
           )}
         </div>
       </div>
@@ -366,7 +437,7 @@ export default function Feed() {
                       <div className="flex flex-col">
                         <Link
                           href={`/client/${item.fid}`}
-                        // className="cursor-pointer"
+                          // className="cursor-pointer"
                         >
                           <p className="font-bold">{item.display_name} </p>
                         </Link>
