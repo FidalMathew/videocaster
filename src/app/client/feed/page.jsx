@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Card,
   CardContent,
@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 // import { Input } from "@/components/ui/input";
 // import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -18,8 +18,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {Button} from "@/components/ui/button";
-import {Pencil, Heart} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Pencil, Heart } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -30,21 +30,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {Textarea} from "@/components/ui/textarea";
-import {useExperimentalFarcasterSigner} from "@privy-io/react-auth";
+import { Textarea } from "@/components/ui/textarea";
+import { useExperimentalFarcasterSigner } from "@privy-io/react-auth";
 import axios from "axios";
 import Frame from "@/components/ui/Frame";
-import {Field, Form, Formik} from "formik";
-import {useFarcasterContext} from "@/app/context/farcasterContext";
+import { Field, Form, Formik } from "formik";
+import { useFarcasterContext } from "@/app/context/farcasterContext";
 import Link from "next/link";
-import {usePathname, useRouter} from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Feed() {
   const [casts, setCasts] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const formikRef = useRef(null);
-  const {submitCast, likeCast} = useExperimentalFarcasterSigner();
-  const {farcasterAccount} = useFarcasterContext();
+  const { submitCast, likeCast } = useExperimentalFarcasterSigner();
+  const { farcasterAccount } = useFarcasterContext();
   const pathname = usePathname();
 
   useEffect(() => {
@@ -76,11 +76,11 @@ export default function Feed() {
     try {
       const castBody = {
         text: values.castText,
-        embeds: [
+        embeds: values.embedUrl ? [
           {
             url: values.embedUrl,
           },
-        ],
+        ] : [],
         embedsDeprecated: [],
         mentions: [],
         mentionsPositions: [],
@@ -88,7 +88,7 @@ export default function Feed() {
       };
 
       console.log(castBody, "castBody");
-      const {hash} = await submitCast(castBody);
+      const { hash } = await submitCast(castBody);
       console.log(hash, "hash");
     } catch (err) {
       console.log(err);
@@ -152,7 +152,7 @@ export default function Feed() {
   console.log(farcasterAccount, "account please");
 
   const likeCastAction = async (castId) => {
-    const {hash: likeMessageHash} = await likeCast({
+    const { hash: likeMessageHash } = await likeCast({
       castHash: castId,
       castAuthorFid: farcasterAccount.fid,
     });
@@ -174,7 +174,7 @@ export default function Feed() {
           <DialogDescription>
             <Formik
               innerRef={formikRef}
-              initialValues={{castText: ""}}
+              initialValues={{ castText: "" }}
               onSubmit={(actions, values) => {
                 console.log(actions, "value ");
                 handleCastContent(actions.castText);
@@ -281,7 +281,7 @@ export default function Feed() {
                   <div className="flex flex-col">
                     <Link
                       href={`/client/${item.fid}`}
-                      // className="cursor-pointer"
+                    // className="cursor-pointer"
                     >
                       <p className="font-bold">
                         {item.author.display_name}{" "}
@@ -308,7 +308,7 @@ export default function Feed() {
                   <>
                     {item.embeds[0].url &&
                       item.embeds[0].url.match(/\.(jpeg|jpg|gif|png)$/) !==
-                        null && (
+                      null && (
                         <img
                           src={item.embeds[0].url}
                           alt="img"
@@ -366,7 +366,7 @@ export default function Feed() {
                       <div className="flex flex-col">
                         <Link
                           href={`/client/${item.fid}`}
-                          // className="cursor-pointer"
+                        // className="cursor-pointer"
                         >
                           <p className="font-bold">{item.display_name} </p>
                         </Link>
