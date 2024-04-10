@@ -33,19 +33,22 @@ import { Textarea } from "@/components/ui/textarea";
 import { useExperimentalFarcasterSigner } from "@privy-io/react-auth";
 import axios from "axios";
 import Frame from "@/components/ui/Frame";
+import { useFarcasterContext } from "../context/farcasterContext";
+
 
 export default function MyCasts() {
   const [casts, setCasts] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
 
   const { submitCast } = useExperimentalFarcasterSigner();
+  const { farcasterAccount } = useFarcasterContext();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get("/api/casts", {
           params: {
-            fid: "394606",
+            fid: farcasterAccount?.fid,
           },
         });
         console.log(response, "data");
