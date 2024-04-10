@@ -33,7 +33,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useExperimentalFarcasterSigner } from "@privy-io/react-auth";
 import axios from "axios";
 import Frame from "@/components/ui/Frame";
-import { useFarcasterContext } from "../context/farcasterContext";
+import { useFarcasterContext } from "../../context/farcasterContext";
 
 
 export default function MyCasts() {
