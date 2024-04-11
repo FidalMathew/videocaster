@@ -3,6 +3,7 @@ import "./globals.css";
 const inter = Inter({subsets: ["latin"]});
 import Providers from "./Provider";
 import FarcasterContextProvider from "./context/farcasterContext";
+import {Suspense} from "react";
 
 export const metadata = {
   title: "Create Next App",
@@ -13,14 +14,16 @@ export default function RootLayout({children}) {
   return (
     <html lang="en">
       <body className={inter.className} suppressHydrationWarning>
-        <Providers
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <FarcasterContextProvider>{children}</FarcasterContextProvider>
-        </Providers>
+        <Suspense>
+          <Providers
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <FarcasterContextProvider>{children}</FarcasterContextProvider>
+          </Providers>
+        </Suspense>
       </body>
     </html>
   );

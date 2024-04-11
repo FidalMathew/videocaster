@@ -137,11 +137,7 @@ export default function Navbar({setOpenPublishModal}) {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar>
-                    <AvatarImage
-                      src={
-                        farcasterAccount?.pfp || "https://github.com/shadcn.png"
-                      }
-                    />
+                    <AvatarImage src={farcasterAccount?.pfp} />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>

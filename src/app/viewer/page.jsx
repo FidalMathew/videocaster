@@ -4,7 +4,7 @@ import {Button} from "@/components/ui/button";
 import Frame from "@/components/ui/Frame";
 import {useExperimentalFarcasterSigner} from "@privy-io/react-auth";
 import axios from "axios";
-import {Suspense, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {
   Dialog,
   DialogContent,
@@ -78,7 +78,7 @@ function Test() {
   // }, [getFrameUrl])
 
   return (
-    <Suspense>
+    <>
       <div className="min-h-screen w-full px-4">
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           {/* <DialogTrigger>Open</DialogTrigger> */}
@@ -263,7 +263,7 @@ function Test() {
         </div>
       </div>
       {/* </div> */}
-    </Suspense>
+    </>
   );
 }
 
