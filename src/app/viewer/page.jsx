@@ -1,10 +1,10 @@
 "use client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {Button} from "@/components/ui/button";
 import Frame from "@/components/ui/Frame";
-import { useExperimentalFarcasterSigner } from "@privy-io/react-auth";
+import {useExperimentalFarcasterSigner} from "@privy-io/react-auth";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import {Suspense, useEffect, useState} from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,36 +14,34 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { Formik, Form, Field } from "formik";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Video, Clapperboard, Newspaper, Eye, Scan } from "lucide-react";
-import { useFarcasterContext } from "../context/farcasterContext";
-import { usePathname, useRouter } from "next/navigation";
+import {Textarea} from "@/components/ui/textarea";
+import {Formik, Form, Field} from "formik";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import {Video, Clapperboard, Newspaper, Eye, Scan} from "lucide-react";
+import {useFarcasterContext} from "../context/farcasterContext";
+import {usePathname, useRouter} from "next/navigation";
 import Navbar from "@/components/ui/Navbar";
-import { useSearchParams } from 'next/navigation';
-
+import {useSearchParams} from "next/navigation";
 
 function Test() {
-  const { submitCast } = useExperimentalFarcasterSigner();
+  const {submitCast} = useExperimentalFarcasterSigner();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
-
   const [getFrameUrl, setGetFrameUrl] = useState("");
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
   const [fetchURL, setFetchURL] = useState("");
 
   useEffect(() => {
-    const frameURL = searchParams.get('frame')
+    const frameURL = searchParams.get("frame");
 
     // console.log(frameURL, "frame URL: ")
     if (frameURL !== fetchURL && frameURL !== null) {
-      console.log("counterr ", frameURL, "dsa ", fetchURL)
-      setFetchURL(frameURL)
+      console.log("counterr ", frameURL, "dsa ", fetchURL);
+      setFetchURL(frameURL);
     }
-  }, [searchParams])
+  }, [searchParams]);
 
   const addCastToFarcaster = async (values) => {
     try {
@@ -59,14 +57,14 @@ function Test() {
         mentionsPositions: [],
         // parentUrl: parentUrl,
       };
-      const { hash } = await submitCast(castBody);
+      const {hash} = await submitCast(castBody);
       console.log(hash, "hash");
     } catch (err) {
       console.log(err);
     }
   };
 
-  const { farcasterAccount } = useFarcasterContext();
+  const {farcasterAccount} = useFarcasterContext();
   const pathname = usePathname();
   const path = pathname.split("/")[1];
 
@@ -79,9 +77,8 @@ function Test() {
   //   }
   // }, [getFrameUrl])
 
-
   return (
-    <>
+    <Suspense>
       <div className="min-h-screen w-full px-4">
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           {/* <DialogTrigger>Open</DialogTrigger> */}
@@ -90,7 +87,7 @@ function Test() {
               <DialogTitle>Send Casts</DialogTitle>
               <DialogDescription className="h-fit">
                 <Formik
-                  initialValues={{ castText: "", embedUrl: "" }}
+                  initialValues={{castText: "", embedUrl: ""}}
                   onSubmit={(values) => {
                     // console.log(values);
                     addCastToFarcaster(values).then((err) => {
@@ -114,7 +111,7 @@ function Test() {
                           placeholder="Embed URL"
                         />
 
-                        <Button type="submit" style={{ marginTop: "20px" }}>
+                        <Button type="submit" style={{marginTop: "20px"}}>
                           Submit
                         </Button>
                       </div>
@@ -130,7 +127,7 @@ function Test() {
           <div className="hidden lg:block lg:w-full">
             <div
               className="lg:flex lg:flex-col lg:py-4 hidden rounded-lg bg-white lg:pt-5 border h-[89vh] sticky top-[8vh]"
-              style={{ alignSelf: "start" }}
+              style={{alignSelf: "start"}}
             >
               {/* profile info */}
               <div className="z-0 w-[90%] h-[80px] border rounded-lg flex items-center just gap-3 pl-3 ml-3 hover:bg-gray-100 cursor-pointer">
@@ -150,9 +147,10 @@ function Test() {
               </div>
               <div className="w-full h-full flex flex-col gap-2">
                 <div
-                  className={`mt-5 flex items-center p-4 px-6 gap-4 mr-4 rounded-lg relative ${path === farcasterAccount?.fid.toString() &&
+                  className={`mt-5 flex items-center p-4 px-6 gap-4 mr-4 rounded-lg relative ${
+                    path === farcasterAccount?.fid.toString() &&
                     "text-purple-900 font-semibold bg-gray-100"
-                    } py-3 cursor-pointer`}
+                  } py-3 cursor-pointer`}
                   onClick={() =>
                     router.push(`/client/${farcasterAccount?.fid}`)
                   }
@@ -165,9 +163,10 @@ function Test() {
                   <p className="ml-2 text-md">My Casts</p>
                 </div>
                 <div
-                  className={`flex items-center p-4 px-6 gap-4 mr-4 rounded-lg relative ${path === "feed" &&
+                  className={`flex items-center p-4 px-6 gap-4 mr-4 rounded-lg relative ${
+                    path === "feed" &&
                     "text-purple-900 font-semibold bg-gray-100"
-                    } py-3 cursor-pointer`}
+                  } py-3 cursor-pointer`}
                   onClick={() => router.push("/client/feed")}
                 >
                   {path === "feed" && (
@@ -178,9 +177,10 @@ function Test() {
                   <p className="ml-2 text-md">Feed</p>
                 </div>
                 <div
-                  className={`flex items-center px-6 gap-4 mr-4 rounded-lg relative ${path.split("client/")[1] === "editor" &&
+                  className={`flex items-center px-6 gap-4 mr-4 rounded-lg relative ${
+                    path.split("client/")[1] === "editor" &&
                     "text-purple-900 font-semibold bg-gray-100"
-                    } py-3 cursor-pointer`}
+                  } py-3 cursor-pointer`}
                   onClick={() => router.push("/editor")}
                 >
                   {path.split("client/")[1] === "editor" && (
@@ -191,9 +191,10 @@ function Test() {
                   <p className="ml-2 text-md">Frames Editor</p>
                 </div>
                 <div
-                  className={`flex items-center px-6 gap-4 mr-4 rounded-lg relative ${path === "viewer" &&
+                  className={`flex items-center px-6 gap-4 mr-4 rounded-lg relative ${
+                    path === "viewer" &&
                     "text-purple-900 font-semibold bg-gray-100"
-                    } py-3 cursor-pointer`}
+                  } py-3 cursor-pointer`}
                   onClick={() => router.push("/viewer")}
                 >
                   {path.split("client/")[1] === "editor" && (
@@ -209,11 +210,9 @@ function Test() {
           {/* <div className="w-full min-h-[90%] lg:min-h-fit flex flex-col lg:flex-row justify-center gap-4 px-6 pb-6"> */}
 
           <div className="col-span-4">
-
-
             <div className="w-full pb-10">
               <Formik
-                initialValues={{ castUrl: "" }}
+                initialValues={{castUrl: ""}}
                 onSubmit={(values) => {
                   console.log(values);
                   // router.replace('/viewer?frame=' + values.castUrl);
@@ -244,7 +243,7 @@ function Test() {
                         value={fetchURL}
                         onChange={(e) => {
                           console.log(e.target.value);
-                          setFetchURL(e.target.value)
+                          setFetchURL(e.target.value);
                         }}
                       />
 
@@ -264,7 +263,7 @@ function Test() {
         </div>
       </div>
       {/* </div> */}
-    </>
+    </Suspense>
   );
 }
 
