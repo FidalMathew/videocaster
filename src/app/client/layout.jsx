@@ -52,9 +52,7 @@ export default function ClientLayout({children}) {
             {/* profile info */}
             <div className="z-0 w-[90%] h-[80px] border rounded-lg flex items-center just gap-3 pl-3 ml-3 hover:bg-gray-100 cursor-pointer">
               <Avatar className="h-12 w-12">
-                <AvatarImage
-                  src={farcasterAccount?.pfp || "https://github.com/shadcn.png"}
-                />
+                <AvatarImage src={farcasterAccount?.pfp || ".png"} />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
 

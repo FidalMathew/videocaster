@@ -14,10 +14,12 @@ import {Switch} from "@/components/ui/switch";
 import {useExperimentalFarcasterSigner} from "@privy-io/react-auth";
 import axios from "axios";
 import Frame from "@/components/ui/Frame";
+import {useRouter} from "next/navigation";
 
 export default function YourCasts({params}) {
   const [casts, setCasts] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const router = useRouter();
 
   const {submitCast} = useExperimentalFarcasterSigner();
 
@@ -94,7 +96,7 @@ export default function YourCasts({params}) {
             <DialogDescription className="px-5 pt-1 w-full h-full">
               <div className="h-full w-full flex gap-2">
                 <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage src=".png" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
 
@@ -125,7 +127,7 @@ export default function YourCasts({params}) {
             }}
           >
             <Avatar className="">
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage src=".png" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="col-span-2 w-full">
@@ -184,7 +186,11 @@ export default function YourCasts({params}) {
           </div>
           {casts &&
             casts.map((item, idx) => (
-              <Card key={idx}>
+              <Card
+                key={idx}
+                className="cursor-pointer"
+                onClick={() => router.push(`/client/cast/${item.hash}`)}
+              >
                 <CardHeader className="p-0">
                   <CardTitle className="text-md px-5 py-5 flex gap-3 items-center">
                     <Avatar className="">

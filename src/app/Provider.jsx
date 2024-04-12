@@ -10,6 +10,7 @@ export default function Providers({children, ...props}) {
     <PrivyProvider
       appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID}
       onSuccess={() => router.push("/client/feed")}
+      onLogout={() => router.push("/")}
       config={{
         // Customize Privy's appearance in your app
         appearance: {

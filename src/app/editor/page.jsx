@@ -24,6 +24,8 @@ import {
   Scan,
   SquareArrowOutUpRight,
   Eye,
+  ClipboardCopy,
+  Check,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Switch } from "@/components/ui/switch";
@@ -80,11 +82,14 @@ export default function DashboardPage() {
     const formik = useFormikContext();
     useEffect(() => {
       const url = 'https://videocaster.vercel.app/viewer?frame='
-      formik.setFieldValue(`${url}buttonProperties[0].target`, `https://no-code-frames.vercel.app/examples/${formik.values.nameOfFrameURL}-${farcasterAccount?.username}`);
+      formik.setFieldValue(`buttonProperties[0].target`, `${url}https://no-code-frames.vercel.app/examples/${formik.values.nameOfFrameURL}-${farcasterAccount?.username}`);
       formik.setFieldValue(`buttonProperties[0].action`, "link");
-      formik.setFieldValue(`buttonProperties[0].buttonContent`, "View on VideoCaster");
+      formik.setFieldValue(
+        `buttonProperties[0].buttonContent`,
+        "View on VideoCaster"
+      );
       setFormikState(formik.values);
-      console.log(formik.values, "formik values")
+      console.log(formik.values, "formik values");
       // setTempUrl(`https://no-code-frames.vercel.app/examples/${formik.values.nameOfFrameURL}-${farcasterAccount?.username}`)
 
       // console.log(`https://no-code-frames.vercel.app/examples/${formik.values.nameOfFrameURL}-${farcasterAccount?.username}`, "temp url")
@@ -309,7 +314,6 @@ export default function DashboardPage() {
   };
 
   const handleStepForm = async () => {
-
     // const formState = formikState;
     // console.log(formState, "formState");
     const url = publishFrame(formikState);
@@ -330,6 +334,23 @@ export default function DashboardPage() {
   };
 
   // console.log(ready, authenticated, "ready");
+
+  const [copied, setCopied] = useState(false);
+
+  async function copyContent(framesUrl) {
+    try {
+      framesUrl.then(async (val) => {
+        await navigator.clipboard.writeText(val);
+      });
+      setCopied(true);
+
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  }
 
   return (
     <>
@@ -460,7 +481,11 @@ export default function DashboardPage() {
                     variant={"outline"}
                     onClick={() => handleStepForm()}
                     className="w-full"
-                    disabled
+                    disabled={
+                      formikState.nameOfFrameURL === "" ||
+                      imageUrl === "" ||
+                      playbackId === ""
+                    }
                   >
                     Build Frame
                   </Button>
@@ -495,7 +520,7 @@ export default function DashboardPage() {
               </DialogDescription> */}
               {console.log(frameUrl, "frameUrl")}
 
-              <DialogDescription className="p-10 text-center flex-col flex items-center justify-center gap-4">
+              <DialogDescription className="p-10 px-5 text-center flex-col flex items-center justify-center gap-4">
                 <CircleCheck className="text-green-600 h-20 w-20" />
                 <p className="text-lg font-semibold"> Frame Published</p>
                 {/* <Link href={frameUrl} target="_blank">
@@ -505,7 +530,20 @@ export default function DashboardPage() {
                   </Button>
                 </Link> */}
                 {/* <Input disabled value={frameUrl} className="w-full" />; */}
-                {frameUrl}
+
+                <div className="text-sm flex gap-3 items-center">
+                  <p className="border-gray-100 p-2 rounded border bg-gray-100">
+                    {frameUrl || "https://www.instagram.com/jaydeep_dey03/"}
+                  </p>
+                  {copied ? (
+                    <Check />
+                  ) : (
+                    <ClipboardCopy
+                      className="w-5 aspect-square cursor-pointer"
+                      onClick={() => copyContent(frameUrl)}
+                    />
+                  )}
+                </div>
               </DialogDescription>
             </DialogHeader>
           </DialogContent>
@@ -519,21 +557,16 @@ export default function DashboardPage() {
 
               {/* <Button onClick={createAsset}>Create</Button> */}
 
-              <div className="w-full min-h-[90%] lg:min-h-full grid lg:grid-cols-5 grid-cols-1 gap-4 p-5 lg:p-0 lg:pr-5 pb-5 mt-4">
+              <div className="w-full min-h-[90%] lg:min-h-full grid lg:grid-cols-5 grid-cols-1 gap-4 p-5 lg:p-0 lg:pr-5 pb-5 mt-2 ml-3">
                 <div className="hidden lg:block lg:w-full">
                   <div
-                    className="lg:flex lg:flex-col lg:py-4 hidden rounded-lg bg-white lg:pt-5 border h-[89vh] sticky top-[8vh]"
+                    className="lg:flex lg:flex-col lg:py-4 hidden rounded-lg bg-white lg:pt-5 border h-[89vh] sticky top-[10vh]"
                     style={{ alignSelf: "start" }}
                   >
                     {/* profile info */}
                     <div className="z-0 w-[90%] h-[80px] border rounded-lg flex items-center just gap-3 pl-3 ml-3 hover:bg-gray-100 cursor-pointer">
                       <Avatar className="h-12 w-12">
-                        <AvatarImage
-                          src={
-                            farcasterAccount?.pfp ||
-                            "https://github.com/shadcn.png"
-                          }
-                        />
+                        <AvatarImage src={farcasterAccount?.pfp} />
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
 
@@ -574,12 +607,13 @@ export default function DashboardPage() {
                         <p className="ml-2 text-md">Feed</p>
                       </div>
                       <div
-                        className={`flex items-center px-6 gap-4 mr-4 rounded-lg relative ${path.split("client/")[1] === "editor" &&
+                        className={`flex items-center px-6 gap-4 mr-4 rounded-lg relative ${path === "editor" &&
                           "text-purple-900 font-semibold bg-gray-100"
                           } py-3 cursor-pointer`}
                         onClick={() => router.push("/editor")}
                       >
-                        {path.split("client/")[1] === "editor" && (
+                        {console.log(path, "path")}
+                        {path === "editor" && (
                           <div className="bg-purple-600 w-[5px] rounded-r-lg h-[80%] absolute left-0 top-1" />
                         )}
 
@@ -620,7 +654,7 @@ export default function DashboardPage() {
                           action: "link",
                           buttonContent: "View on VideoCaster",
                           target: "",
-                        }
+                        },
                       ],
                       // onchange,
                     }}
@@ -749,10 +783,22 @@ export default function DashboardPage() {
                             className="w-full"
                             placeholder="Name of Frame URL"
                             onChange={(e) => {
-                              formik.setFieldValue(`nameOfFrameURL`, e.target.value);
-                              formik.setFieldValue(`buttonProperties[0].target`, `https://no-code-frames.vercel.app/examples/${e.target.value}-${farcasterAccount?.username}`);
-                              formik.setFieldValue(`buttonProperties[0].action`, "link");
-                              formik.setFieldValue(`buttonProperties[0].buttonContent`, "View on VideoCaster");
+                              formik.setFieldValue(
+                                `nameOfFrameURL`,
+                                e.target.value
+                              );
+                              formik.setFieldValue(
+                                `buttonProperties[0].target`,
+                                `https://no-code-frames.vercel.app/examples/${e.target.value}-${farcasterAccount?.username}`
+                              );
+                              formik.setFieldValue(
+                                `buttonProperties[0].action`,
+                                "link"
+                              );
+                              formik.setFieldValue(
+                                `buttonProperties[0].buttonContent`,
+                                "View on VideoCaster"
+                              );
                             }}
                           />
                         </div>
@@ -842,7 +888,10 @@ export default function DashboardPage() {
                                           val
                                         );
                                       }}
-                                      value={formik.values.buttonProperties[index].action}
+                                      value={
+                                        formik.values.buttonProperties[index]
+                                          .action
+                                      }
                                       disabled={index === 0}
                                     >
                                       <SelectTrigger className="w-[180px] focus-visible:ring-0">
@@ -879,11 +928,17 @@ export default function DashboardPage() {
                                       className="w-full"
                                       placeholder="Target URL"
                                       disabled={index === 0}
-                                      value={formik.values.buttonProperties[index].target}
+                                      value={
+                                        formik.values.buttonProperties[index]
+                                          .target
+                                      }
                                       onChange={(e) => {
                                         // Implement the onChange function to update Formik state
-                                        console.log("dasdasa")
-                                        formik.setFieldValue(`buttonProperties[${index}].target`, e.target.value);
+                                        console.log("dasdasa");
+                                        formik.setFieldValue(
+                                          `buttonProperties[${index}].target`,
+                                          e.target.value
+                                        );
                                       }}
                                     />
                                   </div>
