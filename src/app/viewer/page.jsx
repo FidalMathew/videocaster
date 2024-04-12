@@ -123,20 +123,16 @@ function Test() {
           </DialogContent>
         </Dialog>
         <Navbar />
-        <div className="w-full min-h-[90%] lg:min-h-full grid lg:grid-cols-5 grid-cols-1 gap-4 p-5 lg:p-0 lg:pr-5 pb-5 mt-4">
+        <div className="w-full min-h-[90%] lg:min-h-full grid lg:grid-cols-5 grid-cols-1 gap-4 p-5 lg:p-0 lg:pr-5 pb-5 mt-2">
           <div className="hidden lg:block lg:w-full">
             <div
-              className="lg:flex lg:flex-col lg:py-4 hidden rounded-lg bg-white lg:pt-5 border h-[89vh] sticky top-[8vh]"
+              className="lg:flex lg:flex-col lg:py-4 hidden rounded-lg bg-white lg:pt-5 border h-[89vh] sticky top-[10vh]"
               style={{alignSelf: "start"}}
             >
               {/* profile info */}
               <div className="z-0 w-[90%] h-[80px] border rounded-lg flex items-center just gap-3 pl-3 ml-3 hover:bg-gray-100 cursor-pointer">
                 <Avatar className="h-12 w-12">
-                  <AvatarImage
-                    src={
-                      farcasterAccount?.pfp || "https://github.com/shadcn.png"
-                    }
-                  />
+                  <AvatarImage src={farcasterAccount?.pfp || ".png"} />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
 
@@ -197,7 +193,7 @@ function Test() {
                   } py-3 cursor-pointer`}
                   onClick={() => router.push("/viewer")}
                 >
-                  {path.split("client/")[1] === "editor" && (
+                  {path === "viewer" && (
                     <div className="bg-purple-600 w-[5px] rounded-r-lg h-[80%] absolute left-0 top-1" />
                   )}
 

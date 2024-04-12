@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/tooltip";
 import {Button} from "@/components/ui/button";
 import {Pencil, Heart} from "lucide-react";
+import {ReloadIcon} from "@radix-ui/react-icons";
 import {
   Dialog,
   DialogContent,
@@ -77,7 +78,9 @@ export default function Feed() {
     return localDate;
   };
 
+  const [submitCastLoading, setSubmitCastLoading] = useState(false);
   const addCastToFarcaster = async (values) => {
+    setSubmitCastLoading(true);
     try {
       const castBody = {
         text: values.castText,
@@ -97,9 +100,17 @@ export default function Feed() {
       console.log(castBody, "castBody");
       const {hash} = await submitCast(castBody);
       console.log(hash, "hash");
+      setTimeout(() => {
+        window.open(`https://warpcast.com/jaydeepdey03/${hash}`, "_blank");
+        setModalOpen(false);
+      }, 30000);
     } catch (err) {
-      console.log(err);
+      console.log(err, "error from addCastToFarcaster");
       // const formikRef = useRef(null);
+    } finally {
+      setTimeout(() => {
+        setSubmitCastLoading(false);
+      }, 30000);
     }
   };
   const handleSubmit = () => {
@@ -174,7 +185,7 @@ export default function Feed() {
   return (
     <>
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-        <DialogContent className="p-0 top-[28vh]">
+        <DialogContent className="p-0 top-[28vh] w-5/6">
           <DialogHeader className={""}>
             <DialogTitle className="px-4 py-4"></DialogTitle>
           </DialogHeader>
@@ -192,7 +203,7 @@ export default function Feed() {
                   <div className="px-5 pt-1 w-full h-full">
                     <div className="h-full w-full flex gap-2">
                       <Avatar>
-                        <AvatarImage src="https://github.com/shadcn.png" />
+                        <AvatarImage src={farcasterAccount?.pfp} />
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
 
@@ -211,14 +222,25 @@ export default function Feed() {
             </Formik>
           </DialogDescription>
 
-          <DialogFooter className={"py-2 pr-2 border-t"}>
-            <Button
-              size="sm"
-              className="bg-purple-700 hover:bg-purple-800"
-              onClick={handleSubmit}
-            >
-              Casts
-            </Button>
+          <DialogFooter className={"py-2 pr-2 border-t flex items-end"}>
+            {submitCastLoading ? (
+              <Button
+                size="sm"
+                className="bg-purple-700 hover:bg-purple-800 w-1/5"
+                disabled
+              >
+                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                Casts
+              </Button>
+            ) : (
+              <Button
+                size="sm"
+                className="bg-purple-700 hover:bg-purple-800 w-1/5"
+                onClick={handleSubmit}
+              >
+                Casts
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -236,7 +258,7 @@ export default function Feed() {
             }}
           >
             <Avatar className="">
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage src=".png" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="col-span-2 w-full">
@@ -345,7 +367,6 @@ export default function Feed() {
                   className="cursor-pointer"
                   onClick={() => router.push(`/client/cast/${item.hash}`)}
                 >
-                  {console.log(item, "casts from component")}
                   <CardHeader className="p-0">
                     <CardTitle className="text-md px-5 pt-5 pb-2 flex gap-3 items-center">
                       <Avatar className="">

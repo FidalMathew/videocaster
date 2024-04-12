@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import {
   Card,
   CardContent,
@@ -9,16 +9,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {Input} from "@/components/ui/input";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {Pencil} from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -29,19 +29,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { useExperimentalFarcasterSigner } from "@privy-io/react-auth";
+import {Textarea} from "@/components/ui/textarea";
+import {useExperimentalFarcasterSigner} from "@privy-io/react-auth";
 import axios from "axios";
 import Frame from "@/components/ui/Frame";
-import { useFarcasterContext } from "../../context/farcasterContext";
-
+import {useFarcasterContext} from "../../context/farcasterContext";
 
 export default function MyCasts() {
   const [casts, setCasts] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const { submitCast } = useExperimentalFarcasterSigner();
-  const { farcasterAccount } = useFarcasterContext();
+  const {submitCast} = useExperimentalFarcasterSigner();
+  const {farcasterAccount} = useFarcasterContext();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -82,7 +81,7 @@ export default function MyCasts() {
         mentionsPositions: [],
         // parentUrl: parentUrl,
       };
-      const { hash } = await submitCast(castBody);
+      const {hash} = await submitCast(castBody);
       console.log(hash, "hash");
     } catch (err) {
       console.log(err);
@@ -98,7 +97,7 @@ export default function MyCasts() {
             <DialogDescription className="px-5 pt-1 w-full h-full">
               <div className="h-full w-full flex gap-2">
                 <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage src=".png" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
 
@@ -130,7 +129,7 @@ export default function MyCasts() {
             }}
           >
             <Avatar className="">
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage src=".png" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="col-span-2 w-full">

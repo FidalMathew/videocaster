@@ -94,7 +94,7 @@ export default function YourCasts({params}) {
             <DialogDescription className="px-5 pt-1 w-full h-full">
               <div className="h-full w-full flex gap-2">
                 <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage src=".png" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
 
@@ -125,7 +125,7 @@ export default function YourCasts({params}) {
             }}
           >
             <Avatar className="">
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage src=".png" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="col-span-2 w-full">

@@ -523,10 +523,10 @@ export default function DashboardPage() {
 
               {/* <Button onClick={createAsset}>Create</Button> */}
 
-              <div className="w-full min-h-[90%] lg:min-h-full grid lg:grid-cols-5 grid-cols-1 gap-4 p-5 lg:p-0 lg:pr-5 pb-5 mt-4">
+              <div className="w-full min-h-[90%] lg:min-h-full grid lg:grid-cols-5 grid-cols-1 gap-4 p-5 lg:p-0 lg:pr-5 pb-5 mt-2 ml-3">
                 <div className="hidden lg:block lg:w-full">
                   <div
-                    className="lg:flex lg:flex-col lg:py-4 hidden rounded-lg bg-white lg:pt-5 border h-[89vh] sticky top-[8vh]"
+                    className="lg:flex lg:flex-col lg:py-4 hidden rounded-lg bg-white lg:pt-5 border h-[89vh] sticky top-[10vh]"
                     style={{alignSelf: "start"}}
                   >
                     {/* profile info */}
@@ -576,12 +576,13 @@ export default function DashboardPage() {
                       </div>
                       <div
                         className={`flex items-center px-6 gap-4 mr-4 rounded-lg relative ${
-                          path.split("client/")[1] === "editor" &&
+                          path === "editor" &&
                           "text-purple-900 font-semibold bg-gray-100"
                         } py-3 cursor-pointer`}
                         onClick={() => router.push("/editor")}
                       >
-                        {path.split("client/")[1] === "editor" && (
+                        {console.log(path, "path")}
+                        {path === "editor" && (
                           <div className="bg-purple-600 w-[5px] rounded-r-lg h-[80%] absolute left-0 top-1" />
                         )}
 
