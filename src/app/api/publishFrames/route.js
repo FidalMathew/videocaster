@@ -220,7 +220,6 @@ export default async function Home({ searchParams }: NextServerPageProps) {
   // then, when done, return next frame
   return (
     <div>
-      Mint button example <Link href={createDebugUrl(url)}>Debug</Link>
       <meta name="fc:frame:video" content="${video}" />
       <FrameContainer
         pathname="/examples/mint-button"

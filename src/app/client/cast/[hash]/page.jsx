@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import {usePathname} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 import {
   Card,
@@ -39,13 +39,19 @@ export default function SharePage({params}) {
     return localDate;
   };
 
+  const router = useRouter();
+
   return (
     <div className="h-full flex flex-col space-y-5 w-full mt-4 relative mb-7 col-span-3 ml-4">
       {castsData && castsData.author && (
         <Card>
+          {console.log(castsData, "castsData")}
           <CardHeader className="p-0">
             <CardTitle className="text-md px-5 py-5 flex gap-3 items-center">
-              <Avatar className="">
+              <Avatar
+                className="cursor-pointer"
+                onClick={() => router.push(`/client/${castsData.author.fid}`)}
+              >
                 <AvatarImage src={castsData.author.pfp_url} className="" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
