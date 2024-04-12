@@ -79,7 +79,8 @@ export default function DashboardPage() {
   const ExternalStateSyncComponent = () => {
     const formik = useFormikContext();
     useEffect(() => {
-      formik.setFieldValue(`buttonProperties[0].target`, `https://no-code-frames.vercel.app/examples/${formik.values.nameOfFrameURL}-${farcasterAccount?.username}`);
+      const url = 'https://videocaster.vercel.app/viewer?frame='
+      formik.setFieldValue(`${url}buttonProperties[0].target`, `https://no-code-frames.vercel.app/examples/${formik.values.nameOfFrameURL}-${farcasterAccount?.username}`);
       formik.setFieldValue(`buttonProperties[0].action`, "link");
       formik.setFieldValue(`buttonProperties[0].buttonContent`, "View on VideoCaster");
       setFormikState(formik.values);
