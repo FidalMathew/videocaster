@@ -205,7 +205,7 @@ function Test() {
           </div>
           {/* <div className="w-full min-h-[90%] lg:min-h-fit flex flex-col lg:flex-row justify-center gap-4 px-6 pb-6"> */}
 
-          <div className="col-span-4">
+          <div className="col-span-4 w-full">
             <div className="w-full pb-10">
               <Formik
                 initialValues={{castUrl: ""}}
@@ -250,7 +250,7 @@ function Test() {
               </Formik>
 
               {getFrameUrl !== "" && (
-                <div className="w-1/2 m-auto">
+                <div className="lg:w-1/2 m-auto">
                   <Frame frameUrl={getFrameUrl} refresh={refresh} />
                 </div>
               )}

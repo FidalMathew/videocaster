@@ -213,7 +213,7 @@ export default function YourCasts({params}) {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-5 h-fit">
-                  {item.content}
+                  <p className="mb-5 ml-2">{item.content}</p>
                   {/* <div className="w-full border-2 h-[100px] rounded-md"> */}
                   {item.embeds.length > 0 && item.embeds[0].url && (
                     <Frame

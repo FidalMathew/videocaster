@@ -20,7 +20,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {Clapperboard, Newspaper, PanelLeft} from "lucide-react";
+import {Clapperboard, Newspaper, PanelLeft, Eye} from "lucide-react";
 import Link from "next/link";
 import {useFarcasterContext} from "@/app/context/farcasterContext";
 
@@ -108,6 +108,13 @@ export default function Navbar({setOpenPublishModal}) {
               >
                 <Clapperboard className="h-5 w-5" />
                 Editor
+              </Link>
+              <Link
+                href="/editor"
+                className="flex items-center gap-4 px-2 text-muted-foreground hover:text-foreground"
+              >
+                <Eye />
+                Viewer
               </Link>
             </nav>
           </SheetContent>
