@@ -24,6 +24,8 @@ import {
   Scan,
   SquareArrowOutUpRight,
   Eye,
+  ClipboardCopy,
+  Check,
 } from "lucide-react";
 import {usePathname} from "next/navigation";
 import {Switch} from "@/components/ui/switch";
@@ -335,6 +337,23 @@ export default function DashboardPage() {
 
   // console.log(ready, authenticated, "ready");
 
+  const [copied, setCopied] = useState(false);
+
+  async function copyContent(framesUrl) {
+    try {
+      framesUrl.then(async (val) => {
+        await navigator.clipboard.writeText(val);
+      });
+      setCopied(true);
+
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  }
+
   return (
     <>
       <Dialog
@@ -464,7 +483,11 @@ export default function DashboardPage() {
                     variant={"outline"}
                     onClick={() => handleStepForm()}
                     className="w-full"
-                    disabled
+                    disabled={
+                      formikState.nameOfFrameURL === "" ||
+                      imageUrl === "" ||
+                      playbackId === ""
+                    }
                   >
                     Build Frame
                   </Button>
@@ -499,7 +522,7 @@ export default function DashboardPage() {
               </DialogDescription> */}
               {console.log(frameUrl, "frameUrl")}
 
-              <DialogDescription className="p-10 text-center flex-col flex items-center justify-center gap-4">
+              <DialogDescription className="p-10 px-5 text-center flex-col flex items-center justify-center gap-4">
                 <CircleCheck className="text-green-600 h-20 w-20" />
                 <p className="text-lg font-semibold"> Frame Published</p>
                 {/* <Link href={frameUrl} target="_blank">
@@ -509,7 +532,20 @@ export default function DashboardPage() {
                   </Button>
                 </Link> */}
                 {/* <Input disabled value={frameUrl} className="w-full" />; */}
-                {frameUrl}
+
+                <div className="text-sm flex gap-3 items-center">
+                  <p className="border-gray-100 p-2 rounded border bg-gray-100">
+                    {frameUrl || "https://www.instagram.com/jaydeep_dey03/"}
+                  </p>
+                  {copied ? (
+                    <Check />
+                  ) : (
+                    <ClipboardCopy
+                      className="w-5 aspect-square cursor-pointer"
+                      onClick={() => copyContent(frameUrl)}
+                    />
+                  )}
+                </div>
               </DialogDescription>
             </DialogHeader>
           </DialogContent>

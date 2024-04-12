@@ -64,7 +64,7 @@ const FarcasterContextProvider = ({children}) => {
   const farcasterSubject = user?.farcaster?.fid || null;
   const {requestFarcasterSigner, submitCast} = useExperimentalFarcasterSigner();
   const isAuthenticated = ready && authenticated;
-
+  console.log(farcasterAccount, "farcasterAccount");
   return (
     <farcasterContext.Provider
       value={{
