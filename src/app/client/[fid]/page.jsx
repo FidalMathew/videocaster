@@ -14,10 +14,12 @@ import {Switch} from "@/components/ui/switch";
 import {useExperimentalFarcasterSigner} from "@privy-io/react-auth";
 import axios from "axios";
 import Frame from "@/components/ui/Frame";
+import {useRouter} from "next/navigation";
 
 export default function YourCasts({params}) {
   const [casts, setCasts] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const router = useRouter();
 
   const {submitCast} = useExperimentalFarcasterSigner();
 
@@ -184,7 +186,11 @@ export default function YourCasts({params}) {
           </div>
           {casts &&
             casts.map((item, idx) => (
-              <Card key={idx}>
+              <Card
+                key={idx}
+                className="cursor-pointer"
+                onClick={() => router.push(`/client/cast/${item.hash}`)}
+              >
                 <CardHeader className="p-0">
                   <CardTitle className="text-md px-5 py-5 flex gap-3 items-center">
                     <Avatar className="">

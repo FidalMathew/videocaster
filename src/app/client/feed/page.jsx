@@ -102,6 +102,7 @@ export default function Feed() {
       console.log(hash, "hash");
       setTimeout(() => {
         window.open(`https://warpcast.com/jaydeepdey03/${hash}`, "_blank");
+        router.push(`/client/cast/${hash}`);
         setModalOpen(false);
       }, 30000);
     } catch (err) {
