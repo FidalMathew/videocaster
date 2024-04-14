@@ -236,9 +236,6 @@ export default function DashboardPage() {
     try {
       const response = await fetch(
         "https://api.pinata.cloud/pinning/pinFileToIPFS",
-        {
-          cache: "no-cache",
-        },
         options
       );
       if (!response.ok) {
