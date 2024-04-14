@@ -30,6 +30,8 @@ function createOrUpdateFile(content, filePath) {
         response.data.content,
         "base64"
       ).toString("utf-8");
+
+      console.log(currentContent, 'currentContent')
       if (currentContent !== content) {
         updateFile(contentBase64, filePath, response.data.sha);
       } else {
@@ -53,8 +55,10 @@ function createFile(contentBase64, filePath) {
     branch: branch,
   };
 
+  console.log(fileData, 'create file fileData')
+
   axios
-    .put(`${baseUrl}/repos/${owner}/${repo}/contents/${filePath}`, fileData, {
+    .post(`${baseUrl}/repos/${owner}/${repo}/contents/${filePath}`, fileData, {
       headers,
     })
     .then((response) => {
