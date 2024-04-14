@@ -20,7 +20,13 @@ function createOrUpdateFile(content, filePath) {
   // Encode the content to base64
   const contentBytes = Buffer.from(content, "utf-8");
   const contentBase64 = contentBytes.toString("base64");
-
+  console.log(contentBase64, 'contentBase64')
+  console.log(contentBase64, 'contentBase64')
+  console.log(contentBase64, 'contentBase64')
+  console.log(contentBase64, 'contentBase64')
+  console.log(contentBase64, 'contentBase64')
+  console.log(contentBase64, 'contentBase64')
+  console.log(contentBase64, 'contentBase64')
   // Check if the file exists, if not, create it; otherwise, update it
   axios
     .get(`${baseUrl}/repos/${owner}/${repo}/contents/${filePath}`, { headers })
