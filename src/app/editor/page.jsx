@@ -266,18 +266,13 @@ export default function DashboardPage() {
     console.log("Deployment status check started...");
 
     try {
-      const response = await fetch(
-        `https://api.vercel.com/v2/deployments`,
-        {
-          cache: "no-cache",
+      const response = await fetch(`https://api.vercel.com/v2/deployments`, {
+        headers: {
+          Authorization: `Bearer ${vercelAccessToken}`,
+          "Content-Type": "application/json",
         },
-        {
-          headers: {
-            Authorization: `Bearer ${vercelAccessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+        cache: "no-cache",
+      });
 
       if (!response.ok) {
         throw new Error(`Failed to fetch deployments: ${response.statusText}`);
