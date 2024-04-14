@@ -236,6 +236,9 @@ export default function DashboardPage() {
     try {
       const response = await fetch(
         "https://api.pinata.cloud/pinning/pinFileToIPFS",
+        {
+          cache: "no-cache",
+        },
         options
       );
       if (!response.ok) {
@@ -266,12 +269,18 @@ export default function DashboardPage() {
     console.log("Deployment status check started...");
 
     try {
-      const response = await fetch(`https://api.vercel.com/v2/deployments`, {
-        headers: {
-          Authorization: `Bearer ${vercelAccessToken}`,
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `https://api.vercel.com/v2/deployments`,
+        {
+          cache: "no-cache",
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${vercelAccessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Failed to fetch deployments: ${response.statusText}`);
