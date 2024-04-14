@@ -81,7 +81,7 @@ export default function DashboardPage() {
   const ExternalStateSyncComponent = () => {
     const formik = useFormikContext();
     useEffect(() => {
-      const url = 'https://videocaster.vercel.app/viewer?frame='
+      const url = 'https://videocaster.netlify.app/viewer?frame='
       formik.setFieldValue(`buttonProperties[0].target`, `${url}https://no-code-frames.vercel.app/examples/${formik.values.nameOfFrameURL}-${farcasterAccount?.username}`);
       formik.setFieldValue(`buttonProperties[0].action`, "link");
       formik.setFieldValue(
@@ -550,7 +550,7 @@ export default function DashboardPage() {
         )}
       </Dialog>
       <div>
-        <main className="w-full h-full">
+        <main className="w-full h-full overflow-x-hidden">
           {ready && authenticated ? (
             <div className="h-full w-full">
               <Navbar setOpenPublishModal={setOpenPublishModal} />

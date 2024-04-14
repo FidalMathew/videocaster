@@ -1,9 +1,9 @@
 "use client";
-import {useRouter} from "next/navigation";
-import {useEffect, useRef, useState} from "react";
-import {usePrivy, useExperimentalFarcasterSigner} from "@privy-io/react-auth";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { usePrivy, useExperimentalFarcasterSigner } from "@privy-io/react-auth";
 import Navbar from "@/components/ui/Navbar";
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -11,13 +11,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
-import {Formik, Field, Form, useFormikContext} from "formik";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Formik, Field, Form, useFormikContext } from "formik";
 import Dropzone from "react-dropzone";
 import axios from "axios";
-import {Badge} from "@/components/ui/badge";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Clapperboard,
   Newspaper,
@@ -25,11 +25,11 @@ import {
   SquareArrowOutUpRight,
   ReloadIcon,
 } from "lucide-react";
-import {usePathname} from "next/navigation";
-import {Switch} from "@/components/ui/switch";
+import { usePathname } from "next/navigation";
+import { Switch } from "@/components/ui/switch";
 import * as tus from "tus-js-client";
-import {Progress} from "@/components/ui/progress";
-import {File, CircleCheck} from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { File, CircleCheck } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -104,7 +104,7 @@ export default function DashboardPage() {
   const farcasterSubject = user?.farcaster?.fid || null;
 
   //   console.log(farcasterSubject, user, "farcaster");
-  const {requestFarcasterSigner, submitCast} = useExperimentalFarcasterSigner();
+  const { requestFarcasterSigner, submitCast } = useExperimentalFarcasterSigner();
 
   //   const farcasterAccount = user.linkedAccounts.find(
   //     (account) => account.type === "farcaster"
@@ -153,7 +153,7 @@ export default function DashboardPage() {
   };
 
   const handleInputFieldChange = (e) => {
-    const {value} = e.target;
+    const { value } = e.target;
     setFormikState((prevState) => ({
       ...prevState,
       inputFieldUrl: value, // Update inputFieldUrl state with the new value
@@ -161,16 +161,16 @@ export default function DashboardPage() {
   };
 
   const publishFrame = async (values) => {
-    values = {...values, uname: farcasterAccount.username};
+    values = { ...values, uname: farcasterAccount.username };
     // console.log(values, "values");
     try {
       const response = await axios.post("/api/publishFrames", values);
       console.log("Response:", response.data);
       alert(
         "Frame published successfully! Check it out: https://no-code-frames.vercel.app/examples/" +
-          values.nameOfFrameURL +
-          "-" +
-          farcasterAccount.username
+        values.nameOfFrameURL +
+        "-" +
+        farcasterAccount.username
       );
     } catch (error) {
       console.error("Error:", error);
@@ -386,7 +386,7 @@ export default function DashboardPage() {
                 <div className="hidden lg:block lg:w-full">
                   <div
                     className="lg:flex lg:flex-col lg:py-4 hidden rounded-lg bg-white lg:pt-5 border h-[89vh] sticky top-[8vh]"
-                    style={{alignSelf: "start"}}
+                    style={{ alignSelf: "start" }}
                   >
                     {/* profile info */}
                     <div className="z-0 w-[90%] h-[80px] border rounded-lg flex items-center just gap-3 pl-3 ml-3 hover:bg-gray-100 cursor-pointer">
@@ -402,10 +402,9 @@ export default function DashboardPage() {
                     </div>
                     <div className="w-full h-full flex flex-col gap-2">
                       <div
-                        className={`mt-5 flex items-center p-4 px-6 gap-4 mr-4 rounded-lg relative ${
-                          path === farcasterAccount?.fid.toString() &&
+                        className={`mt-5 flex items-center p-4 px-6 gap-4 mr-4 rounded-lg relative ${path === farcasterAccount?.fid.toString() &&
                           "text-purple-900 font-semibold bg-gray-100"
-                        } py-3 cursor-pointer`}
+                          } py-3 cursor-pointer`}
                         onClick={() =>
                           router.push(`/client/${farcasterAccount?.fid}`)
                         }
@@ -425,10 +424,9 @@ export default function DashboardPage() {
                         <p className="ml-2 text-md">Feed</p>
                       </div>
                       <div
-                        className={`flex items-center px-6 gap-4 mr-4 rounded-lg relative ${
-                          path === "editor" &&
+                        className={`flex items-center px-6 gap-4 mr-4 rounded-lg relative ${path === "editor" &&
                           "text-purple-900 font-semibold bg-gray-100"
-                        } py-3 cursor-pointer`}
+                          } py-3 cursor-pointer`}
                         onClick={() => router.push("/editor")}
                       >
                         {path === "editor" && (
@@ -473,7 +471,7 @@ export default function DashboardPage() {
                             createAsset(acceptedFiles[0]);
                           }}
                         >
-                          {({getRootProps, getInputProps, acceptedFiles}) => (
+                          {({ getRootProps, getInputProps, acceptedFiles }) => (
                             <section className="cursor-pointer">
                               <div {...getRootProps()}>
                                 <input {...getInputProps()} />
@@ -490,8 +488,8 @@ export default function DashboardPage() {
                                           {acceptedFiles[0]
                                             ? acceptedFiles[0]?.name
                                             : currentFile != null
-                                            ? currentFile.name
-                                            : "file.mp4"}
+                                              ? currentFile.name
+                                              : "file.mp4"}
                                         </p>
                                         <div className="flex gap-3 items-center font-semibold">
                                           <CircleCheck className="text-green-600" />
@@ -526,7 +524,7 @@ export default function DashboardPage() {
                                     <div className="flex flex-col gap-2 w-full items-center justify-center">
                                       <File />
                                       {acceptedFiles &&
-                                      acceptedFiles.length > 0 ? (
+                                        acceptedFiles.length > 0 ? (
                                         <p className="text-xs">
                                           {
                                             acceptedFiles[0].name // Accessing the name of the first file in the array
@@ -615,7 +613,7 @@ export default function DashboardPage() {
                             formik.setFieldValue("noOfButtons", val);
                             // push the button properties to the formik values
                             const newButtonProperties = Array.from(
-                              {length: val},
+                              { length: val },
                               (_, index) => ({
                                 action: "",
                                 buttonContent: "",
@@ -640,7 +638,7 @@ export default function DashboardPage() {
                         {formikState.noOfButtons > 0 && (
                           <div className="flex flex-col gap-5">
                             {Array.from(
-                              {length: formik.values.noOfButtons},
+                              { length: formik.values.noOfButtons },
                               (_, index) => (
                                 <div
                                   key={index}
@@ -805,7 +803,7 @@ export default function DashboardPage() {
                     {formikState.noOfButtons > 0 && (
                       <div className="grid grid-cols-2 gap-4">
                         {Array.from(
-                          {length: formikState.noOfButtons},
+                          { length: formikState.noOfButtons },
                           (_, index) => (
                             <Button
                               key={index}
@@ -816,7 +814,7 @@ export default function DashboardPage() {
                                 .buttonContent === ""
                                 ? `Button ${index + 1}`
                                 : formikState.buttonProperties[index]
-                                    .buttonContent}
+                                  .buttonContent}
                             </Button>
                           )
                         )}
