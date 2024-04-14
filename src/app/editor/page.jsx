@@ -505,7 +505,8 @@ export default function DashboardPage() {
 
                 {buildingState === "built" && (
                   <Button variant={"outline"} className="w-full">
-                    <CircleCheck className="text-green-600" /> Done
+                    <span className="mr-3">Done</span>
+                    <CircleCheck className="text-green-600" />
                   </Button>
                 )}
 
